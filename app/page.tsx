@@ -1,7 +1,67 @@
+"use client"
+
+import { useRouter, useSearchParams } from "next/navigation";
+import { Search } from "lucide-react";
+import { SearchResults } from "@/components/search-results";
+import { searchCVs, getTopResults } from "@/data/cvs";
+import { useDebounce } from "@/hooks/use-debounce";
+import { useMemo } from "react";
+
 export default function Home() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const queryParam = searchParams.get("q") || "";
+  const debouncedQuery = useDebounce(queryParam, 300);
+
+  const isLoading = queryParam.trim() !== debouncedQuery.trim();
+
+  const searchResults = useMemo(() => {
+    if (debouncedQuery.trim()) {
+      const results = searchCVs(debouncedQuery);
+      const top = getTopResults();
+      return {
+        top,
+        all: results,
+        loading: false
+      };
+    }
+    return { top: [], all: [], loading: false };
+  }, [debouncedQuery]);
+
+  const handleSelectResult = (username: string) => {
+    router.push(`/${username}`);
+  };
+
+  const hasQuery = queryParam.trim().length > 0;
+
   return (
-    <div className="flex-1 p-6">
-      <h1 className="text-2xl font-semibold">Welcome to CV Galaxy</h1>
+    <div className="flex-1 flex flex-col">
+      {!hasQuery ? (
+        <div className="flex-1 flex items-center justify-center min-h-[calc(100vh-12rem)]">
+          <div className="container mx-auto max-w-2xl px-6">
+            <div className="flex flex-col items-center text-center space-y-6">
+              <div className="space-y-3">
+                <div className="flex justify-center">
+                  <Search className="h-10 w-10 text-muted-foreground" />
+                </div>
+                <h1 className="text-2xl font-semibold tracking-tight">Begin your search</h1>
+                <p className="text-sm text-muted-foreground max-w-xs">
+                  Use the search bar above to find CVs by name, title, skills, or keywords.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div className="container mx-auto p-6 max-w-7xl">
+          <SearchResults
+            topResults={searchResults.top}
+            allResults={searchResults.all}
+            isLoading={isLoading}
+            onSelectResult={handleSelectResult}
+          />
+        </div>
+      )}
     </div>
   );
 }
