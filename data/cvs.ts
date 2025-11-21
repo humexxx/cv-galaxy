@@ -15,7 +15,7 @@ export const cvDatabase: Record<string, CVData> = {
     username: "humexxx",
     fullName: "Jason Hume González",
     title: "Software Engineer",
-    avatar: "/avatars/humexxx.jpg",
+    avatar: "/images/users/humexxx.jpg",
     about:
       "I am a person with very good logical, creative and self-taught potential. The union of these characteristics have helped me become a software developer since this area is always in constant change. I am also a parent with great aptitudes for good teamwork.",
     contact: {
@@ -62,6 +62,8 @@ export const cvDatabase: Record<string, CVData> = {
       {
         title: "Senior Frontend Software Developer",
         company: "Intell",
+        companyWebsite: "https://www.intel.com/content/www/us/en/homepage.html",
+        contractor: "Praxis",
         period: {
           start: "May 2022",
           end: "Jan 2024",
@@ -76,6 +78,9 @@ export const cvDatabase: Record<string, CVData> = {
       {
         title: "Senior Fullstack Developer",
         company: "Slac",
+        companyWebsite: "https://www.silacins.com/",
+        contractor: "Tech9",
+        contractorWebsite: "https://www.tech9.com/",
         period: {
           start: "Mar 2021",
           end: "May 2022",
@@ -93,6 +98,9 @@ export const cvDatabase: Record<string, CVData> = {
       {
         title: "Senior Software Developer",
         company: "PayPal",
+        companyWebsite: "https://www.paypal.com/us/home",
+        contractor: "Altimetrik",
+        contractorWebsite: "https://www.altimetrik.com/",
         period: {
           start: "Mar 2020",
           end: "Mar 2021",

@@ -1,9 +1,11 @@
 import { getCVByUsername } from "@/data/cvs";
 import { notFound } from "next/navigation";
+import Image from "next/image";
 import { Mail, Phone, MapPin, Briefcase, Code, Languages, Award, Lightbulb, ExternalLink } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { CompanyAvatar } from "@/components/company-avatar";
 
 interface PageProps {
   params: Promise<{
@@ -25,6 +27,17 @@ export default async function CVPage({ params }: PageProps) {
         {/* Header Section */}
         <div className="mb-8">
           <div className="flex flex-col md:flex-row items-start md:items-center gap-6 mb-6">
+            {cv.avatar && (
+              <div className="shrink-0">
+                <Image 
+                  src={cv.avatar} 
+                  alt={cv.fullName}
+                  width={128}
+                  height={128}
+                  className="w-24 h-24 md:w-32 md:h-32 rounded-full object-cover border-2 border-border"
+                />
+              </div>
+            )}
             <div className="flex-1">
               <h1 className="text-4xl font-bold mb-2">{cv.fullName}</h1>
               <p className="text-xl text-muted-foreground mb-4">{cv.title}</p>
@@ -143,26 +156,41 @@ export default async function CVPage({ params }: PageProps) {
                 {cv.workExperience.map((exp, index) => (
                   <div key={index}>
                     {index > 0 && <Separator className="my-4" />}
-                    <div className="space-y-3">
-                      <div>
-                        <h3 className="font-semibold text-lg">{exp.title}</h3>
-                        <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground mt-1">
-                          <span className="font-medium">{exp.company}</span>
-                          <span>•</span>
-                          <span>
-                            {exp.period.start} - {exp.period.end}
-                          </span>
+                    <div className="flex gap-4">
+                      <CompanyAvatar 
+                        company={exp.company} 
+                        companyWebsite={exp.companyWebsite}
+                        contractor={exp.contractor}
+                        contractorWebsite={exp.contractorWebsite}
+                        size={48} 
+                      />
+                      <div className="space-y-3 flex-1">
+                        <div>
+                          <h3 className="font-semibold text-lg">{exp.title}</h3>
+                          <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground mt-1">
+                            <span className="font-medium">{exp.company}</span>
+                            {exp.contractor && (
+                              <>
+                                <span>via</span>
+                                <span className="font-medium">{exp.contractor}</span>
+                              </>
+                            )}
+                            <span>•</span>
+                            <span>
+                              {exp.period.start} - {exp.period.end}
+                            </span>
+                          </div>
                         </div>
+                        <p className="text-sm text-muted-foreground">{exp.description}</p>
+                        <ul className="space-y-1 text-sm">
+                          {exp.responsibilities.map((resp, idx) => (
+                            <li key={idx} className="flex gap-2">
+                              <span className="text-muted-foreground">•</span>
+                              <span>{resp}</span>
+                            </li>
+                          ))}
+                        </ul>
                       </div>
-                      <p className="text-sm text-muted-foreground">{exp.description}</p>
-                      <ul className="space-y-1 text-sm">
-                        {exp.responsibilities.map((resp, idx) => (
-                          <li key={idx} className="flex gap-2">
-                            <span className="text-muted-foreground">•</span>
-                            <span>{resp}</span>
-                          </li>
-                        ))}
-                      </ul>
                     </div>
                   </div>
                 ))}

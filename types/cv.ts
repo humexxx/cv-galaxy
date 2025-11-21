@@ -1,6 +1,9 @@
 export interface WorkExperience {
   title: string;
   company: string;
+  companyWebsite?: string; // Company website URL
+  contractor?: string; // Name of the contracting company if working as contractor
+  contractorWebsite?: string; // Contractor company website URL
   period: {
     start: string;
     end: string;
