@@ -19,7 +19,7 @@ export const cvDatabase: Record<string, CVData> = {
     about:
       "I am a person with very good logical, creative and self-taught potential. The union of these characteristics have helped me become a software developer since this area is always in constant change. I am also a parent with great aptitudes for good teamwork.",
     contact: {
-      phone: "+1 (809) 393 381",
+      phone: "+506 8939 3381",
       email: "jahumexx@gmail.com",
       address: "Santa Cecilia de San Francisco de Heredia",
     },
@@ -216,12 +216,18 @@ export function searchCVs(query: string): CVSearchResult[] {
 export function getTopResults(): CVSearchResult[] {
   // For now, always return humexxx as top result
   // In the future, this could be based on popularity, recent views, etc.
+  const cv = cvDatabase.humexxx;
+  
+  if (!cv) {
+    return [];
+  }
+  
   return [
     {
-      username: "humexxx",
-      fullName: "Jason Hume González",
-      title: "Software Engineer",
-      avatar: "/avatars/humexxx.jpg",
+      username: cv.username,
+      fullName: cv.fullName,
+      title: cv.title,
+      avatar: cv.avatar,
     },
   ];
 }

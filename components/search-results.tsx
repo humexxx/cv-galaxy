@@ -1,5 +1,6 @@
 "use client"
 
+import Image from "next/image"
 import { FileText, User } from "lucide-react"
 import { CVSearchResult } from "@/data/cvs"
 import { Skeleton } from "@/components/ui/skeleton"
@@ -106,14 +107,24 @@ function ResultCard({ result, onClick }: { result: CVSearchResult; onClick: () =
   return (
     <button
       onClick={onClick}
-      className="flex flex-col items-center justify-center p-4 rounded-lg border bg-card hover:bg-accent transition-colors text-left w-full"
+      className="flex flex-col items-center justify-center p-4 rounded-lg border bg-card hover:bg-accent transition-colors text-left w-full cursor-pointer"
     >
-      <div className="flex items-center justify-center w-12 h-12 rounded-full bg-muted mb-2">
-        <User className="h-6 w-6 text-muted-foreground" />
-      </div>
+      {result.avatar ? (
+        <Image
+          src={result.avatar}
+          alt={result.fullName}
+          width={48}
+          height={48}
+          className="w-12 h-12 rounded-full object-cover mb-2"
+        />
+      ) : (
+        <div className="flex items-center justify-center w-12 h-12 rounded-full bg-muted mb-2">
+          <User className="h-6 w-6 text-muted-foreground" />
+        </div>
+      )}
       <div className="text-center w-full">
-        <p className="font-semibold text-sm truncate">{result.username}</p>
-        <p className="text-xs text-muted-foreground">Error</p>
+        <p className="font-semibold text-sm truncate">{result.fullName}</p>
+        <p className="text-xs text-muted-foreground truncate">{result.title}</p>
       </div>
     </button>
   )
@@ -123,15 +134,25 @@ function ResultRow({ result, onClick }: { result: CVSearchResult; onClick: () =>
   return (
     <button
       onClick={onClick}
-      className="flex items-center gap-3 p-2 rounded-md hover:bg-accent transition-colors text-left w-full"
+      className="flex items-center gap-3 p-2 rounded-md hover:bg-accent transition-colors text-left w-full cursor-pointer"
     >
-      <div className="flex items-center justify-center w-8 h-8 rounded bg-muted shrink-0">
-        <FileText className="h-4 w-4 text-muted-foreground" />
-      </div>
+      {result.avatar ? (
+        <Image
+          src={result.avatar}
+          alt={result.fullName}
+          width={32}
+          height={32}
+          className="w-8 h-8 rounded-full object-cover shrink-0"
+        />
+      ) : (
+        <div className="flex items-center justify-center w-8 h-8 rounded bg-muted shrink-0">
+          <FileText className="h-4 w-4 text-muted-foreground" />
+        </div>
+      )}
       <div className="flex-1 min-w-0">
-        <p className="font-medium text-sm truncate">{result.username}</p>
+        <p className="font-medium text-sm truncate">{result.fullName}</p>
+        <p className="text-xs text-muted-foreground truncate">{result.title}</p>
       </div>
-      <span className="text-xs text-muted-foreground shrink-0">Error</span>
     </button>
   )
 }

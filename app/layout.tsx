@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { Geist, Geist_Mono } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
 import { AppBar } from "@/components/app-bar";
@@ -36,7 +37,11 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <div className="flex min-h-screen flex-col">
-            <AppBar />
+            <Suspense fallback={
+              <header className="sticky top-0 z-50 w-full border-b bg-background h-16" />
+            }>
+              <AppBar />
+            </Suspense>
             <main className="flex-1">
               {children}
             </main>

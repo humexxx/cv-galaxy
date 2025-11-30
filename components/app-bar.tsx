@@ -1,12 +1,15 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useMemo } from "react"
 import Link from "next/link"
-import { useRouter, useSearchParams } from "next/navigation"
+import { useRouter, useSearchParams, usePathname } from "next/navigation"
 import { FileText, Settings } from "lucide-react"
 import { ModeToggle } from "@/components/mode-toggle"
 import { SearchBar } from "@/components/search-bar"
+import { SearchDropdown } from "@/components/search-dropdown"
 import { Button } from "@/components/ui/button"
+import { searchCVs, getTopResults } from "@/data/cvs"
+import { useDebounce } from "@/hooks/use-debounce"
 import {
   Dialog,
   DialogContent,
@@ -21,16 +24,51 @@ import { Label } from "@/components/ui/label"
 
 export function AppBar() {
   const router = useRouter()
+  const pathname = usePathname()
   const searchParams = useSearchParams()
-  const searchValue = searchParams.get("q") || ""
   const [feedbackOpen, setFeedbackOpen] = useState(false)
+  const [localSearchValue, setLocalSearchValue] = useState("")
+  
+  // Check if we're on a CV page (e.g., /humexxx)
+  const isOnCVPage = pathname !== "/" && pathname !== "/settings" && !pathname.startsWith("/_")
+  
+  // Use query params on home page, local state on CV pages
+  const searchValue = isOnCVPage ? localSearchValue : (searchParams.get("q") || "")
+  const debouncedSearch = useDebounce(searchValue, 300)
+  
+  const isLoading = searchValue.trim() !== debouncedSearch.trim()
+  
+  // Search results for dropdown (only on CV pages)
+  const searchResults = useMemo(() => {
+    if (!isOnCVPage || !debouncedSearch.trim()) {
+      return { top: [], all: [] }
+    }
+    const results = searchCVs(debouncedSearch)
+    const top = getTopResults()
+    
+    return {
+      top: debouncedSearch.trim() ? top : [],
+      all: results
+    }
+  }, [isOnCVPage, debouncedSearch])
 
   const handleSearchChange = (value: string) => {
-    if (value.trim()) {
-      router.push(`/?q=${encodeURIComponent(value)}`, { scroll: false })
+    if (isOnCVPage) {
+      // On CV pages, just update local state (no navigation)
+      setLocalSearchValue(value)
     } else {
-      router.push("/", { scroll: false })
+      // On home page, update URL
+      if (value.trim()) {
+        router.push(`/?q=${encodeURIComponent(value)}`, { scroll: false })
+      } else {
+        router.push("/", { scroll: false })
+      }
     }
+  }
+  
+  const handleSelectResult = (username: string) => {
+    setLocalSearchValue("")
+    router.push(`/${username}`)
   }
 
   return (
@@ -45,13 +83,21 @@ export function AppBar() {
         </Link>
         
         {/* Search Bar - Centered */}
-        <div className="flex-1 max-w-2xl mx-auto">
+        <div className="flex-1 max-w-2xl mx-auto relative">
           <SearchBar 
             size="sm"
             inputClassName="bg-background"
             value={searchValue}
             onChange={handleSearchChange}
           />
+          {isOnCVPage && searchValue.trim() && (
+            <SearchDropdown
+              topResults={searchResults.top}
+              allResults={searchResults.all}
+              isLoading={isLoading}
+              onSelectResult={handleSelectResult}
+            />
+          )}
         </div>
         
         {/* Right Side Actions */}

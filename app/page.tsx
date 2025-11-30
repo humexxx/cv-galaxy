@@ -5,9 +5,9 @@ import { Search } from "lucide-react";
 import { SearchResults } from "@/components/search-results";
 import { searchCVs, getTopResults } from "@/data/cvs";
 import { useDebounce } from "@/hooks/use-debounce";
-import { useMemo } from "react";
+import { useMemo, Suspense } from "react";
 
-export default function Home() {
+function HomeContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const queryParam = searchParams.get("q") || "";
@@ -63,5 +63,17 @@ export default function Home() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function Home() {
+  return (
+    <Suspense fallback={
+      <div className="flex-1 flex items-center justify-center">
+        <div className="text-muted-foreground">Loading...</div>
+      </div>
+    }>
+      <HomeContent />
+    </Suspense>
   );
 }
