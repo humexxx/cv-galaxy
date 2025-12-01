@@ -1,11 +1,11 @@
 import { getCVByUsername } from "@/data/cvs";
 import { notFound } from "next/navigation";
 import Image from "next/image";
-import { Mail, Phone, MapPin, Briefcase, Code, Languages, Award, Lightbulb, ExternalLink } from "lucide-react";
+import { Mail, Phone, MapPin, Code, Languages, Award, Lightbulb, ExternalLink } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { CompanyAvatar } from "@/components/company-avatar";
+import { WorkExperienceSection } from "@/components/work-experience-section";
 import type { Metadata } from "next";
 
 interface PageProps {
@@ -214,58 +214,7 @@ export default async function CVPage({ params }: PageProps) {
           {/* Main Content */}
           <div className="md:col-span-2 space-y-6">
             {/* Work Experience */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Briefcase className="h-5 w-5" />
-                  Work Experience
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                {cv.workExperience.map((exp, index) => (
-                  <div key={index}>
-                    {index > 0 && <Separator className="my-4" />}
-                    <div className="flex gap-4">
-                      <CompanyAvatar 
-                        company={exp.company} 
-                        contractor={exp.contractor}
-                        size={48} 
-                      />
-                      <div className="space-y-3 flex-1">
-                        <div>
-                          <h3 className="font-semibold text-lg">{exp.title}</h3>
-                          <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground mt-1">
-                            <span className="font-medium">{exp.company.name}</span>
-                            {exp.contractor && (
-                              <>
-                                <span>via</span>
-                                <span className="font-medium">{exp.contractor.name}</span>
-                              </>
-                            )}
-                            <span>•</span>
-                            <span>
-                              {exp.period.start.toLocaleDateString('en-US', { month: 'short', year: 'numeric' })} - {' '}
-                              {exp.period.end === "Present" 
-                                ? "Present" 
-                                : exp.period.end.toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
-                            </span>
-                          </div>
-                        </div>
-                        <p className="text-sm text-muted-foreground">{exp.description}</p>
-                        <ul className="space-y-1 text-sm">
-                          {exp.responsibilities.map((resp, idx) => (
-                            <li key={idx} className="flex gap-2">
-                              <span className="text-muted-foreground">•</span>
-                              <span>{resp}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </CardContent>
-            </Card>
+            <WorkExperienceSection workExperience={cv.workExperience} />
 
             {/* Projects */}
             {cv.projects.length > 0 && (
