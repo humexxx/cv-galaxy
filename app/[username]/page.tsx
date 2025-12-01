@@ -6,11 +6,59 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { CompanyAvatar } from "@/components/company-avatar";
+import type { Metadata } from "next";
 
 interface PageProps {
   params: Promise<{
     username: string;
   }>;
+}
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { username } = await params;
+  const cv = getCVByUsername(username);
+
+  if (!cv) {
+    return {
+      title: "CV Not Found",
+    };
+  }
+
+  const title = `${cv.fullName} - ${cv.title}`;
+  const description = `${cv.about.slice(0, 200)}${cv.about.length > 200 ? "..." : ""}`;
+  const technologies = cv.technologies.slice(0, 5).join(", ");
+  const fullDescription = `${description}\n\nTechnologies: ${technologies}`;
+  const url = `https://cv-galaxy.vercel.app/${username}`;
+  const avatarUrl = cv.avatar ? `https://cv-galaxy.vercel.app${cv.avatar}` : undefined;
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description: fullDescription,
+      url,
+      siteName: "CV Galaxy",
+      images: avatarUrl
+        ? [
+            {
+              url: avatarUrl,
+              width: 800,
+              height: 800,
+              alt: cv.fullName,
+            },
+          ]
+        : [],
+      locale: "en_US",
+      type: "profile",
+    },
+    twitter: {
+      card: "summary",
+      title,
+      description: fullDescription,
+      images: avatarUrl ? [avatarUrl] : [],
+    },
+  };
 }
 
 export default async function CVPage({ params }: PageProps) {

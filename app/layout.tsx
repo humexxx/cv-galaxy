@@ -16,8 +16,26 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "CV Galaxy",
-  description: "Manage your CV with ease",
+  title: {
+    default: "CV Galaxy",
+    template: "%s | CV Galaxy",
+  },
+  description: "Discover and share professional CVs in CV Galaxy - A modern platform to showcase your career, skills, and experience.",
+  keywords: ["CV", "resume", "portfolio", "career", "professional", "developer"],
+  authors: [{ name: "CV Galaxy" }],
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: "https://cv-galaxy.vercel.app",
+    siteName: "CV Galaxy",
+    title: "CV Galaxy",
+    description: "Discover and share professional CVs in CV Galaxy",
+  },
+  twitter: {
+    card: "summary",
+    title: "CV Galaxy",
+    description: "Discover and share professional CVs in CV Galaxy",
+  },
 };
 
 export default function RootLayout({
