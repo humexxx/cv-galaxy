@@ -24,12 +24,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     };
   }
 
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
   const title = `${cv.fullName} - ${cv.title}`;
   const description = `${cv.about.slice(0, 200)}${cv.about.length > 200 ? "..." : ""}`;
   const technologies = cv.technologies.slice(0, 5).join(", ");
   const fullDescription = `${description}\n\nTechnologies: ${technologies}`;
-  const url = `https://cv-galaxy.vercel.app/${username}`;
-  const avatarUrl = cv.avatar ? `https://cv-galaxy.vercel.app${cv.avatar}` : undefined;
+  const url = `${baseUrl}/${username}`;
+  const avatarUrl = cv.avatar ? `${baseUrl}${cv.avatar}` : undefined;
 
   return {
     title,

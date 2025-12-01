@@ -15,6 +15,8 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+
 export const metadata: Metadata = {
   title: {
     default: "CV Galaxy",
@@ -26,7 +28,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://cv-galaxy.vercel.app",
+    url: baseUrl,
     siteName: "CV Galaxy",
     title: "CV Galaxy",
     description: "Discover and share professional CVs in CV Galaxy",
