@@ -21,7 +21,7 @@ function SingleAvatar({
 
   const avatarContent = logo ? (
     <div
-      className={`shrink-0 overflow-hidden rounded-lg border bg-background ${className}`}
+      className={`shrink-0 overflow-hidden rounded-lg border bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center ${className}`}
       style={{ width: size, height: size }}
     >
       <Image

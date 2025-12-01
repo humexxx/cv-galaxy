@@ -45,7 +45,7 @@ export const companies: Record<string, Company> = {
   avionyx: {
     id: "avionyx",
     name: "Avionyx (6 months internship + 3 months employment)",
-    website: "https://www.avionyx.com/" ,
+    website: "https://www.avionyx.com/",
     logo: "/images/companies/avionyx.avif",
   },
   justserve: {
@@ -63,6 +63,12 @@ export const companies: Record<string, Company> = {
   praxis: {
     id: "praxis",
     name: "Praxis",
+  },
+  smash: {
+    id: "smash",
+    name: "Smash",
+    website: "https://smashcr.com/",
+    logo: "/images/companies/smash.png",
   },
   freelancer: {
     id: "freelancer",
@@ -98,11 +104,9 @@ export const cvDatabase: Record<string, CVData> = {
       "Firebase",
       "C#",
       ".NET",
-      ".NET Core",
       "Java",
       "SQL",
       "NoSQL",
-      "Postgres",
       "Docker",
       "REST APIs",
     ],
@@ -123,26 +127,13 @@ export const cvDatabase: Record<string, CVData> = {
           start: new Date(2024, 0), // Jan 2024
           end: "Present",
         },
-        description: "Leading frontend development and technical direction for internal and external-facing applications.",
+        description:
+          "Leading frontend development and technical direction for internal and external-facing applications.",
         responsibilities: [
           "Use Blazor and .NET to design and implement multiple internal tools and customer-facing applications.",
           "Integrate AI capabilities into internal applications to improve task assignment, triage and overall efficiency for internal agents.",
           "Maintain and evolve shared NuGet packages and service libraries to ensure scalability, reusability and consistent integrations across applications, including those built with Angular and other technologies.",
           "Quickly ramped up on Blazor within a few weeks and was promoted to tech lead for a key project, delivering on time while defining improved patterns for DTO usage, data mapping, error handling and view model design.",
-        ],
-      },
-      {
-        title: "Senior Frontend Software Developer",
-        company: companies.intel,
-        period: {
-          start: new Date(2022, 4), // May 2022
-          end: new Date(2024, 0), // Jan 2024
-        },
-        description: "Led frontend initiatives for an internal project modernisation.",
-        responsibilities: [
-          "Migrated an Angular-based project to Vue to improve maintainability and developer experience.",
-          "Created reusable UI components and tested them in isolation using Storybook.",
-          "Integrated services such as Google Maps and other internal APIs to enhance user experience and data visualisation.",
         ],
       },
       {
@@ -153,7 +144,8 @@ export const cvDatabase: Record<string, CVData> = {
           start: new Date(2022, 3), // Apr 2022
           end: new Date(2023, 6), // Jul 2023
         },
-        description: "Worked on the main public experience for searching and discovering volunteer projects.",
+        description:
+          "Worked on the main public experience for searching and discovering volunteer projects.",
         responsibilities: [
           "Implemented core features of the main landing and search pages so visitors could discover and filter volunteer opportunities.",
           "Used Next.js as the primary framework, leveraging server-side rendering and static generation to improve SEO and ensure rich link previews when projects were shared via chat or social media.",
@@ -162,14 +154,30 @@ export const cvDatabase: Record<string, CVData> = {
         ],
       },
       {
+        title: "Senior Frontend Software Developer",
+        company: companies.intel,
+        period: {
+          start: new Date(2021, 3),
+          end: new Date(2022, 3),
+        },
+        description:
+          "Led frontend initiatives for an internal project modernisation.",
+        responsibilities: [
+          "Migrated an Angular-based project to Vue to improve maintainability and developer experience.",
+          "Created reusable UI components and tested them in isolation using Storybook.",
+          "Integrated services such as Google Maps and other internal APIs to enhance user experience and data visualisation.",
+        ],
+      },
+      {
         title: "Senior Fullstack Developer",
         company: companies.silac,
-        contractor: companies.tech9,
+        contractor: companies.smash,
         period: {
-          start: new Date(2021, 2), // Mar 2021
-          end: new Date(2022, 4), // May 2022
+          start: new Date(2020, 3),
+          end: new Date(2021, 3),
         },
-        description: "Full-stack development focused on policy management systems.",
+        description:
+          "Full-stack development focused on policy management systems.",
         responsibilities: [
           "Extended an administrative web application to support creation and management of insurance policies.",
           "Redesigned and expanded the project to allow clients and agents to visualise policy performance over time.",
@@ -182,10 +190,11 @@ export const cvDatabase: Record<string, CVData> = {
         company: companies.paypal,
         contractor: companies.altimetrik,
         period: {
-          start: new Date(2020, 2), // Mar 2020
-          end: new Date(2021, 2), // Mar 2021
+          start: new Date(2019, 0),
+          end: new Date(2020, 3),
         },
-        description: "Provided technical support and enhancements for PayPal help software.",
+        description:
+          "Provided technical support and enhancements for PayPal help software.",
         responsibilities: [
           "Supported and maintained PayPal's help platform used by millions of customers.",
           "Implemented new features and UX improvements to enhance user experience.",
@@ -196,10 +205,11 @@ export const cvDatabase: Record<string, CVData> = {
         title: "Fullstack Developer",
         company: companies.freelancer,
         period: {
-          start: new Date(2018, 2), // Mar 2018
-          end: new Date(2020, 2), // Mar 2020
+          start: new Date(2018, 1),
+          end: new Date(2019, 0), 
         },
-        description: "Delivered diverse web applications for various clients across different domains.",
+        description:
+          "Delivered diverse web applications for various clients across different domains.",
         responsibilities: [
           "Developed web applications for vehicle fleet monitoring and management using React, Node.js and SQL/NoSQL databases.",
           "Built systems for medical office group management, integrating multiple REST APIs and third-party services.",
@@ -215,7 +225,8 @@ export const cvDatabase: Record<string, CVData> = {
           start: new Date(2016, 10), // Nov 2016
           end: new Date(2018, 1), // Feb 2018
         },
-        description: "Backend and internal tool development for Intel projects.",
+        description:
+          "Backend and internal tool development for Intel projects.",
         responsibilities: [
           "Developed internal tools using AngularJS, .NET C#, SQL Server and related technologies.",
           "Implemented logical parsing of PDF files with specific patterns for data extraction.",
@@ -229,7 +240,8 @@ export const cvDatabase: Record<string, CVData> = {
           start: new Date(2016, 0), // Jan 2016
           end: new Date(2016, 8), // Sept 2016
         },
-        description: "Started professional career working on macros and aircraft maintenance systems.",
+        description:
+          "Started professional career working on macros and aircraft maintenance systems.",
         responsibilities: [
           "Developed macros with Visual Basic to automate repetitive tasks.",
           "Maintained and updated drivers used in aircraft-related systems.",
@@ -241,7 +253,7 @@ export const cvDatabase: Record<string, CVData> = {
       {
         title: "Champions – Personal Growth & Financial Wellness Platform",
         description:
-          "Designing and building a personal growth platform that helps users organise their finances, track investments, build healthy habits, plan workouts and maintain balanced entertainment. The product combines social sharing features with 3D animations and gamification elements to create a motivating and healthy environment for friends and communities. Built with React and Firebase, currently approaching beta release.",
+          "Designing and building a personal growth platform that helps users organize their finances, track investments, build healthy habits, plan workouts and maintain balanced entertainment. The product combines social sharing features with 3D animations and gamification elements to create a motivating and healthy environment for friends and communities. Built with React and Firebase, currently approaching beta release.",
         link: "TBD",
       },
       {
@@ -299,11 +311,11 @@ export function getTopResults(): CVSearchResult[] {
   // For now, always return humexxx as top result
   // In the future, this could be based on popularity, recent views, etc.
   const cv = cvDatabase.humexxx;
-  
+
   if (!cv) {
     return [];
   }
-  
+
   return [
     {
       username: cv.username,
