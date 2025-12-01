@@ -6,21 +6,22 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { TypographyH2, TypographyMuted } from "@/components/ui/typography";
 
 export default function SettingsPage() {
   return (
     <div className="container mx-auto p-6 max-w-4xl">
-      <div className="space-y-6">
+      <div className="space-y-8">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Settings</h1>
-          <p className="text-muted-foreground">
+          <TypographyH2>Settings</TypographyH2>
+          <TypographyMuted>
             Manage your account settings and preferences.
-          </p>
+          </TypographyMuted>
         </div>
 
         <Separator />
 
-        <div className="grid gap-6">
+        <div className="grid gap-8">
           <Card>
             <CardHeader>
               <CardTitle>Privacy & Security</CardTitle>

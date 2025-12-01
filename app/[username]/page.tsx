@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { WorkExperienceSection } from "@/components/work-experience-section";
+import { TypographyH1, TypographyLead, TypographyH3, TypographyMuted } from "@/components/ui/typography";
 import type { Metadata } from "next";
 
 interface PageProps {
@@ -108,8 +109,8 @@ export default async function CVPage({ params }: PageProps) {
               </div>
             )}
             <div className="flex-1">
-              <h1 className="text-4xl font-bold mb-2">{cv.fullName}</h1>
-              <p className="text-xl text-muted-foreground mb-4">{cv.title}</p>
+              <TypographyH1 className="mb-2">{cv.fullName}</TypographyH1>
+              <TypographyLead className="mb-4">{cv.title}</TypographyLead>
               
               <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
                 {cv.contact.email && (
@@ -145,14 +146,14 @@ export default async function CVPage({ params }: PageProps) {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-muted-foreground leading-relaxed">{cv.about}</p>
+              <TypographyMuted className="leading-relaxed">{cv.about}</TypographyMuted>
             </CardContent>
           </Card>
         </div>
 
         <div className="grid md:grid-cols-3 gap-8">
           {/* Sidebar */}
-          <div className="space-y-6">
+          <div className="space-y-8">
             {/* Technologies */}
             <Card>
               <CardHeader>
@@ -162,7 +163,7 @@ export default async function CVPage({ params }: PageProps) {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-1">
                   {cv.technologies.map((tech) => (
                     <Badge key={tech} variant="secondary">
                       {tech}
@@ -183,9 +184,9 @@ export default async function CVPage({ params }: PageProps) {
               <CardContent>
                 <div className="space-y-2">
                   {cv.languages.map((lang) => (
-                    <div key={lang} className="text-sm">
+                    <TypographyMuted key={lang} className="leading-relaxed">
                       {lang}
-                    </div>
+                    </TypographyMuted>
                   ))}
                 </div>
               </CardContent>
@@ -200,19 +201,20 @@ export default async function CVPage({ params }: PageProps) {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="space-y-2">
+                <ul className="space-y-2">
                   {cv.skills.map((skill) => (
-                    <div key={skill} className="text-sm">
-                      • {skill}
-                    </div>
+                    <li key={skill} className="flex gap-2">
+                      <span className="text-muted-foreground mt-0.5">•</span>
+                      <TypographyMuted className="flex-1 leading-relaxed">{skill}</TypographyMuted>
+                    </li>
                   ))}
-                </div>
+                </ul>
               </CardContent>
             </Card>
           </div>
 
           {/* Main Content */}
-          <div className="md:col-span-2 space-y-6">
+          <div className="md:col-span-2 space-y-8">
             {/* Work Experience */}
             <WorkExperienceSection workExperience={cv.workExperience} />
 
@@ -228,7 +230,7 @@ export default async function CVPage({ params }: PageProps) {
                       {index > 0 && <Separator className="my-4" />}
                       <div className="space-y-2">
                         <div className="flex items-start justify-between gap-2">
-                          <h3 className="font-semibold">{project.title}</h3>
+                          <TypographyH3 className="text-lg">{project.title}</TypographyH3>
                           {project.link && (
                             <a
                               href={project.link}
@@ -240,7 +242,7 @@ export default async function CVPage({ params }: PageProps) {
                             </a>
                           )}
                         </div>
-                        <p className="text-sm text-muted-foreground">{project.description}</p>
+                        <TypographyMuted>{project.description}</TypographyMuted>
                       </div>
                     </div>
                   ))}
@@ -258,7 +260,7 @@ export default async function CVPage({ params }: PageProps) {
                   {cv.personalValues.map((value, index) => (
                     <div key={index}>
                       {index > 0 && <Separator className="my-4" />}
-                      <p className="text-sm text-muted-foreground leading-relaxed">{value}</p>
+                      <TypographyMuted>{value}</TypographyMuted>
                     </div>
                   ))}
                 </CardContent>

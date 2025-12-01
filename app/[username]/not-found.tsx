@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { TypographyH1, TypographyLead } from "@/components/ui/typography";
 
 export default function NotFound() {
   return (
@@ -8,10 +9,10 @@ export default function NotFound() {
       <div className="text-center space-y-6 p-8">
         <FileText className="h-24 w-24 mx-auto text-muted-foreground" />
         <div className="space-y-2">
-          <h1 className="text-4xl font-bold">CV Not Found</h1>
-          <p className="text-muted-foreground text-lg">
+          <TypographyH1>CV Not Found</TypographyH1>
+          <TypographyLead>
             The CV you&apos;re looking for doesn&apos;t exist in our system.
-          </p>
+          </TypographyLead>
         </div>
         <Button asChild>
           <Link href="/">Go Back Home</Link>

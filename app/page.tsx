@@ -6,6 +6,7 @@ import { SearchResults } from "@/components/search-results";
 import { searchCVs, getTopResults } from "@/data/cvs";
 import { useDebounce } from "@/hooks/use-debounce";
 import { useMemo, Suspense } from "react";
+import { TypographyH2, TypographyMuted } from "@/components/ui/typography";
 
 function HomeContent() {
   const router = useRouter();
@@ -40,14 +41,14 @@ function HomeContent() {
         <div className="flex-1 flex items-center justify-center min-h-[calc(100vh-12rem)]">
           <div className="container mx-auto max-w-2xl px-6">
             <div className="flex flex-col items-center text-center space-y-6">
-              <div className="space-y-3">
+              <div className="space-y-4">
                 <div className="flex justify-center">
                   <Search className="h-10 w-10 text-muted-foreground" />
                 </div>
-                <h1 className="text-2xl font-semibold tracking-tight">Begin your search</h1>
-                <p className="text-sm text-muted-foreground max-w-xs">
+                <TypographyH2>Begin your search</TypographyH2>
+                <TypographyMuted className="max-w-xs">
                   Use the search bar above to find CVs by name, title, skills, or keywords.
-                </p>
+                </TypographyMuted>
               </div>
             </div>
           </div>

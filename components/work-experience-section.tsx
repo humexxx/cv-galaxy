@@ -10,6 +10,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { TypographyH3, TypographyMuted } from "@/components/ui/typography";
 import type { CVData } from "@/types/cv";
 
 interface WorkExperienceSectionProps {
@@ -42,7 +43,7 @@ export function WorkExperienceSection({ workExperience }: WorkExperienceSectionP
               />
               <div className="space-y-3 flex-1">
                 <div>
-                  <h3 className="font-semibold text-lg">{exp.title}</h3>
+                  <TypographyH3 className="text-lg">{exp.title}</TypographyH3>
                   <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground mt-1">
                     <span className="font-medium">{exp.company.name}</span>
                     {exp.contractor && (
@@ -60,12 +61,12 @@ export function WorkExperienceSection({ workExperience }: WorkExperienceSectionP
                     </span>
                   </div>
                 </div>
-                <p className="text-sm text-muted-foreground">{exp.description}</p>
-                <ul className="space-y-1 text-sm">
+                <TypographyMuted>{exp.description}</TypographyMuted>
+                <ul className="space-y-2">
                   {exp.responsibilities.map((resp, idx) => (
-                    <li key={idx} className="flex gap-2">
-                      <span className="text-muted-foreground">•</span>
-                      <span>{resp}</span>
+                    <li key={idx} className="flex gap-2 text-sm leading-relaxed">
+                      <span className="text-muted-foreground mt-0.5">•</span>
+                      <span className="flex-1">{resp}</span>
                     </li>
                   ))}
                 </ul>
@@ -103,7 +104,7 @@ export function WorkExperienceSection({ workExperience }: WorkExperienceSectionP
                       />
                       <div className="space-y-3 flex-1">
                         <div>
-                          <h3 className="font-semibold text-lg">{exp.title}</h3>
+                          <TypographyH3 className="text-lg">{exp.title}</TypographyH3>
                           <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground mt-1">
                             <span className="font-medium">{exp.company.name}</span>
                             {exp.contractor && (
@@ -121,12 +122,12 @@ export function WorkExperienceSection({ workExperience }: WorkExperienceSectionP
                             </span>
                           </div>
                         </div>
-                        <p className="text-sm text-muted-foreground">{exp.description}</p>
-                        <ul className="space-y-1 text-sm">
+                        <TypographyMuted>{exp.description}</TypographyMuted>
+                        <ul className="space-y-2">
                           {exp.responsibilities.map((resp, idx) => (
-                            <li key={idx} className="flex gap-2">
-                              <span className="text-muted-foreground">•</span>
-                              <span>{resp}</span>
+                            <li key={idx} className="flex gap-2 text-sm leading-relaxed">
+                              <span className="text-muted-foreground mt-0.5">•</span>
+                              <span className="flex-1">{resp}</span>
                             </li>
                           ))}
                         </ul>

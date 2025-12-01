@@ -5,6 +5,7 @@ import { FileText, User } from "lucide-react"
 import { CVSearchResult } from "@/data/cvs"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Separator } from "@/components/ui/separator"
+import { TypographyH2, TypographyMuted } from "@/components/ui/typography"
 
 interface SearchResultsProps {
   topResults: CVSearchResult[]
@@ -23,9 +24,9 @@ export function SearchResults({
 
   if (isLoading) {
     return (
-      <div className="space-y-6">
+      <div className="space-y-8">
         <div>
-          <h2 className="text-2xl font-bold mb-4">Top Results</h2>
+          <TypographyH2 className="mb-6">Top Results</TypographyH2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {[1, 2, 3, 4].map((i) => (
               <ResultCardSkeleton key={i} />
@@ -36,8 +37,8 @@ export function SearchResults({
         <Separator />
         
         <div>
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-2xl font-bold">All Results</h2>
+          <div className="flex items-center justify-between mb-6">
+            <TypographyH2>All Results</TypographyH2>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
             {[1, 2, 3, 4, 5, 6].map((i) => (
@@ -52,19 +53,19 @@ export function SearchResults({
   if (!hasResults) {
     return (
       <div className="flex items-center justify-center py-12">
-        <div className="text-center">
-          <p className="text-lg text-muted-foreground">No results found</p>
-          <p className="text-sm text-muted-foreground mt-1">Try a different search term</p>
+        <div className="text-center space-y-2">
+          <TypographyMuted className="text-base">No results found</TypographyMuted>
+          <TypographyMuted>Try a different search term</TypographyMuted>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {topResults.length > 0 && (
         <div>
-          <h2 className="text-2xl font-bold mb-4">Top Results</h2>
+          <TypographyH2 className="mb-6">Top Results</TypographyH2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {topResults.map((result) => (
               <ResultCard
@@ -81,11 +82,11 @@ export function SearchResults({
         <>
           <Separator />
           <div>
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-2xl font-bold">All Results</h2>
-              <span className="text-sm text-muted-foreground">
+            <div className="flex items-center justify-between mb-6">
+              <TypographyH2>All Results</TypographyH2>
+              <TypographyMuted>
                 {allResults.length} {allResults.length === 1 ? 'result' : 'results'}
-              </span>
+              </TypographyMuted>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
               {allResults.map((result) => (
