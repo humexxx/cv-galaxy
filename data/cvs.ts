@@ -1,4 +1,4 @@
-import { CVData } from "@/types/cv";
+import { CVData, Company } from "@/types/cv";
 
 // TODO: Move this data to a database in the future
 // This is temporary data storage for CV information
@@ -10,18 +10,78 @@ export interface CVSearchResult {
   avatar?: string;
 }
 
+// Company database
+export const companies: Record<string, Company> = {
+  intel: {
+    id: "intel",
+    name: "Intel",
+    website: "https://www.intel.com/content/www/us/en/homepage.html",
+    logo: "/images/companies/intel.svg",
+  },
+  paypal: {
+    id: "paypal",
+    name: "PayPal",
+    website: "https://www.paypal.com/us/home",
+    logo: "/images/companies/paypal.svg",
+  },
+  silac: {
+    id: "silac",
+    name: "Silac",
+    website: "https://www.silacins.com/",
+    logo: "/images/companies/silac.png",
+  },
+  tech9: {
+    id: "tech9",
+    name: "Tech9",
+    website: "https://www.tech9.com/",
+    logo: "/images/companies/tech9.svg",
+  },
+  altimetrik: {
+    id: "altimetrik",
+    name: "Altimetrik",
+    website: "https://www.altimetrik.com/",
+    logo: "/images/companies/altimetrik.png",
+  },
+  avionyx: {
+    id: "avionyx",
+    name: "Avionyx (6 months internship + 3 months employment)",
+    website: "https://www.avionyx.com/" ,
+    logo: "/images/companies/avionyx.avif",
+  },
+  justserve: {
+    id: "justserve",
+    name: "JustServe",
+    website: "https://www.justserve.org/",
+    logo: "/images/companies/justserve.svg",
+  },
+  prestige: {
+    id: "prestige",
+    name: "Prestige Financial Services",
+    website: "https://www.myprestige.com/",
+    logo: "/images/companies/prestige.svg",
+  },
+  praxis: {
+    id: "praxis",
+    name: "Praxis",
+  },
+  freelancer: {
+    id: "freelancer",
+    name: "Freelancer",
+  },
+};
+
 export const cvDatabase: Record<string, CVData> = {
   humexxx: {
     username: "humexxx",
     fullName: "Jason Hume González",
-    title: "Software Engineer",
+    title: "Senior Fullstack Developer",
     avatar: "/images/users/humexxx.jpg",
     about:
-      "I am a person with very good logical, creative and self-taught potential. The union of these characteristics have helped me become a software developer since this area is always in constant change. I am also a parent with great aptitudes for good teamwork.",
+      "Senior Fullstack Developer with solid experience building web applications end-to-end using modern JavaScript/TypeScript frameworks and .NET backends. I combine strong logical thinking, creativity and a self-taught mindset to quickly understand complex domains and deliver high-quality, maintainable solutions. I actively leverage AI tools and integrate AI-powered features into applications to accelerate development and provide smarter user experiences. Comfortable working in distributed teams, collaborating with stakeholders, and taking ownership from design to production.",
     contact: {
       phone: "+506 8939 3381",
-      email: "jahumexx@gmail.com",
-      address: "Santa Cecilia de San Francisco de Heredia",
+      email: "jahume92@gmail.com",
+      location: "Heredia, Costa Rica",
     },
     technologies: [
       "JavaScript",
@@ -29,156 +89,178 @@ export const cvDatabase: Record<string, CVData> = {
       "React",
       "Next.js",
       "Angular",
+      "Blazor",
       "Node.js",
       "HTML",
       "CSS",
-      "jQuery",
-      "Material UI",
-      "Ionic",
       "React Native",
-      "Redux",
+      "Ionic",
       "Firebase",
-      "NetCA",
+      "C#",
+      ".NET",
+      ".NET Core",
       "Java",
       "SQL",
       "NoSQL",
       "Postgres",
       "Docker",
-      "Kendo UI",
-      "LINQ",
-      "C#",
-      ".NET",
-      "Entity Framework",
       "REST APIs",
     ],
-    languages: ["Spanish", "English"],
+    languages: ["Spanish (Native)", "English (Fluent)"],
     skills: [
       "Creative problem solving",
       "Ability to work under pressure",
-      "Self-taught person",
-      "Excellent teamwork",
+      "Fast self-learner / self-taught mindset",
+      "Excellent teamwork and communication",
+      "Continuously learning and leveraging AI tools to improve productivity and code quality",
     ],
     workExperience: [
       {
-        title: "Senior Frontend Software Developer",
-        company: "Intell",
-        companyWebsite: "https://www.intel.com/content/www/us/en/homepage.html",
-        contractor: "Praxis",
+        title: "Senior Frontend Developer / Tech Lead",
+        company: companies.prestige,
+        contractor: companies.tech9,
         period: {
-          start: "May 2022",
-          end: "Jan 2024",
+          start: new Date(2024, 0), // Jan 2024
+          end: "Present",
         },
-        description: "Led frontend development using modern web technologies",
+        description: "Leading frontend development and technical direction for internal and external-facing applications.",
         responsibilities: [
-          "Migrated an Angular-written project to Vue",
-          "Created reusable components and tested them in isolation using Storybook",
-          "Incorporated various services, such as Google Maps, to enhance the user experience",
+          "Use Blazor and .NET to design and implement multiple internal tools and customer-facing applications.",
+          "Integrate AI capabilities into internal applications to improve task assignment, triage and overall efficiency for internal agents.",
+          "Maintain and evolve shared NuGet packages and service libraries to ensure scalability, reusability and consistent integrations across applications, including those built with Angular and other technologies.",
+          "Quickly ramped up on Blazor within a few weeks and was promoted to tech lead for a key project, delivering on time while defining improved patterns for DTO usage, data mapping, error handling and view model design.",
+        ],
+      },
+      {
+        title: "Senior Frontend Software Developer",
+        company: companies.intel,
+        period: {
+          start: new Date(2022, 4), // May 2022
+          end: new Date(2024, 0), // Jan 2024
+        },
+        description: "Led frontend initiatives for an internal project modernisation.",
+        responsibilities: [
+          "Migrated an Angular-based project to Vue to improve maintainability and developer experience.",
+          "Created reusable UI components and tested them in isolation using Storybook.",
+          "Integrated services such as Google Maps and other internal APIs to enhance user experience and data visualisation.",
         ],
       },
       {
         title: "Senior Fullstack Developer",
-        company: "Slac",
-        companyWebsite: "https://www.silacins.com/",
-        contractor: "Tech9",
-        contractorWebsite: "https://www.tech9.com/",
+        company: companies.justserve,
+        contractor: companies.tech9,
         period: {
-          start: "Mar 2021",
-          end: "May 2022",
+          start: new Date(2022, 3), // Apr 2022
+          end: new Date(2023, 6), // Jul 2023
         },
-        description: "Full-stack development with focus on policy management systems",
+        description: "Worked on the main public experience for searching and discovering volunteer projects.",
         responsibilities: [
-          "Extended the VueJS web app of administrative use, allowing the creation and management of policies",
-          "Redesigned and expanded the project to enable clients and agents to view the performance of their policies over time",
-          "Enhanced functionality when performing calculations based on the selected product in a policy",
-          "Developed an intuitive and user-friendly interface for both administrative users and clients/agents",
-          "Utilized Java in the backend to implement controls, validations, and APIs for accurate calculations. Additionally, developed middleware to handle cross-cutting concerns like authentication and logging, ensuring a robust and scalable system architecture",
-          "Implemented additional controls and validations to ensure the accuracy of the calculations performed",
+          "Implemented core features of the main landing and search pages so visitors could discover and filter volunteer opportunities.",
+          "Used Next.js as the primary framework, leveraging server-side rendering and static generation to improve SEO and ensure rich link previews when projects were shared via chat or social media.",
+          "Integrated Google Maps APIs to provide advanced location and area-based filters for volunteer projects.",
+          "Contributed to internal shared libraries consumed by multiple projects, promoting consistency and reducing duplicated logic.",
+        ],
+      },
+      {
+        title: "Senior Fullstack Developer",
+        company: companies.silac,
+        contractor: companies.tech9,
+        period: {
+          start: new Date(2021, 2), // Mar 2021
+          end: new Date(2022, 4), // May 2022
+        },
+        description: "Full-stack development focused on policy management systems.",
+        responsibilities: [
+          "Extended an administrative web application to support creation and management of insurance policies.",
+          "Redesigned and expanded the project to allow clients and agents to visualise policy performance over time.",
+          "Enhanced calculations based on selected products within policies, ensuring accuracy and reliability.",
+          "Used Java on the backend to implement controls, validations and APIs, and developed middleware to handle cross-cutting concerns like authentication and logging.",
         ],
       },
       {
         title: "Senior Software Developer",
-        company: "PayPal",
-        companyWebsite: "https://www.paypal.com/us/home",
-        contractor: "Altimetrik",
-        contractorWebsite: "https://www.altimetrik.com/",
+        company: companies.paypal,
+        contractor: companies.altimetrik,
         period: {
-          start: "Mar 2020",
-          end: "Mar 2021",
+          start: new Date(2020, 2), // Mar 2020
+          end: new Date(2021, 2), // Mar 2021
         },
-        description: "Provided technical support and enhanced PayPal's help software",
+        description: "Provided technical support and enhancements for PayPal help software.",
         responsibilities: [
-          "Provided support for the PayPal help software",
-          "Added functionalities to enhance the user experience",
-          "Monitored the software's performance to ensure smooth operation",
-          "Resolved issues and errors reported by users to improve software stability",
+          "Supported and maintained PayPal's help platform used by millions of customers.",
+          "Implemented new features and UX improvements to enhance user experience.",
+          "Monitored performance and resolved issues to keep the platform stable and responsive.",
         ],
       },
       {
         title: "Fullstack Developer",
-        company: "Freelancer",
+        company: companies.freelancer,
         period: {
-          start: "Mar 2018",
-          end: "Mar 2020",
+          start: new Date(2018, 2), // Mar 2018
+          end: new Date(2020, 2), // Mar 2020
         },
-        description: "Developed diverse web applications for various clients",
+        description: "Delivered diverse web applications for various clients across different domains.",
         responsibilities: [
-          "Developed applications for vehicle fleet monitoring and management",
-          "Created applications using React with TypeScript, Node, HTML, JS, CSS and Firebase",
-          "Built group management systems for medical offices",
-          "Migrated legacy applications using React, Java, and Postgres",
-          "Developed hybrid applications with React Native and cloud functions",
-          "Created applications using Firebase combined with various frontend technologies",
-          "Worked with Angular, Material UI, and multiple REST APIs for scraping data",
-          "Developed cross-browser compatible applications using Chrome and Firefox extensions",
-          "Built employee management applications using Angular, jQuery, and various SQL databases",
+          "Developed web applications for vehicle fleet monitoring and management using React, Node.js and SQL/NoSQL databases.",
+          "Built systems for medical office group management, integrating multiple REST APIs and third-party services.",
+          "Created hybrid and mobile-ready solutions with React Native and Ionic.",
+          "Migrated legacy applications using React, Java and Postgres, improving performance and maintainability.",
         ],
       },
       {
-        title: ".Net Developer C#",
-        company: "Intel (Praxis)",
+        title: ".NET Developer C#",
+        company: companies.intel,
+        contractor: companies.praxis,
         period: {
-          start: "Nov 2016",
-          end: "Feb 2018",
+          start: new Date(2016, 10), // Nov 2016
+          end: new Date(2018, 1), // Feb 2018
         },
-        description: "Backend development for internal Intel projects",
+        description: "Backend and internal tool development for Intel projects.",
         responsibilities: [
-          "Developed internal projects using Angular.js, Kendo UI, jQuery, .Net C#, LINQ, EF, SQL Server, HTML, JS, and CSS",
-          "Applied logical techniques to parse PDF files with specific patterns",
-          "Developed multiple storage procedures for data optimization",
+          "Developed internal tools using AngularJS, .NET C#, SQL Server and related technologies.",
+          "Implemented logical parsing of PDF files with specific patterns for data extraction.",
+          "Created and optimised stored procedures to improve data processing performance.",
         ],
       },
       {
         title: "Junior Software Developer",
-        company: "Abacus (6 months internship + 3 months employment)",
+        company: companies.avionyx,
         period: {
-          start: "Jan 2016",
-          end: "Sept 2016",
+          start: new Date(2016, 0), // Jan 2016
+          end: new Date(2016, 8), // Sept 2016
         },
-        description: "Started professional career developing macros and aircraft maintenance systems",
+        description: "Started professional career working on macros and aircraft maintenance systems.",
         responsibilities: [
-          "Developed macros with Visual Basic for automating various functionalities",
-          "Maintained and updated several drivers for aircraft use",
-          "Created database queries for information requests using SQL",
-          "Built web application modules using JavaScript, CSS and HTML",
+          "Developed macros with Visual Basic to automate repetitive tasks.",
+          "Maintained and updated drivers used in aircraft-related systems.",
+          "Created queries and small web modules using JavaScript, CSS and HTML.",
         ],
       },
     ],
     projects: [
       {
-        title: "Educational YouTube Channel Development",
+        title: "Champions – Personal Growth & Financial Wellness Platform",
         description:
-          "I started creating a YouTube channel to show and document my learning process with new technologies from scratch. I feel that even though it is a great way to offer valuable content to the community, I learn a lot each way. I create clones of famous applications and websites and document them so that I can measure my progress when it comes to outlining and preparing the creation of an application. I feel that it is a clever way of putting the acquired knowledge into practice.",
-        link: "https://www.youtube.com/channel/UCVPyJ_B7yjbdsPsWkVhd4wg",
+          "Designing and building a personal growth platform that helps users organise their finances, track investments, build healthy habits, plan workouts and maintain balanced entertainment. The product combines social sharing features with 3D animations and gamification elements to create a motivating and healthy environment for friends and communities. Built with React and Firebase, currently approaching beta release.",
+        link: "TBD",
       },
       {
-        title: "EAs Development for Trading",
+        title: "Trim Success – Business Performance Analytics",
         description:
-          "I have developed 2 robots for trading and although they have not been successful, when developing them I tested many logical skills. I am currently developing a third in my spare time.",
+          "Developing a private analytics tool to measure company performance using multiple financial and operational metrics. The system provides dashboards and visualisations to understand profitability and growth over time. Implemented with React and Firebase, designed for iterative refinement and potential onboarding of test accounts.",
+        link: "TBD",
+      },
+      {
+        title: "AI-Driven Micro Projects",
+        description:
+          "Building a series of small projects and experiments focused on integrating AI into everyday development workflows and applications. These include prototypes that use modern AI APIs and concepts to improve developer productivity, enhance user experiences and stay up to date with the latest trends in AI-driven software development.",
       },
     ],
     personalValues: [
-      'You will never hear a "I can\'t do that" from me - I believe that in terms of the engineering area (especially to the software development) we refer there is a world of infinite knowledge so it is impossible to know everything, however, the important thing is not knowing the solution to any problem, knowing this and even better putting it into practice, I have the kind of thinking that whatever the problem that presents itself to me, I will not stop looking for the solution.',
-      "Excellent teamwork - Although I have worked as a freelancer for a long time, I have developed many projects with different people and I know how to create a good working environment. I can also identify when someone is losing motivation and I can turn the situation around to be able to achieve the goal together as planned. I feel that it is a very important quality because most of the time you have to make decisions together.",
+      "Continuous learning mindset – I actively study new technologies, especially AI trends, to stay ahead of the curve and bring modern solutions to the teams I work with.",
+      "Ownership and accountability – I treat the products I work on as if they were my own, taking responsibility from design through delivery and ongoing improvement.",
+      "Team-first collaboration – I focus on clear communication, knowledge sharing and creating a positive environment where the whole team can succeed.",
+      "Resilience and perseverance – I don't stop at the first obstacle; I iterate, test and refine until the solution is solid.",
     ],
   },
 };

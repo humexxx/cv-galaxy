@@ -57,10 +57,10 @@ export default async function CVPage({ params }: PageProps) {
                     <span>{cv.contact.phone}</span>
                   </div>
                 )}
-                {cv.contact.address && (
+                {cv.contact.location && (
                   <div className="flex items-center gap-2">
                     <MapPin className="h-4 w-4" />
-                    <span>{cv.contact.address}</span>
+                    <span>{cv.contact.location}</span>
                   </div>
                 )}
               </div>
@@ -159,25 +159,26 @@ export default async function CVPage({ params }: PageProps) {
                     <div className="flex gap-4">
                       <CompanyAvatar 
                         company={exp.company} 
-                        companyWebsite={exp.companyWebsite}
                         contractor={exp.contractor}
-                        contractorWebsite={exp.contractorWebsite}
                         size={48} 
                       />
                       <div className="space-y-3 flex-1">
                         <div>
                           <h3 className="font-semibold text-lg">{exp.title}</h3>
                           <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground mt-1">
-                            <span className="font-medium">{exp.company}</span>
+                            <span className="font-medium">{exp.company.name}</span>
                             {exp.contractor && (
                               <>
                                 <span>via</span>
-                                <span className="font-medium">{exp.contractor}</span>
+                                <span className="font-medium">{exp.contractor.name}</span>
                               </>
                             )}
                             <span>•</span>
                             <span>
-                              {exp.period.start} - {exp.period.end}
+                              {exp.period.start.toLocaleDateString('en-US', { month: 'short', year: 'numeric' })} - {' '}
+                              {exp.period.end === "Present" 
+                                ? "Present" 
+                                : exp.period.end.toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
                             </span>
                           </div>
                         </div>

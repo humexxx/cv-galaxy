@@ -1,12 +1,17 @@
+export interface Company {
+  id: string;
+  name: string;
+  website?: string;
+  logo?: string;
+}
+
 export interface WorkExperience {
   title: string;
-  company: string;
-  companyWebsite?: string; // Company website URL
-  contractor?: string; // Name of the contracting company if working as contractor
-  contractorWebsite?: string; // Contractor company website URL
+  company: Company;
+  contractor?: Company; // Contracting company if working as contractor
   period: {
-    start: string;
-    end: string;
+    start: Date;
+    end: Date | "Present";
   };
   description: string;
   responsibilities: string[];
@@ -21,7 +26,7 @@ export interface Project {
 export interface ContactInfo {
   phone?: string;
   email: string;
-  address?: string;
+  location?: string;
 }
 
 export interface CVData {
