@@ -25,12 +25,22 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
-  const title = `${cv.fullName} - ${cv.title}`;
-  const description = `${cv.about.slice(0, 200)}${cv.about.length > 200 ? "..." : ""}`;
-  const technologies = cv.technologies.slice(0, 5).join(", ");
-  const fullDescription = `${description}\n\nTechnologies: ${technologies}`;
+  
+  // Optimize title length (50-60 characters ideal)
+  const title = `${cv.fullName} | ${cv.title} | CV Galaxy`;
+  
+  // Optimize description length (110-160 characters ideal)
+  const technologies = cv.technologies.slice(0, 3).join(", ");
+  const shortDescription = cv.about.length > 100 
+    ? `${cv.about.slice(0, 100)}...` 
+    : cv.about;
+  const description = `${cv.title} specializing in ${technologies}. View full CV and experience.`;
+  
+  // Full description for social cards (still keep it reasonable)
+  const fullDescription = `${shortDescription} | Skills: ${technologies}`;
+  
   const url = `${baseUrl}/${username}`;
-  const avatarUrl = cv.avatar ? `${baseUrl}${cv.avatar}` : undefined;
+  const ogImageUrl = `${baseUrl}/api/og?username=${username}`;
 
   return {
     title,
@@ -40,24 +50,24 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       description: fullDescription,
       url,
       siteName: "CV Galaxy",
-      images: avatarUrl
-        ? [
-            {
-              url: avatarUrl,
-              width: 800,
-              height: 800,
-              alt: cv.fullName,
-            },
-          ]
-        : [],
+      images: [
+        {
+          url: ogImageUrl,
+          width: 1200,
+          height: 630,
+          alt: `${cv.fullName} - ${cv.title}`,
+          type: "image/png",
+        },
+      ],
       locale: "en_US",
       type: "profile",
     },
     twitter: {
-      card: "summary",
+      card: "summary_large_image",
       title,
       description: fullDescription,
-      images: avatarUrl ? [avatarUrl] : [],
+      images: [ogImageUrl],
+      creator: `@${username}`,
     },
   };
 }
