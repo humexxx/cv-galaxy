@@ -18,7 +18,7 @@ interface WorkExperienceSectionProps {
 }
 
 export function WorkExperienceSection({ workExperience }: WorkExperienceSectionProps) {
-  // Mostrar los primeros 2 siempre expandidos, el resto en accordion
+  // Show first 2 always expanded, rest in accordion
   const alwaysVisible = workExperience.slice(0, 2);
   const collapsible = workExperience.slice(2);
   const [accordionValue, setAccordionValue] = useState<string | undefined>(undefined);
@@ -32,7 +32,7 @@ export function WorkExperienceSection({ workExperience }: WorkExperienceSectionP
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-8">
-        {/* Primeros 2 trabajos siempre visibles */}
+        {/* First 2 jobs always visible */}
         <div className="space-y-8">
           {alwaysVisible.map((exp, index) => (
             <div key={index} className="flex gap-4">
@@ -75,7 +75,6 @@ export function WorkExperienceSection({ workExperience }: WorkExperienceSectionP
           ))}
         </div>
 
-        {/* Resto de trabajos en accordion */}
         {collapsible.length > 0 && (
           <Accordion 
             type="single" 
