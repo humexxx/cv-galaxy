@@ -1,6 +1,31 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# CV Galaxy
 
-## Getting Started
+![CI](https://github.com/humexxx/cv-galaxy/actions/workflows/ci.yml/badge.svg)
+![Deploy](https://github.com/humexxx/cv-galaxy/actions/workflows/deploy.yml/badge.svg)
+
+A modern platform to discover and share professional CVs. Built with Next.js, TypeScript, and Tailwind CSS.
+
+## ✨ Features
+
+- 🔍 **Smart Search** - Find CVs by name, title, skills, or keywords
+- 🎨 **Modern UI** - Clean, responsive design with dark mode support
+- 🚀 **Fast Performance** - Optimized with Next.js 15 and React 19
+- 📱 **Mobile Friendly** - Works seamlessly on all devices
+- 🔄 **Real-time Search** - Instant results as you type
+- 🎯 **Professional Layouts** - Beautiful CV presentation
+
+## 🛠️ Tech Stack
+
+- **Framework:** Next.js 15 (App Router)
+- **Language:** TypeScript
+- **Styling:** Tailwind CSS
+- **UI Components:** shadcn/ui + Radix UI
+- **Icons:** Lucide React
+- **Theme:** next-themes (Dark/Light mode)
+- **Deployment:** Vercel
+- **CI/CD:** GitHub Actions
+
+## 🚀 Getting Started
 
 First, run the development server:
 
@@ -29,8 +54,79 @@ To learn more about Next.js, take a look at the following resources:
 
 You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-## Deploy on Vercel
+## 📦 Installation
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+# Clone the repository
+git clone https://github.com/humexxx/cv-galaxy.git
+cd cv-galaxy
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+# Install dependencies
+npm install
+
+# Run development server
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+
+## 🏗️ Project Structure
+
+```
+cv-galaxy/
+├── app/                    # Next.js App Router pages
+│   ├── [username]/        # Dynamic CV pages
+│   ├── settings/          # Settings page
+│   └── page.tsx           # Home page with search
+├── components/            # React components
+│   ├── ui/               # shadcn/ui components
+│   └── ...               # Custom components
+├── data/                 # CV data and utilities
+├── lib/                  # Utility functions
+├── types/                # TypeScript type definitions
+└── public/               # Static assets
+```
+
+## 🧪 Development
+
+```bash
+# Run development server
+npm run dev
+
+# Run linting
+npm run lint
+
+# Build for production
+npm run build
+
+# Start production server
+npm start
+```
+
+## 🚀 CI/CD
+
+This project uses GitHub Actions for automated CI/CD:
+
+- **CI Pipeline**: Runs on every push and PR (linting, type checking, build)
+- **Production Deploy**: Auto-deploys to Vercel on push to `main`
+- **Preview Deploys**: Creates preview deployments for every PR
+
+See [CI_CD_README.md](.github/CI_CD_README.md) for detailed setup instructions.
+
+## 📝 Adding CVs
+
+To add a new CV, edit `data/cvs.ts` and add your CV data following the `CVData` type structure.
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## 📄 License
+
+This project is open source and available under the MIT License.
+
+## 🔗 Links
+
+- [Documentation](.github/CI_CD_README.md)
+- [Vercel Deployment](https://vercel.com)
+- [Next.js Documentation](https://nextjs.org/docs)

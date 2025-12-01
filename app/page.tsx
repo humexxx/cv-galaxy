@@ -1,65 +1,80 @@
-import Image from "next/image";
+"use client"
+
+import { useRouter, useSearchParams } from "next/navigation";
+import { Search } from "lucide-react";
+import { SearchResults } from "@/components/search-results";
+import { searchCVs, getTopResults } from "@/data/cvs";
+import { useDebounce } from "@/hooks/use-debounce";
+import { useMemo, Suspense } from "react";
+import { TypographyH2, TypographyMuted } from "@/components/ui/typography";
+
+function HomeContent() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const queryParam = searchParams.get("q") || "";
+  const debouncedQuery = useDebounce(queryParam, 300);
+
+  const isLoading = queryParam.trim() !== debouncedQuery.trim();
+
+  const searchResults = useMemo(() => {
+    if (debouncedQuery.trim()) {
+      const results = searchCVs(debouncedQuery);
+      const top = getTopResults();
+      return {
+        top,
+        all: results,
+        loading: false
+      };
+    }
+    return { top: [], all: [], loading: false };
+  }, [debouncedQuery]);
+
+  const handleSelectResult = (username: string) => {
+    router.push(`/${username}`);
+  };
+
+  const hasQuery = queryParam.trim().length > 0;
+
+  return (
+    <div className="flex-1 flex flex-col">
+      {!hasQuery ? (
+        <div className="flex-1 flex items-center justify-center min-h-[calc(100vh-12rem)]">
+          <div className="container mx-auto max-w-2xl px-6">
+            <div className="flex flex-col items-center text-center space-y-6">
+              <div className="space-y-4">
+                <div className="flex justify-center">
+                  <Search className="h-10 w-10 text-muted-foreground" />
+                </div>
+                <TypographyH2>Begin your search</TypographyH2>
+                <TypographyMuted className="max-w-xs">
+                  Use the search bar above to find CVs by name, title, skills, or keywords.
+                </TypographyMuted>
+              </div>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div className="container mx-auto p-6 max-w-7xl">
+          <SearchResults
+            topResults={searchResults.top}
+            allResults={searchResults.all}
+            isLoading={isLoading}
+            onSelectResult={handleSelectResult}
+          />
+        </div>
+      )}
+    </div>
+  );
+}
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+    <Suspense fallback={
+      <div className="flex-1 flex items-center justify-center">
+        <div className="text-muted-foreground">Loading...</div>
+      </div>
+    }>
+      <HomeContent />
+    </Suspense>
   );
 }
