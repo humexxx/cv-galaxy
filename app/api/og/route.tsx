@@ -65,6 +65,7 @@ export async function GET(request: Request) {
                   overflow: "hidden",
                 }}
               >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={`${process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"}${cv.avatar}`}
                   alt={cv.fullName}

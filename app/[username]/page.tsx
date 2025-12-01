@@ -45,6 +45,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   return {
     title,
     description,
+    authors: [{ name: cv.fullName }],
     openGraph: {
       title,
       description: fullDescription,
@@ -60,7 +61,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         },
       ],
       locale: "en_US",
-      type: "profile",
+      type: "article",
+      publishedTime: new Date().toISOString(),
+      authors: [cv.fullName],
+      tags: cv.technologies,
     },
     twitter: {
       card: "summary_large_image",
@@ -68,6 +72,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       description: fullDescription,
       images: [ogImageUrl],
       creator: `@${username}`,
+    },
+    // Additional metadata for Pinterest Rich Pins
+    other: {
+      "article:author": cv.fullName,
+      "article:published_time": new Date().toISOString(),
+      "pinterest:description": description,
     },
   };
 }
