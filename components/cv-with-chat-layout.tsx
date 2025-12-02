@@ -21,7 +21,7 @@ interface CvWithChatLayoutProps {
 export function CvWithChatLayout({ children, userId }: CvWithChatLayoutProps) {
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [models, setModels] = useState<AIModel[]>([]);
-  const [selectedModel, setSelectedModel] = useState<string>("gpt-5.1");
+  const [selectedModel, setSelectedModel] = useState<string>("gpt-4o-mini");
   const [isLoadingModels, setIsLoadingModels] = useState(true);
   const aiChatRef = useRef<AiChatRef>(null);
 

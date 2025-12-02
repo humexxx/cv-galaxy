@@ -2,6 +2,7 @@ import OpenAI from "openai";
 import type { ChatMessage } from "@/types/chat";
 import type { CVData } from "@/types/cv";
 import { formatSystemPrompt } from "@/lib/constants/prompts";
+import { ALLOWED_MODEL_IDS, DEFAULT_MODEL } from "@/app/api/models/route";
 
 export class OpenAIService {
   private client: OpenAI;
@@ -19,8 +20,9 @@ export class OpenAIService {
   async createChatStream(
     messages: ChatMessage[],
     cvData: CVData,
-    model: string = "gpt-4-turbo-preview"
+    model: string = DEFAULT_MODEL
   ) {
+    const validModel = ALLOWED_MODEL_IDS.includes(model) ? model : DEFAULT_MODEL;
     const systemPrompt = formatSystemPrompt(cvData);
     const openAIMessages: OpenAI.Chat.ChatCompletionMessageParam[] = [
       {
@@ -34,7 +36,7 @@ export class OpenAIService {
     ];
 
     const stream = await this.client.chat.completions.create({
-      model: model,
+      model: validModel,
       messages: openAIMessages,
       stream: true,
       temperature: 0.7,

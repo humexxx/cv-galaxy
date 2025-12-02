@@ -1,44 +1,47 @@
-    import { NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import type { AIModel, AIModelsResponse } from "@/types/ai";
 
-// Common OpenAI models
+export const DEFAULT_MODEL = "gpt-4o-mini";
+
 const models: AIModel[] = [
   {
-    id: "gpt-5.1",
-    name: "GPT-5.1",
+    id: "gpt-4o-mini",
+    name: "GPT-4o Mini ⭐",
     description:
-      "The best model for coding and agentic tasks, with configurable reasoning effort and strong performance on large, complex projects.",
+      "Best balance: fast, affordable, excellent for CV analysis (Recommended)",
     provider: "openai",
   },
   {
-    id: "gpt-5",
-    name: "GPT-5",
+    id: "gpt-5-nano",
+    name: "GPT-5 Nano",
     description:
-      "Previous flagship multimodal and reasoning model for coding and agentic workflows, with excellent code generation and tool use.",
+      "Fastest and most economical option from GPT-5 family",
     provider: "openai",
   },
   {
-    id: "gpt-4.1",
-    name: "GPT-4.1",
+    id: "gpt-4.1-mini",
+    name: "GPT-4.1 Mini",
     description:
-      "High-intelligence general-purpose model with strong coding, instruction-following, and up to 1M-token context.",
+      "Smart non-reasoning model, great balance for focused tasks",
+    provider: "openai",
+  },
+  {
+    id: "gpt-5-mini",
+    name: "GPT-5 Mini",
+    description:
+      "Cost-efficient GPT-5 for well-defined tasks",
     provider: "openai",
   },
   {
     id: "gpt-4o",
     name: "GPT-4o",
     description:
-      "Versatile omni model for text and image inputs with great latency and quality, ideal for interactive apps.",
-    provider: "openai",
-  },
-  {
-    id: "o4-mini",
-    name: "o4-mini",
-    description:
-      "Reasoning-focused small model optimized for deeper logical thinking and problem solving at lower cost.",
+      "Most capable option for complex analysis (higher cost)",
     provider: "openai",
   },
 ];
+
+export const ALLOWED_MODEL_IDS = models.map(m => m.id);
 
 export async function GET() {
   return NextResponse.json<AIModelsResponse>({ models });
