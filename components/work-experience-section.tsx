@@ -11,6 +11,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { TypographyH3, TypographyMuted } from "@/components/ui/typography";
+import { HighlightedText } from "@/components/highlighted-text";
 import type { CVData } from "@/types/cv";
 
 interface WorkExperienceSectionProps {
@@ -43,9 +44,13 @@ export function WorkExperienceSection({ workExperience }: WorkExperienceSectionP
               />
               <div className="space-y-3 flex-1">
                 <div>
-                  <TypographyH3 className="text-lg">{exp.title}</TypographyH3>
+                  <TypographyH3 className="text-lg">
+                    <HighlightedText text={exp.title} />
+                  </TypographyH3>
                   <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground mt-1">
-                    <span className="font-medium">{exp.company.name}</span>
+                    <span className="font-medium">
+                      <HighlightedText text={exp.company.name} />
+                    </span>
                     {exp.contractor && (
                       <>
                         <span>via</span>
@@ -61,12 +66,16 @@ export function WorkExperienceSection({ workExperience }: WorkExperienceSectionP
                     </span>
                   </div>
                 </div>
-                <TypographyMuted>{exp.description}</TypographyMuted>
+                <TypographyMuted>
+                  <HighlightedText text={exp.description} />
+                </TypographyMuted>
                 <ul className="space-y-2">
                   {exp.responsibilities.map((resp, idx) => (
                     <li key={idx} className="flex gap-2 text-sm leading-relaxed">
                       <span className="text-muted-foreground mt-0.5">•</span>
-                      <span className="flex-1">{resp}</span>
+                      <span className="flex-1">
+                        <HighlightedText text={resp} />
+                      </span>
                     </li>
                   ))}
                 </ul>
@@ -103,9 +112,13 @@ export function WorkExperienceSection({ workExperience }: WorkExperienceSectionP
                       />
                       <div className="space-y-3 flex-1">
                         <div>
-                          <TypographyH3 className="text-lg">{exp.title}</TypographyH3>
+                          <TypographyH3 className="text-lg">
+                            <HighlightedText text={exp.title} />
+                          </TypographyH3>
                           <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground mt-1">
-                            <span className="font-medium">{exp.company.name}</span>
+                            <span className="font-medium">
+                              <HighlightedText text={exp.company.name} />
+                            </span>
                             {exp.contractor && (
                               <>
                                 <span>via</span>
@@ -121,12 +134,16 @@ export function WorkExperienceSection({ workExperience }: WorkExperienceSectionP
                             </span>
                           </div>
                         </div>
-                        <TypographyMuted>{exp.description}</TypographyMuted>
+                        <TypographyMuted>
+                          <HighlightedText text={exp.description} />
+                        </TypographyMuted>
                         <ul className="space-y-2">
                           {exp.responsibilities.map((resp, idx) => (
                             <li key={idx} className="flex gap-2 text-sm leading-relaxed">
                               <span className="text-muted-foreground mt-0.5">•</span>
-                              <span className="flex-1">{resp}</span>
+                              <span className="flex-1">
+                                <HighlightedText text={resp} />
+                              </span>
                             </li>
                           ))}
                         </ul>

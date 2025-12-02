@@ -213,7 +213,7 @@ Los warnings de ESLint en archivos YAML son normales y no afectan la funcionalid
 3. Revisa los logs en la pestaña Actions de GitHub
 
 ### Build falla localmente pero pasa en CI
-Asegúrate de tener las mismas versiones de Node (20) y dependencias actualizadas con `npm ci`.
+Asegúrate de tener las mismas versiones de Node (22) y dependencias actualizadas con `npm ci`.
 
 ### Semantic Release no crea versión
 - **Verifica tus commits**: Deben seguir Conventional Commits (feat, fix, etc.)
