@@ -1,6 +1,8 @@
 import { chatRequestSchema } from "@/schemas/chat";
 import type { ChatMessage, ChatResponse, ChatRequest, StreamChunk } from "@/types/chat";
 import type { AIModelsResponse } from "@/types/ai";
+import type { CVData } from "@/types/cv";
+import { CVMatcher } from "@/lib/services/cv-matcher";
 
 export class ChatService {
   private static readonly API_URL = "/api/chat";
@@ -20,6 +22,7 @@ export class ChatService {
     messages: ChatMessage[],
     model: string,
     userId: string,
+    cvData: CVData,
     onChunk?: (chunk: StreamChunk) => void
   ): Promise<string> {
     const requestData: ChatRequest = {
@@ -73,7 +76,6 @@ export class ChatService {
 
           try {
             const parsed = JSON.parse(data);
-            console.log("Parsed chunk:", parsed);
             
             if (parsed.type === "content" && parsed.content) {
               fullContent += parsed.content;
@@ -81,17 +83,19 @@ export class ChatService {
                 onChunk({ type: "content", content: parsed.content });
               }
             }
-            
-            if (parsed.type === "highlight" && parsed.highlight) {
-              if (onChunk) {
-                onChunk({ type: "highlight", highlight: parsed.highlight });
-              }
-            }
-          } catch (e) {
-            
+          } catch {
+            // Ignore parse errors
           }
         }
       }
+    }
+
+    // Generate automatic highlights based on CV content
+    if (onChunk && fullContent) {
+      const highlights = CVMatcher.findHighlights(fullContent, cvData);
+      highlights.forEach(highlight => {
+        onChunk({ type: "highlight", highlight });
+      });
     }
 
     return fullContent;

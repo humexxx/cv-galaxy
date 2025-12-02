@@ -12,13 +12,15 @@ import AiButton from "@/components/ui/ai-button";
 import { AiChat, type AiChatRef } from "@/components/ai-chat";
 import { ChatService } from "@/lib/services/chat-service";
 import type { AIModel } from "@/types/ai";
+import type { CVData } from "@/types/cv";
 
 interface CvWithChatLayoutProps {
   children: React.ReactNode;
   userId: string;
+  cvData: CVData;
 }
 
-export function CvWithChatLayout({ children, userId }: CvWithChatLayoutProps) {
+export function CvWithChatLayout({ children, userId, cvData }: CvWithChatLayoutProps) {
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [models, setModels] = useState<AIModel[]>([]);
   const [selectedModel, setSelectedModel] = useState<string>("gpt-4o-mini");
@@ -72,6 +74,7 @@ export function CvWithChatLayout({ children, userId }: CvWithChatLayoutProps) {
             onModelChange={setSelectedModel}
             isLoadingModels={isLoadingModels}
             userId={userId}
+            cvData={cvData}
           />
         </SheetContent>
       </Sheet>

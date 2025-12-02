@@ -96,7 +96,7 @@ export default async function CVPage({ params }: PageProps) {
 
   return (
     <CVHighlightProvider>
-      <CvWithChatLayout userId={username}>
+      <CvWithChatLayout userId={username} cvData={cv}>
         <div className="container mx-auto py-8 px-4 max-w-6xl">
         {/* Header Section */}
         <div className="mb-8">

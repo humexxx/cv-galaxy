@@ -29,6 +29,7 @@ import {
   type ChatMessage,
 } from "@/schemas/chat";
 import type { AIModel } from "@/types/ai";
+import type { CVData } from "@/types/cv";
 
 export interface AiChatRef {
   resetChat: () => void;
@@ -40,6 +41,7 @@ interface AiChatProps {
   onModelChange: (model: string) => void;
   isLoadingModels: boolean;
   userId: string;
+  cvData: CVData;
 }
 
 const SUGGESTIONS = [
@@ -50,7 +52,7 @@ const SUGGESTIONS = [
 ];
 
 export const AiChat = forwardRef<AiChatRef, AiChatProps>(function AiChat(
-  { models, selectedModel, onModelChange, isLoadingModels, userId },
+  { models, selectedModel, onModelChange, isLoadingModels, userId, cvData },
   ref
 ) {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -88,6 +90,7 @@ export const AiChat = forwardRef<AiChatRef, AiChatProps>(function AiChat(
         [...messages, userMessage],
         selectedModel,
         userId,
+        cvData,
         (chunk) => {
           if (chunk.type === "content" && chunk.content) {
             setMessages((prev) => {
@@ -133,6 +136,16 @@ export const AiChat = forwardRef<AiChatRef, AiChatProps>(function AiChat(
       });
     } finally {
       setIsLoading(false);
+      
+      setMessages((prev) => {
+        const updated = [...prev];
+        const lastIndex = updated.length - 1;
+        if (updated[lastIndex]?.role === "assistant" && !updated[lastIndex].content) {
+          updated[lastIndex].content = "I apologize, but I couldn't generate a proper response. Please try again.";
+        }
+        return updated;
+      });
+      
       setTimeout(() => {
         const scrollArea = scrollAreaRef.current?.querySelector(
           "[data-radix-scroll-area-viewport]"

@@ -60,16 +60,16 @@ export function HighlightedText({ text }: HighlightedTextProps) {
     }
 
     const colorClasses = {
-      yellow: "bg-yellow-200 dark:bg-yellow-900/40",
-      blue: "bg-blue-200 dark:bg-blue-900/40",
-      green: "bg-green-200 dark:bg-green-900/40",
-      purple: "bg-purple-200 dark:bg-purple-900/40",
+      yellow: "bg-yellow-200 text-yellow-900 dark:bg-yellow-400/40 dark:text-yellow-50",
+      blue: "bg-blue-200 text-blue-900 dark:bg-blue-400/40 dark:text-blue-50",
+      green: "bg-green-200 text-green-900 dark:bg-green-400/40 dark:text-green-50",
+      purple: "bg-purple-200 text-purple-900 dark:bg-purple-400/40 dark:text-purple-50",
     };
 
     result.push(
       <mark
         key={match.start}
-        className={`${colorClasses[match.color as keyof typeof colorClasses]} px-0.5 rounded transition-all duration-300 animate-pulse`}
+        className={`${colorClasses[match.color as keyof typeof colorClasses]} px-0.5 rounded transition-all duration-500 animate-pulse [animation-duration:3s]`}
       >
         {text.slice(match.start, match.end)}
       </mark>
