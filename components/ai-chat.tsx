@@ -38,6 +38,7 @@ interface AiChatProps {
   selectedModel: string;
   onModelChange: (model: string) => void;
   isLoadingModels: boolean;
+  userId: string;
 }
 
 const SUGGESTIONS = [
@@ -52,6 +53,7 @@ export const AiChat = forwardRef<AiChatRef, AiChatProps>(function AiChat({
   selectedModel,
   onModelChange,
   isLoadingModels,
+  userId,
 }, ref) {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -80,18 +82,37 @@ export const AiChat = forwardRef<AiChatRef, AiChatProps>(function AiChat({
     }
     setIsLoading(true);
 
-    try {
-      const data = await ChatService.sendMessage(
-        [...messages, userMessage],
-        selectedModel
-      );
+    setMessages((prev) => [
+      ...prev,
+      { role: "assistant", content: "" },
+    ]);
 
-      if (data.message) {
-        setMessages((prev) => [
-          ...prev,
-          { role: "assistant", content: data.message },
-        ]);
-      }
+    try {
+      await ChatService.sendMessage(
+        [...messages, userMessage],
+        selectedModel,
+        userId,
+        (chunk) => {
+          setMessages((prev) => {
+            const updated = [...prev];
+            const lastIndex = updated.length - 1;
+            updated[lastIndex] = {
+              ...updated[lastIndex],
+              content: updated[lastIndex].content + chunk,
+            };
+            return updated;
+          });
+          
+          setTimeout(() => {
+            const scrollArea = scrollAreaRef.current?.querySelector(
+              "[data-radix-scroll-area-viewport]"
+            );
+            if (scrollArea) {
+              scrollArea.scrollTop = scrollArea.scrollHeight;
+            }
+          }, 0);
+        }
+      );
     } catch (error) {
       console.error("Failed to send message:", error);
       const errorMessage =
@@ -99,10 +120,15 @@ export const AiChat = forwardRef<AiChatRef, AiChatProps>(function AiChat({
           ? error.message
           : "Sorry, I encountered an error. Please try again.";
 
-      setMessages((prev) => [
-        ...prev,
-        { role: "assistant", content: errorMessage },
-      ]);
+      setMessages((prev) => {
+        const updated = [...prev];
+        const lastIndex = updated.length - 1;
+        updated[lastIndex] = {
+          ...updated[lastIndex],
+          content: errorMessage,
+        };
+        return updated;
+      });
     } finally {
       setIsLoading(false);
       setTimeout(() => {

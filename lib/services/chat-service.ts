@@ -18,14 +18,16 @@ export class ChatService {
 
   static async sendMessage(
     messages: ChatMessage[],
-    model: string
-  ): Promise<ChatResponse> {
+    model: string,
+    userId: string,
+    onChunk?: (content: string) => void
+  ): Promise<string> {
     const requestData: ChatRequest = {
       messages,
       model,
+      userId,
     };
 
-    // Validate request data with Zod before sending
     const validationResult = chatRequestSchema.safeParse(requestData);
 
     if (!validationResult.success) {
@@ -41,10 +43,49 @@ export class ChatService {
     });
 
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      const error = await response.json();
+      throw new Error(error.error || `HTTP error! status: ${response.status}`);
     }
 
-    const data: ChatResponse = await response.json();
-    return data;
+    const reader = response.body?.getReader();
+    const decoder = new TextDecoder();
+    let fullContent = "";
+
+    if (!reader) {
+      throw new Error("No response body reader available");
+    }
+
+    while (true) {
+      const { done, value } = await reader.read();
+
+      if (done) break;
+
+      const chunk = decoder.decode(value);
+      const lines = chunk.split("\n");
+
+      for (const line of lines) {
+        if (line.startsWith("data: ")) {
+          const data = line.slice(6);
+
+          if (data === "[DONE]") {
+            continue;
+          }
+
+          try {
+            const parsed = JSON.parse(data);
+            if (parsed.content) {
+              fullContent += parsed.content;
+              if (onChunk) {
+                onChunk(parsed.content);
+              }
+            }
+          } catch (e) {
+            
+          }
+        }
+      }
+    }
+
+    return fullContent;
   }
 }

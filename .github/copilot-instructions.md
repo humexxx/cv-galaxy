@@ -49,3 +49,9 @@
 4. Types
 5. Utilities/helpers
 6. Styles
+
+### Code Style & Comments
+- Avoid unnecessary comments and JSDoc annotations
+- Only add comments when absolutely necessary for complex logic
+- Code should be self-explanatory through clear naming and structure
+- Use TypeScript types instead of JSDoc for type documentation

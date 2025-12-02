@@ -15,9 +15,10 @@ import type { AIModel } from "@/types/ai";
 
 interface CvWithChatLayoutProps {
   children: React.ReactNode;
+  userId: string;
 }
 
-export function CvWithChatLayout({ children }: CvWithChatLayoutProps) {
+export function CvWithChatLayout({ children, userId }: CvWithChatLayoutProps) {
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [models, setModels] = useState<AIModel[]>([]);
   const [selectedModel, setSelectedModel] = useState<string>("gpt-5.1");
@@ -70,6 +71,7 @@ export function CvWithChatLayout({ children }: CvWithChatLayoutProps) {
             selectedModel={selectedModel}
             onModelChange={setSelectedModel}
             isLoadingModels={isLoadingModels}
+            userId={userId}
           />
         </SheetContent>
       </Sheet>

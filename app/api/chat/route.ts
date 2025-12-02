@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { chatRequestSchema } from "@/schemas/chat";
-import type { ChatResponse } from "@/schemas/chat";
+import { OpenAIService } from "@/lib/services/openai-service";
+import { getCVByUsername } from "@/data/cvs";
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
 
-    // Validate request body with Zod
     const validationResult = chatRequestSchema.safeParse(body);
 
     if (!validationResult.success) {
@@ -16,17 +16,40 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { messages, model } = validationResult.data;
+    const { messages, model, userId } = validationResult.data;
 
-    // TODO: Implement actual AI chat functionality
-    // For now, return a placeholder response
-    const response: ChatResponse = {
-      message: `Model ${model} is still not implemented. You sent: "${messages[messages.length - 1].content}"`,
-    };
+    const cvData = getCVByUsername(userId);
 
-    return NextResponse.json(response);
+    if (!cvData) {
+      return NextResponse.json(
+        { error: "CV not found for the specified user" },
+        { status: 404 }
+      );
+    }
+
+    const openAIService = new OpenAIService();
+    const stream = await openAIService.createChatStream(messages, cvData, model);
+    const readableStream = OpenAIService.toReadableStream(stream);
+
+    return new Response(readableStream, {
+      headers: {
+        "Content-Type": "text/event-stream",
+        "Cache-Control": "no-cache",
+        "Connection": "keep-alive",
+      },
+    });
   } catch (error) {
     console.error("Chat API error:", error);
+    
+    if (error instanceof Error) {
+      if (error.message.includes("OPENAI_API_KEY")) {
+        return NextResponse.json(
+          { error: "OpenAI API key is not configured" },
+          { status: 500 }
+        );
+      }
+    }
+
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }

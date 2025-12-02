@@ -8,6 +8,7 @@ export const chatMessageSchema = z.object({
 export const chatRequestSchema = z.object({
   messages: z.array(chatMessageSchema).min(1, "At least one message is required"),
   model: z.string().min(1, "Model is required"),
+  userId: z.string().min(1, "User ID is required"),
 });
 
 export type ChatMessage = z.infer<typeof chatMessageSchema>;
