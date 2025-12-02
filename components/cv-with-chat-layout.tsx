@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import { Plus } from "lucide-react";
 import {
   Sheet,
   SheetContent,
@@ -49,30 +50,17 @@ export function CvWithChatLayout({ children }: CvWithChatLayoutProps) {
           side="right"
           className="w-[400px] sm:w-[400px] p-0 flex flex-col"
         >
-          <SheetHeader className="p-6 pb-4 flex flex-row items-center justify-between space-y-0 [&>button]:cursor-pointer">
+          <SheetHeader className="px-6 pt-6 pb-4 flex flex-row items-center justify-between space-y-0">
             <SheetTitle>AI Assistant</SheetTitle>
             <button
               onClick={() => {
                 aiChatRef.current?.resetChat();
               }}
-              className="h-8 w-8 rounded-md hover:bg-accent flex items-center justify-center transition-colors cursor-pointer"
+              className="h-8 w-8 rounded-md hover:bg-accent flex items-center justify-center transition-opacity opacity-70 hover:opacity-100 cursor-pointer mr-8"
               aria-label="New chat"
               title="New chat"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M5 12h14" />
-                <path d="M12 5v14" />
-              </svg>
+              <Plus className="size-4" />
             </button>
           </SheetHeader>
 
