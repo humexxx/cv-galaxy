@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   Sheet,
   SheetContent,
@@ -8,7 +8,7 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import AiButton from "@/components/ui/ai-button";
-import { AiChat } from "@/components/ai-chat";
+import { AiChat, type AiChatRef } from "@/components/ai-chat";
 import { ChatService } from "@/lib/services/chat-service";
 import type { AIModel } from "@/types/ai";
 
@@ -21,6 +21,7 @@ export function CvWithChatLayout({ children }: CvWithChatLayoutProps) {
   const [models, setModels] = useState<AIModel[]>([]);
   const [selectedModel, setSelectedModel] = useState<string>("gpt-5.1");
   const [isLoadingModels, setIsLoadingModels] = useState(true);
+  const aiChatRef = useRef<AiChatRef>(null);
 
   useEffect(() => {
     async function fetchModels() {
@@ -48,11 +49,35 @@ export function CvWithChatLayout({ children }: CvWithChatLayoutProps) {
           side="right"
           className="w-[400px] sm:w-[400px] p-0 flex flex-col"
         >
-          <SheetHeader className="p-6 pb-4">
+          <SheetHeader className="p-6 pb-4 flex flex-row items-center justify-between space-y-0 [&>button]:cursor-pointer">
             <SheetTitle>AI Assistant</SheetTitle>
+            <button
+              onClick={() => {
+                aiChatRef.current?.resetChat();
+              }}
+              className="h-8 w-8 rounded-md hover:bg-accent flex items-center justify-center transition-colors cursor-pointer"
+              aria-label="New chat"
+              title="New chat"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M5 12h14" />
+                <path d="M12 5v14" />
+              </svg>
+            </button>
           </SheetHeader>
 
           <AiChat
+            ref={aiChatRef}
             models={models}
             selectedModel={selectedModel}
             onModelChange={setSelectedModel}
