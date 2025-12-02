@@ -238,7 +238,9 @@ export default async function CVPage({ params }: PageProps) {
                       {index > 0 && <Separator className="my-4" />}
                       <div className="space-y-2">
                         <div className="flex items-start justify-between gap-2">
-                          <TypographyH3 className="text-lg">{project.title}</TypographyH3>
+                          <TypographyH3 className="text-lg">
+                            <HighlightedText text={project.title} />
+                          </TypographyH3>
                           {project.link && (
                             <a
                               href={project.link}
@@ -250,7 +252,9 @@ export default async function CVPage({ params }: PageProps) {
                             </a>
                           )}
                         </div>
-                        <TypographyMuted>{project.description}</TypographyMuted>
+                        <TypographyMuted>
+                          <HighlightedText text={project.description} />
+                        </TypographyMuted>
                       </div>
                     </div>
                   ))}
@@ -268,7 +272,9 @@ export default async function CVPage({ params }: PageProps) {
                   {cv.personalValues.map((value, index) => (
                     <div key={index}>
                       {index > 0 && <Separator className="my-4" />}
-                      <TypographyMuted>{value}</TypographyMuted>
+                      <TypographyMuted>
+                        <HighlightedText text={value} />
+                      </TypographyMuted>
                     </div>
                   ))}
                 </CardContent>
