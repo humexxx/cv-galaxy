@@ -41,6 +41,15 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+
+  /* Keyframes */
+  @keyframes sparkle {
+    0%, 100% { opacity: 0.75; scale: 0.9; }
+    50% { opacity: 1; scale: 1; }
+  }
+
+  /* Animations */
+  --animate-sparkle: sparkle 2s ease-in-out infinite;
 }
 
 :root {
