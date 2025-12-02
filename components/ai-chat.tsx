@@ -57,14 +57,13 @@ export const AiChat = forwardRef<AiChatRef, AiChatProps>(function AiChat({
   const [isLoading, setIsLoading] = useState(false);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
 
-  const { register, handleSubmit, watch, reset, setFocus } = useForm<ChatInput>(
+  const { register, handleSubmit, reset, setFocus } = useForm<ChatInput>(
     {
       resolver: zodResolver(chatInputSchema),
       defaultValues: { message: "" },
     }
   );
 
-  const inputMessage = watch("message");
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
 
   const onSubmit = async (data: ChatInput) => {
@@ -140,7 +139,7 @@ export const AiChat = forwardRef<AiChatRef, AiChatProps>(function AiChat({
       <div className="overflow-hidden min-h-0">
         <ScrollArea ref={scrollAreaRef} className="h-full pr-4">
           {messages.length === 0 ? (
-            <div className="flex flex-col items-center justify-center h-full gap-6 py-8">
+            <div className="flex flex-col items-center justify-center h-full gap-6 py-8 pl-4">
               <div className="text-center space-y-2">
                 <Sparkles className="h-12 w-12 mx-auto text-muted-foreground/50" />
                 <h3 className="font-semibold">Start a conversation</h3>
@@ -269,7 +268,7 @@ export const AiChat = forwardRef<AiChatRef, AiChatProps>(function AiChat({
             <Button
               type="submit"
               size="icon"
-              disabled={!inputMessage.trim() || isLoading}
+              disabled={isLoading}
               className="h-7 w-7"
             >
               <Send className="h-3.5 w-3.5" />
