@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { WorkExperienceSection } from "@/components/work-experience-section";
 import { TypographyH1, TypographyLead, TypographyH3, TypographyMuted } from "@/components/ui/typography";
+import AiButton from "@/components/ui/ai-button";
 import type { Metadata } from "next";
 
 interface PageProps {
@@ -91,6 +92,11 @@ export default async function CVPage({ params }: PageProps) {
     notFound();
   }
 
+  function handleAIReviewClick() {
+    // Placeholder for AI review functionality
+    console.log(`Initiate AI review for ${cv.fullName}'s CV`);
+  }
+
   return (
     <div className="flex-1 overflow-y-auto">
       <div className="container mx-auto py-8 px-4 max-w-6xl">
@@ -109,8 +115,13 @@ export default async function CVPage({ params }: PageProps) {
               </div>
             )}
             <div className="flex-1">
-              <TypographyH1 className="mb-2">{cv.fullName}</TypographyH1>
-              <TypographyLead className="mb-4">{cv.title}</TypographyLead>
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <TypographyH1 className="mb-2">{cv.fullName}</TypographyH1>
+                  <TypographyLead className="mb-4">{cv.title}</TypographyLead>
+                </div>
+                <AiButton label="Review with AI" onClick={handleAIReviewClick} />
+              </div>
               
               <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
                 {cv.contact.email && (
