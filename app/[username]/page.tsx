@@ -8,6 +8,8 @@ import { Separator } from "@/components/ui/separator";
 import { WorkExperienceSection } from "@/components/work-experience-section";
 import { TypographyH1, TypographyLead, TypographyH3, TypographyMuted } from "@/components/ui/typography";
 import { CvWithChatLayout } from "@/components/cv-with-chat-layout";
+import { CVHighlightProvider } from "@/components/cv-highlight-provider";
+import { HighlightedText } from "@/components/highlighted-text";
 import type { Metadata } from "next";
 
 interface PageProps {
@@ -93,8 +95,9 @@ export default async function CVPage({ params }: PageProps) {
   }
 
   return (
-    <CvWithChatLayout userId={username}>
-      <div className="container mx-auto py-8 px-4 max-w-6xl">
+    <CVHighlightProvider>
+      <CvWithChatLayout userId={username}>
+        <div className="container mx-auto py-8 px-4 max-w-6xl">
         {/* Header Section */}
         <div className="mb-8">
           <div className="flex flex-col md:flex-row items-start md:items-center gap-6 mb-6">
@@ -147,7 +150,9 @@ export default async function CVPage({ params }: PageProps) {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <TypographyMuted className="leading-relaxed">{cv.about}</TypographyMuted>
+              <TypographyMuted className="leading-relaxed">
+                <HighlightedText text={cv.about} />
+              </TypographyMuted>
             </CardContent>
           </Card>
         </div>
@@ -167,7 +172,7 @@ export default async function CVPage({ params }: PageProps) {
                 <div className="flex flex-wrap gap-1">
                   {cv.technologies.map((tech) => (
                     <Badge key={tech} variant="secondary">
-                      {tech}
+                      <HighlightedText text={tech} />
                     </Badge>
                   ))}
                 </div>
@@ -186,7 +191,7 @@ export default async function CVPage({ params }: PageProps) {
                 <div className="space-y-2">
                   {cv.languages.map((lang) => (
                     <TypographyMuted key={lang} className="leading-relaxed">
-                      {lang}
+                      <HighlightedText text={lang} />
                     </TypographyMuted>
                   ))}
                 </div>
@@ -206,7 +211,9 @@ export default async function CVPage({ params }: PageProps) {
                   {cv.skills.map((skill) => (
                     <li key={skill} className="flex gap-2">
                       <span className="text-muted-foreground mt-0.5">•</span>
-                      <TypographyMuted className="flex-1 leading-relaxed">{skill}</TypographyMuted>
+                      <TypographyMuted className="flex-1 leading-relaxed">
+                        <HighlightedText text={skill} />
+                      </TypographyMuted>
                     </li>
                   ))}
                 </ul>
@@ -270,6 +277,7 @@ export default async function CVPage({ params }: PageProps) {
           </div>
         </div>
       </div>
-    </CvWithChatLayout>
+      </CvWithChatLayout>
+    </CVHighlightProvider>
   );
 }
