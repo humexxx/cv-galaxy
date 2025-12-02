@@ -13,6 +13,8 @@ A modern platform to discover and share professional CVs. Built with Next.js, Ty
 - 📱 **Mobile Friendly** - Works seamlessly on all devices
 - 🔄 **Real-time Search** - Instant results as you type
 - 🎯 **Professional Layouts** - Beautiful CV presentation
+- 🤖 **Automated Releases** - Semantic versioning with changelog generation
+- 🔄 **CI/CD Pipeline** - Automated testing, building, and deployment
 
 ## 🛠️ Tech Stack
 
@@ -110,8 +112,31 @@ This project uses GitHub Actions for automated CI/CD:
 - **CI Pipeline**: Runs on every push and PR (linting, type checking, build)
 - **Production Deploy**: Auto-deploys to Vercel on push to `main`
 - **Preview Deploys**: Creates preview deployments for every PR
+- **Semantic Release**: Automated versioning and changelog generation
+- **Auto-sync**: develop branch syncs automatically after releases
 
 See [CI_CD_README.md](.github/CI_CD_README.md) for detailed setup instructions.
+
+## 📋 Conventional Commits
+
+This project uses [Conventional Commits](https://www.conventionalcommits.org/) for automated versioning:
+
+```bash
+# Features (bumps MINOR version)
+git commit -m "feat: add new search filter"
+
+# Fixes (bumps PATCH version)
+git commit -m "fix: resolve mobile layout issue"
+
+# Breaking changes (bumps MAJOR version)
+git commit -m "feat!: change API response format"
+
+# Other types (no version bump)
+git commit -m "docs: update README"
+git commit -m "chore: update dependencies"
+```
+
+See [CONVENTIONAL_COMMITS.md](.github/CONVENTIONAL_COMMITS.md) for the complete guide.
 
 ## 📝 Adding CVs
 
