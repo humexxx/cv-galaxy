@@ -22,6 +22,7 @@ import {
 import { Send, Sparkles } from "lucide-react";
 import { ChatService } from "@/lib/services/chat-service";
 import { useHighlights } from "@/components/cv-highlight-provider";
+import { MessageContent } from "@/components/message-content";
 
 import {
   chatInputSchema,
@@ -224,16 +225,14 @@ export const AiChat = forwardRef<AiChatRef, AiChatProps>(function AiChat(
                             : "bg-muted"
                         }`}
                       >
-                        <p className="text-sm whitespace-pre-wrap">
-                          {message.content}
-                        </p>
+                        <MessageContent content={message.content} />
                       </div>
                     </div>
                   )
               )}
               {isLoading && (
                 <div className="flex justify-start">
-                  <div className="bg-muted rounded-lg px-4 py-2">
+                  <div className="bg-muted rounded-lg px-4 py-4">
                     <div className="flex gap-1">
                       <div className="w-2 h-2 bg-muted-foreground/50 rounded-full animate-bounce" />
                       <div className="w-2 h-2 bg-muted-foreground/50 rounded-full animate-bounce [animation-delay:0.2s]" />
