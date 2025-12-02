@@ -11,7 +11,7 @@ Se ejecuta en cada push y pull request a las ramas `develop` y `main`.
 - ✅ ESLint
 - ✅ TypeScript Type Check
 - ✅ Build de Next.js
-- ✅ Subida de artefactos de build
+- ✅ Subida de artefactos de build (guardados por 7 días para debugging)
 
 ### 2. **Deploy to Production** (`.github/workflows/deploy.yml`)
 Se ejecuta automáticamente al hacer push a la rama `main`.
@@ -28,6 +28,30 @@ Se ejecuta automáticamente en cada Pull Request.
 - 👀 Deploy de preview a Vercel
 - 💬 Comentario automático en el PR con la URL de preview
 - 🔄 Se actualiza con cada nuevo commit al PR
+- 🔐 Permisos: `pull-requests: write` para poder comentar
+
+### 4. **Semantic Release** (`.github/workflows/release.yml`)
+Se ejecuta automáticamente al hacer push a `main` (después del merge).
+
+**Características:**
+- 🏷️ Versionado automático basado en Conventional Commits
+- 📝 Generación automática de CHANGELOG.md
+- 🎯 Creación de tags de Git (v1.0.0, v1.1.0, etc.)
+- 📦 Creación de GitHub Releases con notas
+- 🔄 Commit automático de cambios (`[skip ci]` para evitar loops)
+
+**Reglas de versionado:**
+- `feat:` → Minor version (1.X.0)
+- `fix:` → Patch version (1.0.X)
+- `feat!:` o `BREAKING CHANGE:` → Major version (X.0.0)
+
+### 5. **Sync Develop** (`.github/workflows/sync-develop.yml`)
+Se ejecuta después de un release exitoso.
+
+**Características:**
+- 🔄 Sincroniza automáticamente `develop` con `main`
+- 📥 Trae los cambios del CHANGELOG y package.json actualizados
+- 🤖 Solo corre cuando hay un commit de release
 
 ## 🔧 Configuración Requerida
 
@@ -79,13 +103,83 @@ Puedes agregar protecciones adicionales como required reviewers.
 
 ## 🚀 Uso
 
+### Flujo de Desarrollo Completo
+
+```
+1. Crear rama feature
+   git checkout -b feature/nueva-funcionalidad
+
+2. Desarrollar y hacer commits (¡usa Conventional Commits!)
+   git commit -m "feat: add new search filter"
+   git commit -m "fix: resolve mobile layout issue"
+
+3. Push y abrir PR hacia develop
+   git push origin feature/nueva-funcionalidad
+   → Preview deployment se crea automáticamente
+   → CI checks corren
+
+4. Merge a develop
+   → Todos los checks deben pasar ✅
+
+5. Cuando estés listo para release, PR de develop → main
+   
+6. Merge a main
+   → CI corre
+   → Deploy a producción
+   → Semantic Release crea versión
+   → develop se sincroniza automáticamente
+```
+
+### Conventional Commits (Importante para Releases)
+
+Para que el versionado automático funcione, **debes usar Conventional Commits**:
+
+```bash
+# Features (incrementa versión MINOR)
+git commit -m "feat: add user authentication"
+git commit -m "feat(search): implement fuzzy matching"
+
+# Fixes (incrementa versión PATCH)
+git commit -m "fix: resolve memory leak"
+git commit -m "fix(ui): correct button alignment"
+
+# Breaking changes (incrementa versión MAJOR)
+git commit -m "feat!: change API response format"
+git commit -m "feat: new endpoint
+
+BREAKING CHANGE: old endpoint /api/v1 removed"
+
+# Otros tipos (no crean release)
+git commit -m "docs: update README"
+git commit -m "style: format code"
+git commit -m "refactor: simplify search logic"
+git commit -m "test: add unit tests"
+git commit -m "chore: update dependencies"
+```
+
+Ver guía completa: [CONVENTIONAL_COMMITS.md](./CONVENTIONAL_COMMITS.md)
+
 ### Deploy a Producción
 ```bash
+# Opción A: Desde la UI de GitHub
+1. Crea PR de develop → main
+2. Review y merge
+3. Automático: CI + Deploy + Release
+
+# Opción B: Desde terminal (fast-forward)
+git checkout main
+git merge develop --ff-only
 git push origin main
 ```
+
 Esto automáticamente:
 1. Ejecutará el pipeline de CI
 2. Desplegará a producción en Vercel
+3. Analizará commits conventional
+4. Creará nueva versión si corresponde
+5. Generará CHANGELOG.md
+6. Creará GitHub Release
+7. Sincronizará develop con main
 
 ### Preview en Pull Request
 1. Crea un Pull Request desde cualquier rama
@@ -93,10 +187,11 @@ Esto automáticamente:
    - Ejecutará CI checks
    - Creará un deploy de preview
    - Comentará en el PR con la URL de preview
+3. Cada nuevo push actualiza el preview
 
 ### Deploy Manual
-Puedes ejecutar el deploy manualmente desde:
-**GitHub → Actions → Deploy to Vercel → Run workflow**
+Puedes ejecutar workflows manualmente desde:
+**GitHub → Actions → [Nombre del workflow] → Run workflow**
 
 ## 📊 Status Badges
 
@@ -119,6 +214,26 @@ Los warnings de ESLint en archivos YAML son normales y no afectan la funcionalid
 
 ### Build falla localmente pero pasa en CI
 Asegúrate de tener las mismas versiones de Node (20) y dependencias actualizadas con `npm ci`.
+
+### Semantic Release no crea versión
+- **Verifica tus commits**: Deben seguir Conventional Commits (feat, fix, etc.)
+- **Revisa el log del workflow**: GitHub Actions → Semantic Release
+- **Commits sin tipo válido**: `docs`, `style`, `refactor`, `test`, `chore` no crean releases
+- **Ya existe la versión**: Si no hay nuevos commits feat/fix desde el último release
+
+### Conflictos en sync-develop
+Si develop tiene cambios que main no tiene:
+```bash
+# Resolver manualmente
+git checkout develop
+git merge main
+git push origin develop
+```
+
+### No se sincroniza develop automáticamente
+- Verifica que el commit en main sea de tipo `chore(release)`
+- Revisa los logs del workflow "Sync develop with main"
+- El workflow solo corre cuando se modifican `CHANGELOG.md` o `package.json`
 
 ## 📝 Notas Adicionales
 

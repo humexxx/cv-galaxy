@@ -1,0 +1,32 @@
+name: Sync Develop
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'CHANGELOG.md'
+      - 'package.json'
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    name: Sync develop with main
+    runs-on: ubuntu-latest
+    # Solo corre si es un commit de release
+    if: ${{ contains(github.event.head_commit.message, 'chore(release)') }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: develop
+          fetch-depth: 0
+
+      - name: Merge main into develop
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git merge origin/main --no-edit
+          git push origin develop
