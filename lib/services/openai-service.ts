@@ -53,10 +53,10 @@ export class OpenAIService {
       async start(controller) {
         try {
           for await (const chunk of stream) {
-            const content = chunk.choices[0]?.delta?.content;
+            const delta = chunk.choices[0]?.delta;
             
-            if (content) {
-              const data = `data: ${JSON.stringify({ content })}\n\n`;
+            if (delta?.content) {
+              const data = `data: ${JSON.stringify({ type: "content", content: delta.content })}\n\n`;
               controller.enqueue(encoder.encode(data));
             }
           }

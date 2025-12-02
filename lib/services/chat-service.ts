@@ -1,5 +1,5 @@
 import { chatRequestSchema } from "@/schemas/chat";
-import type { ChatMessage, ChatResponse, ChatRequest } from "@/schemas/chat";
+import type { ChatMessage, ChatResponse, ChatRequest, StreamChunk } from "@/types/chat";
 import type { AIModelsResponse } from "@/types/ai";
 
 export class ChatService {
@@ -20,7 +20,7 @@ export class ChatService {
     messages: ChatMessage[],
     model: string,
     userId: string,
-    onChunk?: (content: string) => void
+    onChunk?: (chunk: StreamChunk) => void
   ): Promise<string> {
     const requestData: ChatRequest = {
       messages,
@@ -73,10 +73,18 @@ export class ChatService {
 
           try {
             const parsed = JSON.parse(data);
-            if (parsed.content) {
+            console.log("Parsed chunk:", parsed);
+            
+            if (parsed.type === "content" && parsed.content) {
               fullContent += parsed.content;
               if (onChunk) {
-                onChunk(parsed.content);
+                onChunk({ type: "content", content: parsed.content });
+              }
+            }
+            
+            if (parsed.type === "highlight" && parsed.highlight) {
+              if (onChunk) {
+                onChunk({ type: "highlight", highlight: parsed.highlight });
               }
             }
           } catch (e) {

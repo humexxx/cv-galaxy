@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/tooltip";
 import { Send, Sparkles } from "lucide-react";
 import { ChatService } from "@/lib/services/chat-service";
+import { useHighlights } from "@/components/cv-highlight-provider";
 
 import {
   chatInputSchema,
@@ -48,23 +49,19 @@ const SUGGESTIONS = [
   "Suggest improvements",
 ];
 
-export const AiChat = forwardRef<AiChatRef, AiChatProps>(function AiChat({
-  models,
-  selectedModel,
-  onModelChange,
-  isLoadingModels,
-  userId,
-}, ref) {
+export const AiChat = forwardRef<AiChatRef, AiChatProps>(function AiChat(
+  { models, selectedModel, onModelChange, isLoadingModels, userId },
+  ref
+) {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
+  const { addHighlight, clearHighlights } = useHighlights();
 
-  const { register, handleSubmit, reset } = useForm<ChatInput>(
-    {
-      resolver: zodResolver(chatInputSchema),
-      defaultValues: { message: "" },
-    }
-  );
+  const { register, handleSubmit, reset } = useForm<ChatInput>({
+    resolver: zodResolver(chatInputSchema),
+    defaultValues: { message: "" },
+  });
 
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
 
@@ -82,10 +79,9 @@ export const AiChat = forwardRef<AiChatRef, AiChatProps>(function AiChat({
     }
     setIsLoading(true);
 
-    setMessages((prev) => [
-      ...prev,
-      { role: "assistant", content: "" },
-    ]);
+    clearHighlights();
+
+    setMessages((prev) => [...prev, { role: "assistant", content: "" }]);
 
     try {
       await ChatService.sendMessage(
@@ -93,24 +89,30 @@ export const AiChat = forwardRef<AiChatRef, AiChatProps>(function AiChat({
         selectedModel,
         userId,
         (chunk) => {
-          setMessages((prev) => {
-            const updated = [...prev];
-            const lastIndex = updated.length - 1;
-            updated[lastIndex] = {
-              ...updated[lastIndex],
-              content: updated[lastIndex].content + chunk,
-            };
-            return updated;
-          });
-          
-          setTimeout(() => {
-            const scrollArea = scrollAreaRef.current?.querySelector(
-              "[data-radix-scroll-area-viewport]"
-            );
-            if (scrollArea) {
-              scrollArea.scrollTop = scrollArea.scrollHeight;
-            }
-          }, 0);
+          if (chunk.type === "content" && chunk.content) {
+            setMessages((prev) => {
+              const updated = [...prev];
+              const lastIndex = updated.length - 1;
+              updated[lastIndex] = {
+                ...updated[lastIndex],
+                content: updated[lastIndex].content + chunk.content,
+              };
+              return updated;
+            });
+
+            setTimeout(() => {
+              const scrollArea = scrollAreaRef.current?.querySelector(
+                "[data-radix-scroll-area-viewport]"
+              );
+              if (scrollArea) {
+                scrollArea.scrollTop = scrollArea.scrollHeight;
+              }
+            }, 0);
+          }
+
+          if (chunk.type === "highlight" && chunk.highlight) {
+            addHighlight(chunk.highlight);
+          }
         }
       );
     } catch (error) {
@@ -191,26 +193,31 @@ export const AiChat = forwardRef<AiChatRef, AiChatProps>(function AiChat({
             </div>
           ) : (
             <div className="space-y-4 py-4">
-              {messages.map((message, index) => (
-                <div
-                  key={index}
-                  className={`flex ${
-                    message.role === "user" ? "justify-end" : "justify-start"
-                  }`}
-                >
-                  <div
-                    className={`max-w-[85%] rounded-lg px-4 py-2 ${
-                      message.role === "user"
-                        ? "bg-primary text-primary-foreground"
-                        : "bg-muted"
-                    }`}
-                  >
-                    <p className="text-sm whitespace-pre-wrap">
-                      {message.content}
-                    </p>
-                  </div>
-                </div>
-              ))}
+              {messages.map(
+                (message, index) =>
+                  message.content && (
+                    <div
+                      key={index}
+                      className={`flex ${
+                        message.role === "user"
+                          ? "justify-end"
+                          : "justify-start"
+                      }`}
+                    >
+                      <div
+                        className={`max-w-[85%] rounded-lg px-4 py-2 ${
+                          message.role === "user"
+                            ? "bg-primary text-primary-foreground"
+                            : "bg-muted"
+                        }`}
+                      >
+                        <p className="text-sm whitespace-pre-wrap">
+                          {message.content}
+                        </p>
+                      </div>
+                    </div>
+                  )
+              )}
               {isLoading && (
                 <div className="flex justify-start">
                   <div className="bg-muted rounded-lg px-4 py-2">
@@ -238,7 +245,10 @@ export const AiChat = forwardRef<AiChatRef, AiChatProps>(function AiChat({
                 if (textareaRef.current) {
                   textareaRef.current.style.height = "auto";
                   const scrollHeight = textareaRef.current.scrollHeight;
-                  textareaRef.current.style.height = `${Math.min(scrollHeight, 240)}px`;
+                  textareaRef.current.style.height = `${Math.min(
+                    scrollHeight,
+                    240
+                  )}px`;
                 }
               },
             })}
