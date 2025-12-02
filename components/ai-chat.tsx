@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -17,9 +19,9 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { Send, Sparkles } from "lucide-react";
+import {     Send, Sparkles } from "lucide-react";
 import { ChatService } from "@/lib/services/chat-service";
-import type { ChatMessage } from "@/schemas/chat";
+import { chatInputSchema, type ChatInput, type ChatMessage } from "@/schemas/chat";
 import type { AIModel } from "@/types/ai";
 
 interface AiChatProps {
@@ -38,31 +40,33 @@ const SUGGESTIONS = [
 
 export function AiChat({ models, selectedModel, onModelChange, isLoadingModels }: AiChatProps) {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
-  const [inputMessage, setInputMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const scrollAreaRef = useRef<HTMLDivElement>(null);
+  
+  const { register, handleSubmit, watch, reset, setFocus } = useForm<ChatInput>({
+    resolver: zodResolver(chatInputSchema),
+    defaultValues: { message: "" },
+  });
+  
+  const inputMessage = watch("message");
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
-
-  useEffect(() => {
-    if (textareaRef.current) {
-      textareaRef.current.style.height = "auto";
-      const scrollHeight = textareaRef.current.scrollHeight;
+    const textarea = document.querySelector<HTMLTextAreaElement>('textarea[name="message"]');
+    if (textarea) {
+      textarea.style.height = "auto";
+      const scrollHeight = textarea.scrollHeight;
       const lineHeight = 24;
       const maxHeight = lineHeight * 10;
-      textareaRef.current.style.height = `${Math.min(scrollHeight, maxHeight)}px`;
+      textarea.style.height = `${Math.min(scrollHeight, maxHeight)}px`;
     }
   }, [inputMessage]);
 
-  const handleSendMessage = async (content: string) => {
-    if (!content.trim() || isLoading) return;
+  const onSubmit = async (data: ChatInput) => {
+    if (isLoading) return;
 
-    const userMessage: ChatMessage = { role: "user", content: content.trim() };
+    const userMessage: ChatMessage = { role: "user", content: data.message.trim() };
     setMessages((prev) => [...prev, userMessage]);
-    setInputMessage("");
+    reset();
     setIsLoading(true);
 
     try {
@@ -86,17 +90,25 @@ export function AiChat({ models, selectedModel, onModelChange, isLoadingModels }
       ]);
     } finally {
       setIsLoading(false);
+      setFocus("message");
+      // Scroll al final solo cuando hay nuevos mensajes
+      setTimeout(() => {
+        const scrollArea = scrollAreaRef.current?.querySelector('[data-radix-scroll-area-viewport]');
+        if (scrollArea) {
+          scrollArea.scrollTop = scrollArea.scrollHeight;
+        }
+      }, 100);
     }
   };
 
   const handleSuggestionClick = (suggestion: string) => {
-    handleSendMessage(suggestion);
+    onSubmit({ message: suggestion });
   };
 
   return (
-    <div className="flex-1 flex flex-col p-6 pt-0">
-      {/* Chat Messages */}
-      <ScrollArea className="flex-1 pr-4">
+    <div className="flex-1 grid grid-rows-[1fr_auto] gap-4 p-6 pt-0 overflow-hidden">
+      <div className="overflow-hidden min-h-0">
+        <ScrollArea ref={scrollAreaRef} className="h-full pr-4">
         {messages.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full gap-6 py-8">
             <div className="text-center space-y-2">
@@ -107,7 +119,6 @@ export function AiChat({ models, selectedModel, onModelChange, isLoadingModels }
               </p>
             </div>
             
-            {/* Suggestions */}
             <div className="w-full space-y-2">
               <p className="text-xs text-muted-foreground">Try asking:</p>
               <div className="flex flex-wrap gap-2">
@@ -155,27 +166,28 @@ export function AiChat({ models, selectedModel, onModelChange, isLoadingModels }
                 </div>
               </div>
             )}
-            <div ref={messagesEndRef} />
           </div>
         )}
-      </ScrollArea>
+        </ScrollArea>
+      </div>
 
-      {/* Input Area with Model Selector */}
-      <div className="rounded-lg border bg-background p-2">
+      <div className="min-h-fit">
+        <form 
+          onSubmit={handleSubmit(onSubmit)}
+          className="rounded-lg border bg-background p-2"
+        >
         <textarea
-          ref={textareaRef}
+          {...register("message")}
           placeholder="Ask about this CV..."
-          value={inputMessage}
-          onChange={(e) => setInputMessage(e.target.value)}
           onKeyDown={(e) => {
             if (e.key === "Enter" && !e.shiftKey) {
               e.preventDefault();
-              handleSendMessage(inputMessage);
+              handleSubmit(onSubmit)();
             }
           }}
           disabled={isLoading}
           rows={1}
-          className="w-full resize-none bg-transparent px-1 py-1 text-sm focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 overflow-y-auto"
+          className="w-full resize-none bg-transparent px-1 py-1 text-sm focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 overflow-y-auto max-h-60"
         />
         <div className="flex items-center justify-between gap-2 pt-2">
           <Select
@@ -213,14 +225,15 @@ export function AiChat({ models, selectedModel, onModelChange, isLoadingModels }
           </Select>
           
           <Button
+            type="submit"
             size="icon"
-            onClick={() => handleSendMessage(inputMessage)}
             disabled={!inputMessage.trim() || isLoading}
             className="h-7 w-7"
           >
             <Send className="h-3.5 w-3.5" />
           </Button>
         </div>
+        </form>
       </div>
     </div>
   );

@@ -13,6 +13,12 @@ export const chatRequestSchema = z.object({
 export type ChatMessage = z.infer<typeof chatMessageSchema>;
 export type ChatRequest = z.infer<typeof chatRequestSchema>;
 
+export const chatInputSchema = z.object({
+  message: z.string().min(1, "Message is required"),
+});
+
+export type ChatInput = z.infer<typeof chatInputSchema>;
+
 export interface ChatResponse {
   message: string;
 }
