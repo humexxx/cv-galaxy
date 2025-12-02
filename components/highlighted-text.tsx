@@ -14,21 +14,20 @@ export function HighlightedText({ text }: HighlightedTextProps) {
   const matches: Array<{ start: number; end: number; color: string }> = [];
 
   for (const highlight of highlights) {
-    const searchText = text.toLowerCase();
     const highlightText = highlight.text.toLowerCase();
-    let startIndex = 0;
+    
+    // Use word boundary regex to avoid partial matches (e.g., "ai" in "maintain")
+    // Escape special regex characters in the highlight text
+    const escapedHighlight = highlightText.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const regex = new RegExp(`\\b${escapedHighlight}\\b`, 'gi');
+    let match;
 
-    while (true) {
-      const index = searchText.indexOf(highlightText, startIndex);
-      if (index === -1) break;
-
+    while ((match = regex.exec(text)) !== null) {
       matches.push({
-        start: index,
-        end: index + highlight.text.length,
+        start: match.index,
+        end: match.index + match[0].length,
         color: highlight.color || "yellow",
       });
-
-      startIndex = index + 1;
     }
   }
 
@@ -69,7 +68,7 @@ export function HighlightedText({ text }: HighlightedTextProps) {
     result.push(
       <mark
         key={match.start}
-        className={`${colorClasses[match.color as keyof typeof colorClasses]} px-0.5 rounded transition-all duration-500 animate-pulse [animation-duration:3s]`}
+        className={`${colorClasses[match.color as keyof typeof colorClasses]} px-0.5 rounded transition-all duration-500 animate-pulse animation-duration-[3s]`}
       >
         {text.slice(match.start, match.end)}
       </mark>
