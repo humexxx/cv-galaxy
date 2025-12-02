@@ -57,7 +57,7 @@ export const AiChat = forwardRef<AiChatRef, AiChatProps>(function AiChat({
   const [isLoading, setIsLoading] = useState(false);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
 
-  const { register, handleSubmit, reset, setFocus } = useForm<ChatInput>(
+  const { register, handleSubmit, reset } = useForm<ChatInput>(
     {
       resolver: zodResolver(chatInputSchema),
       defaultValues: { message: "" },
@@ -105,8 +105,6 @@ export const AiChat = forwardRef<AiChatRef, AiChatProps>(function AiChat({
       ]);
     } finally {
       setIsLoading(false);
-      setFocus("message");
-      // Scroll al final solo cuando hay nuevos mensajes
       setTimeout(() => {
         const scrollArea = scrollAreaRef.current?.querySelector(
           "[data-radix-scroll-area-viewport]"
@@ -114,6 +112,7 @@ export const AiChat = forwardRef<AiChatRef, AiChatProps>(function AiChat({
         if (scrollArea) {
           scrollArea.scrollTop = scrollArea.scrollHeight;
         }
+        textareaRef.current?.focus();
       }, 100);
     }
   };

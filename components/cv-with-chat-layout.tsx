@@ -48,7 +48,7 @@ export function CvWithChatLayout({ children }: CvWithChatLayoutProps) {
       <Sheet open={isChatOpen} onOpenChange={setIsChatOpen}>
         <SheetContent
           side="right"
-          className="w-[400px] sm:w-[400px] p-0 flex flex-col"
+          className="w-[400px] sm:w-[400px] p-0 flex flex-col outline-0"
         >
           <SheetHeader className="px-6 pt-6 pb-4 flex flex-row items-center justify-between space-y-0">
             <SheetTitle>AI Assistant</SheetTitle>
