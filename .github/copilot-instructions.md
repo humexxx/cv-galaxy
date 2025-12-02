@@ -9,14 +9,30 @@
 - **Exception**: Component props interfaces can be defined at component level (e.g., `AiButtonProps`, `CvWithChatLayoutProps`)
 - Never define business logic types inline in components or API routes
 
+### Zod Schemas & Validation
+- **Always** define Zod schemas in `schemas/` directory
+- Use Zod schemas for API request/response validation
+- Export inferred types from schemas (e.g., `type ChatRequest = z.infer<typeof chatRequestSchema>`)
+- Validate data on both client and server sides using the same schemas
+
 ### Component Organization
 - UI components in `components/ui/`
 - Feature components in `components/`
+- Break down complex components into smaller, focused components
 - Client components must have `"use client"` directive
 - Server components are default (no directive needed)
 
+### Services
+- **Always** define API calls in `lib/services/` directory
+- Create service classes for each API domain (e.g., `ChatService`, `UserService`)
+- Services handle validation, error handling, and API communication
+- **Never** make raw fetch calls directly in components - always use services
+- Services provide a single source of truth for API interactions
+- Each service method should handle its own error handling and validation
+
 ### API Routes
-- Import types from `types/` directory
+- Import types from `types/` directory and schemas from `schemas/` directory
+- Always validate requests using Zod schemas
 - Keep route handlers focused and simple
 - Use proper HTTP status codes and error handling
 
