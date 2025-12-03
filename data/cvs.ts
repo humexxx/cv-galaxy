@@ -74,6 +74,12 @@ export const companies: Record<string, Company> = {
     id: "freelancer",
     name: "Freelancer",
   },
+  gigster: {
+    id: "gigster",
+    name: "Gigster",
+    website: "https://gigster.com/",
+    logo: "/images/companies/gigster.webp",
+  }
 };
 
 export const cvDatabase: Record<string, CVData> = {
@@ -145,7 +151,7 @@ export const cvDatabase: Record<string, CVData> = {
           end: new Date(2023, 6), // Jul 2023
         },
         description:
-          "Worked on the main public experience for searching and discovering volunteer projects.",
+          "Migrated and enhanced a volunteer opportunity platform from AngularJS to Next.js with a focus on performance, SEO and user experience.",
         responsibilities: [
           "Implemented core features of the main landing and search pages so visitors could discover and filter volunteer opportunities.",
           "Used Next.js as the primary framework, leveraging server-side rendering and static generation to improve SEO and ensure rich link previews when projects were shared via chat or social media.",
@@ -154,18 +160,18 @@ export const cvDatabase: Record<string, CVData> = {
         ],
       },
       {
-        title: "Senior Frontend Software Developer",
+        title: "Senior Frontend and Technical Lead",
         company: companies.intel,
         period: {
           start: new Date(2021, 3),
           end: new Date(2022, 3),
         },
         description:
-          "Led frontend initiatives for an internal project modernisation.",
+          "Led a frontend team to build internal applications.",
         responsibilities: [
-          "Migrated an Angular-based project to Vue to improve maintainability and developer experience.",
-          "Created reusable UI components and tested them in isolation using Storybook.",
-          "Integrated services such as Google Maps and other internal APIs to enhance user experience and data visualisation.",
+          "Migrated an Angular-based project to React to improve maintainability and developer experience.",
+          "Created a lot of integration tests to ensure stability during the migration and future feature additions.",
+          "Mentored junior developers and conducted code reviews to maintain high code quality standards.",
         ],
       },
       {
@@ -179,10 +185,27 @@ export const cvDatabase: Record<string, CVData> = {
         description:
           "Full-stack development focused on policy management systems.",
         responsibilities: [
-          "Extended an administrative web application to support creation and management of insurance policies.",
+          "Using React and Python/Django, developed features for an insurance policy management system.",
+          "Created a component library with Storybook and React to ensure consistency across multiple applications.",
           "Redesigned and expanded the project to allow clients and agents to visualise policy performance over time.",
           "Enhanced calculations based on selected products within policies, ensuring accuracy and reliability.",
-          "Used Java on the backend to implement controls, validations and APIs, and developed middleware to handle cross-cutting concerns like authentication and logging.",
+        ],
+      },
+      {
+        title: "Senior Back-end Developer",
+        company: companies.gigster,
+        contractor: companies.altimetrik,
+        period: {
+          start: new Date(2019, 0),
+          end: new Date(2020, 3),
+        },
+        description:
+          "Develop the main mobile app and add integrations with 3rd party apps.",
+        responsibilities: [
+          "Using React Native and NestJS, created the main mobile application for requesting gigs and managing the payment process.",
+          "Integrated multiple 3rd party services such as Stripe for payments, various integrations with already existing platforms and identity providers for authentication.",
+          "Collaborated closely with UX designers to implement a smooth and intuitive user experience.",
+          "Eventhough my focus was more in the backend using NestJS, I also helped the frontend team with complex features and bug fixes in the React Native app.",
         ],
       },
       {
@@ -190,22 +213,23 @@ export const cvDatabase: Record<string, CVData> = {
         company: companies.paypal,
         contractor: companies.altimetrik,
         period: {
-          start: new Date(2019, 0),
-          end: new Date(2020, 3),
+          start: new Date(2018, 6),
+          end: new Date(2019, 6),
         },
         description:
-          "Provided technical support and enhancements for PayPal help software.",
+          "Provided technical support and enhancements for PayPal helpcenter micro frontend.",
         responsibilities: [
           "Supported and maintained PayPal's help platform used by millions of customers.",
           "Implemented new features and UX improvements to enhance user experience.",
           "Monitored performance and resolved issues to keep the platform stable and responsive.",
+          "Redesign of the Help Center's micro frontend using React, improving maintainability and user experience.",
         ],
       },
       {
         title: "Fullstack Developer",
         company: companies.freelancer,
         period: {
-          start: new Date(2018, 1),
+          start: new Date(2017, 10),
           end: new Date(2019, 0), 
         },
         description:
@@ -214,31 +238,31 @@ export const cvDatabase: Record<string, CVData> = {
           "Developed web applications for vehicle fleet monitoring and management using React, Node.js and SQL/NoSQL databases.",
           "Built systems for medical office group management, integrating multiple REST APIs and third-party services.",
           "Created hybrid and mobile-ready solutions with React Native and Ionic.",
-          "Migrated legacy applications using React, Java and Postgres, improving performance and maintainability.",
+          "Closely coollaborated with a Intel manager to build some applications for international clients.",
         ],
       },
       {
-        title: ".NET Developer C#",
+        title: "AngularJs and .NET Developer",
         company: companies.intel,
         contractor: companies.praxis,
         period: {
-          start: new Date(2016, 10), // Nov 2016
-          end: new Date(2018, 1), // Feb 2018
+          start: new Date(2016, 10), 
+          end: new Date(2017, 10), 
         },
         description:
           "Backend and internal tool development for Intel projects.",
         responsibilities: [
           "Developed internal tools using AngularJS, .NET C#, SQL Server and related technologies.",
           "Implemented logical parsing of PDF files with specific patterns for data extraction.",
-          "Created and optimised stored procedures to improve data processing performance.",
+          "Used a lot of LINQ queries + Entity Framework + Kendo UI + JQuery for frontend components.",
         ],
       },
       {
         title: "Junior Software Developer",
         company: companies.avionyx,
         period: {
-          start: new Date(2016, 0), // Jan 2016
-          end: new Date(2016, 8), // Sept 2016
+          start: new Date(2016, 0), 
+          end: new Date(2016, 6), 
         },
         description:
           "Started professional career working on macros and aircraft maintenance systems.",
