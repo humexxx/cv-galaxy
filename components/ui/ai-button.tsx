@@ -26,6 +26,7 @@ import Particles, { initParticlesEngine } from "@tsparticles/react";
 
 interface AiButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   label: string;
+  showLabel?: boolean;
 }
 
 const options: ISourceOptions = {
@@ -132,6 +133,7 @@ const options: ISourceOptions = {
 
 export default function AiButton({ 
   label, 
+  showLabel = true,
   className,
   onMouseEnter,
   onMouseLeave,
@@ -175,32 +177,33 @@ export default function AiButton({
       className={`cursor-pointer group relative my-8 rounded-full bg-gradient-to-r from-blue-300/30 via-blue-500/30 via-40% to-purple-500/30 p-1 text-white transition-transform hover:scale-110 active:scale-105 ${className || ""}`}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
+      aria-label={label}
       {...props}
     >
-      <div className="relative flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-blue-300 via-blue-500 via-40% to-purple-500 px-4 py-2 text-white">
+      <div className={`relative flex items-center justify-center ${showLabel ? 'gap-2' : ''} rounded-full bg-gradient-to-r from-blue-300 via-blue-500 via-40% to-purple-500 ${showLabel ? 'px-4 py-2' : 'p-3'} text-white`}>
         <Sparkle className="size-6 -translate-y-0.5 animate-sparkle fill-white" />
         <Sparkle
           style={{
             animationDelay: "1s",
           }}
-          className="absolute bottom-2.5 left-3.5 z-20 size-2 rotate-12 animate-sparkle fill-white"
+          className={`absolute z-20 size-2 rotate-12 animate-sparkle fill-white ${showLabel ? 'bottom-2.5 left-3.5' : 'bottom-3 left-3'}`}
         />
         <Sparkle
           style={{
             animationDelay: "1.5s",
             animationDuration: "2.5s",
           }}
-          className="absolute left-5 top-2.5 size-1 -rotate-12 animate-sparkle fill-white"
+          className={`absolute size-1 -rotate-12 animate-sparkle fill-white ${showLabel ? 'left-5 top-2.5' : 'left-4 top-3'}`}
         />
         <Sparkle
           style={{
             animationDelay: "0.5s",
             animationDuration: "2.5s",
           }}
-          className="absolute left-3 top-3 size-1.5 animate-sparkle fill-white"
+          className={`absolute size-1.5 animate-sparkle fill-white ${showLabel ? 'left-3 top-3' : 'left-2.5 top-3.5'}`}
         />
 
-        <span className="font-semibold">{label}</span>
+        {showLabel && <span className="font-semibold">{label}</span>}
       </div>
       {!!particleState && (
         <Particles

@@ -73,13 +73,13 @@ export function AppBar() {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background">
-      <div className="flex h-16 items-center gap-4 px-6">
+      <div className="flex h-14 sm:h-16 items-center gap-2 sm:gap-4 px-3 sm:px-6">
         {/* Logo and App Name */}
-        <Link href="/" className="flex items-center gap-2 mr-4">
-          <div className="flex items-center justify-center w-8 h-8 rounded bg-primary">
-            <FileText className="h-5 w-5 text-primary-foreground" />
+        <Link href="/" className="flex items-center gap-2 mr-2 sm:mr-4">
+          <div className="flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded border-2">
+            <FileText className="h-4 w-4 sm:h-5 sm:w-5" />
           </div>
-          <span className="font-semibold text-lg">CV Galaxy</span>
+          <span className="font-semibold text-base sm:text-lg hidden sm:inline-flex">CV Galaxy</span>
         </Link>
         
         {/* Search Bar - Centered */}
@@ -101,10 +101,10 @@ export function AppBar() {
         </div>
         
         {/* Right Side Actions */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1 sm:gap-2">
           <Dialog open={feedbackOpen} onOpenChange={setFeedbackOpen}>
             <DialogTrigger asChild>
-              <Button variant="ghost" size="sm" className="text-sm">
+              <Button variant="ghost" size="sm" className="text-xs sm:text-sm hidden sm:inline-flex">
                 Feedback
               </Button>
             </DialogTrigger>
@@ -143,12 +143,14 @@ export function AppBar() {
               </DialogFooter>
             </DialogContent>
           </Dialog>
-          <Button variant="ghost" size="icon" asChild>
+          <Button variant="ghost" size="icon" className="h-8 w-8 sm:h-10 sm:w-10" asChild>
             <Link href="/settings">
-              <Settings className="h-5 w-5" />
+              <Settings className="h-4 w-4 sm:h-5 sm:w-5" />
             </Link>
           </Button>
-          <ModeToggle />
+          <div className="[&>button]:h-8 [&>button]:w-8 sm:[&>button]:h-10 sm:[&>button]:w-10">
+            <ModeToggle />
+          </div>
         </div>
       </div>
     </header>
