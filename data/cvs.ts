@@ -100,6 +100,8 @@ export const cvDatabase: Record<string, CVData> = {
       "TypeScript",
       "React",
       "Next.js",
+      "Storybook",
+      "NestJS",
       "Angular",
       "Blazor",
       "Node.js",
