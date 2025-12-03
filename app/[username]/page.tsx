@@ -116,57 +116,84 @@ export default async function CVPage({ params }: PageProps) {
         <div className="container mx-auto py-4 sm:py-8 px-3 sm:px-4 max-w-6xl text-sm sm:text-base">
           {/* Header Section */}
           <div className="mb-4 sm:mb-8">
-            <div className="flex items-start gap-4 mb-6">
-              <div className="flex flex-col md:flex-row items-start md:items-center gap-6 flex-1">
-                {cv.avatar && (
-                  <div className="shrink-0">
-                    <Image
-                      src={cv.avatar}
-                      alt={cv.fullName}
-                      width={128}
-                      height={128}
-                      className="w-24 h-24 md:w-32 md:h-32 rounded-full object-cover border-2 border-border"
-                    />
-                  </div>
-                )}
-                <div className="flex-1">
-                  <TypographyH1 className="mb-2">{cv.fullName}</TypographyH1>
-                  <TypographyLead className="mb-4">{cv.title}</TypographyLead>
+            <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-6 mb-4 md:mb-6">
+              {cv.avatar && (
+                <div className="shrink-0">
+                  <Image
+                    src={cv.avatar}
+                    alt={cv.fullName}
+                    width={128}
+                    height={128}
+                    className="w-20 h-20 sm:w-24 sm:h-24 md:w-32 md:h-32 rounded-full object-cover border-2 border-border"
+                  />
+                </div>
+              )}
+              <div className="flex-1 min-w-0 text-center sm:text-left">
+                <TypographyH1 className="mb-1 sm:mb-2">{cv.fullName}</TypographyH1>
+                <TypographyLead className="mb-3 sm:mb-4">{cv.title}</TypographyLead>
 
-                  <div className="space-y-3">
-                    <div className="flex flex-wrap gap-3 sm:gap-4 text-xs sm:text-sm text-muted-foreground">
-                      {cv.contact.email && (
-                        <div className="flex items-center gap-1.5 sm:gap-2">
-                          <Mail className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0" />
-                          <a
-                            href={`mailto:${cv.contact.email}`}
-                            className="hover:text-foreground transition-colors break-all"
-                          >
-                            {cv.contact.email}
-                          </a>
-                        </div>
-                      )}
-                      {cv.contact.phone && (
-                        <div className="flex items-center gap-1.5 sm:gap-2">
-                          <Phone className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0" />
-                          <span>{cv.contact.phone}</span>
-                        </div>
-                      )}
-                      {cv.contact.location && (
-                        <div className="flex items-center gap-1.5 sm:gap-2">
-                          <MapPin className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0" />
-                          <span>{cv.contact.location}</span>
-                        </div>
-                      )}
-                    </div>
-                    <div className="sm:hidden">
-                      <DownloadPdfButton userId={username} />
-                    </div>
-                    <div className="hidden sm:block">
-                      <DownloadPdfButton userId={username} />
-                    </div>
+                {/* Contact info for desktop - shown inline */}
+                <div className="hidden md:flex md:items-center md:justify-between gap-3">
+                  <div className="flex flex-wrap gap-3 sm:gap-4 text-xs sm:text-sm text-muted-foreground">
+                    {cv.contact.email && (
+                      <div className="flex items-center gap-1.5 sm:gap-2">
+                        <Mail className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0" />
+                        <a
+                          href={`mailto:${cv.contact.email}`}
+                          className="hover:text-foreground transition-colors break-all"
+                        >
+                          {cv.contact.email}
+                        </a>
+                      </div>
+                    )}
+                    {cv.contact.phone && (
+                      <div className="flex items-center gap-1.5 sm:gap-2">
+                        <Phone className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0" />
+                        <span>{cv.contact.phone}</span>
+                      </div>
+                    )}
+                    {cv.contact.location && (
+                      <div className="flex items-center gap-1.5 sm:gap-2">
+                        <MapPin className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0" />
+                        <span>{cv.contact.location}</span>
+                      </div>
+                    )}
+                  </div>
+                  <div className="shrink-0">
+                    <DownloadPdfButton userId={username} />
                   </div>
                 </div>
+              </div>
+            </div>
+
+            <div className="md:hidden space-y-3 mb-4">
+              <div className="flex flex-wrap gap-3 sm:gap-4 text-xs sm:text-sm text-muted-foreground">
+                {cv.contact.email && (
+                  <div className="flex items-center gap-1.5 sm:gap-2">
+                    <Mail className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0" />
+                    <a
+                      href={`mailto:${cv.contact.email}`}
+                      className="hover:text-foreground transition-colors break-all"
+                    >
+                      {cv.contact.email}
+                    </a>
+                  </div>
+                )}
+                {cv.contact.phone && (
+                  <div className="flex items-center gap-1.5 sm:gap-2">
+                    <Phone className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0" />
+                    <span>{cv.contact.phone}</span>
+                  </div>
+                )}
+                {cv.contact.location && (
+                  <div className="flex items-center gap-1.5 sm:gap-2">
+                    <MapPin className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0" />
+                    <span>{cv.contact.location}</span>
+                  </div>
+                )}
+              </div>
+              <div>
+                <DownloadPdfButton userId={username} />
               </div>
             </div>
 
