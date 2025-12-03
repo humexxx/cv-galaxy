@@ -76,8 +76,8 @@ export function AppBar() {
       <div className="flex h-16 items-center gap-4 px-6">
         {/* Logo and App Name */}
         <Link href="/" className="flex items-center gap-2 mr-4">
-          <div className="flex items-center justify-center w-8 h-8 rounded bg-primary">
-            <FileText className="h-5 w-5 text-primary-foreground" />
+          <div className="flex items-center justify-center w-8 h-8 rounded border-2">
+            <FileText className="h-5 w-5" />
           </div>
           <span className="font-semibold text-lg">CV Galaxy</span>
         </Link>
