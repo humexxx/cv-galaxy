@@ -82,10 +82,7 @@ export async function generateMetadata({
         },
       ],
       locale: "en_US",
-      type: "article",
-      publishedTime: new Date().toISOString(),
-      authors: [cv.fullName],
-      tags: cv.technologies,
+      type: "website",
     },
     twitter: {
       card: "summary_large_image",
@@ -94,11 +91,13 @@ export async function generateMetadata({
       images: [ogImageUrl],
       creator: `@${username}`,
     },
-    // Additional metadata for Pinterest Rich Pins
     other: {
-      "article:author": cv.fullName,
-      "article:published_time": new Date().toISOString(),
-      "pinterest:description": description,
+      // Meta tags explícitos para WhatsApp y redes sociales
+      "og:image": ogImageUrl,
+      "og:image:width": "1200",
+      "og:image:height": "630",
+      "og:image:type": "image/png",
+      "og:image:alt": `${cv.fullName} - ${cv.title}`,
     },
   };
 }
