@@ -20,7 +20,7 @@ export async function GET(request: Request) {
 
     const technologies = cv.technologies.slice(0, 5).join(" • ");
 
-    return new ImageResponse(
+    const imageResponse = new ImageResponse(
       (
         <div
           style={{
@@ -67,7 +67,7 @@ export async function GET(request: Request) {
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src={`${process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"}${cv.avatar}`}
+                  src={`${process.env.NEXT_PUBLIC_BASE_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000")}${cv.avatar}`}
                   alt={cv.fullName}
                   width="120"
                   height="120"
@@ -189,8 +189,14 @@ export async function GET(request: Request) {
       {
         width: 1200,
         height: 630,
+        headers: {
+          'Content-Type': 'image/png',
+          'Cache-Control': 'public, max-age=31536000, immutable',
+        },
       }
     );
+
+    return imageResponse;
   } catch (error) {
     console.error("Error generating OG image:", error);
     return new Response("Failed to generate image", { status: 500 });

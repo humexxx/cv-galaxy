@@ -45,7 +45,8 @@ export async function generateMetadata({
     };
   }
 
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 
+    (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000");
 
   // Optimize title length (50-60 characters ideal)
   const title = `${cv.fullName} | ${cv.title} | CV Galaxy`;
@@ -60,7 +61,7 @@ export async function generateMetadata({
   const fullDescription = `${shortDescription} | Skills: ${technologies}`;
 
   const url = `${baseUrl}/${username}`;
-  const ogImageUrl = `${baseUrl}/api/og?username=${username}`;
+  const ogImageUrl = `${baseUrl}/api/og?username=${encodeURIComponent(username)}`;
 
   return {
     title,
@@ -113,9 +114,9 @@ export default async function CVPage({ params }: PageProps) {
   return (
     <CVHighlightProvider>
       <CvWithChatLayout userId={username} cvData={cv}>
-        <div className="container mx-auto py-8 px-4 max-w-6xl">
+        <div className="container mx-auto py-4 sm:py-8 px-3 sm:px-4 max-w-6xl text-sm sm:text-base">
           {/* Header Section */}
-          <div className="mb-8">
+          <div className="mb-4 sm:mb-8">
             <div className="flex items-start gap-4 mb-6">
               <div className="flex flex-col md:flex-row items-start md:items-center gap-6 flex-1">
                 {cv.avatar && (
@@ -133,33 +134,38 @@ export default async function CVPage({ params }: PageProps) {
                   <TypographyH1 className="mb-2">{cv.fullName}</TypographyH1>
                   <TypographyLead className="mb-4">{cv.title}</TypographyLead>
 
-                  <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                    <div className="flex flex-wrap gap-4 flex-1">
+                  <div className="space-y-3">
+                    <div className="flex flex-wrap gap-3 sm:gap-4 text-xs sm:text-sm text-muted-foreground">
                       {cv.contact.email && (
-                        <div className="flex items-center gap-2">
-                          <Mail className="h-4 w-4" />
+                        <div className="flex items-center gap-1.5 sm:gap-2">
+                          <Mail className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0" />
                           <a
                             href={`mailto:${cv.contact.email}`}
-                            className="hover:text-foreground transition-colors"
+                            className="hover:text-foreground transition-colors break-all"
                           >
                             {cv.contact.email}
                           </a>
                         </div>
                       )}
                       {cv.contact.phone && (
-                        <div className="flex items-center gap-2">
-                          <Phone className="h-4 w-4" />
+                        <div className="flex items-center gap-1.5 sm:gap-2">
+                          <Phone className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0" />
                           <span>{cv.contact.phone}</span>
                         </div>
                       )}
                       {cv.contact.location && (
-                        <div className="flex items-center gap-2">
-                          <MapPin className="h-4 w-4" />
+                        <div className="flex items-center gap-1.5 sm:gap-2">
+                          <MapPin className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0" />
                           <span>{cv.contact.location}</span>
                         </div>
                       )}
                     </div>
-                    <DownloadPdfButton userId={username} />
+                    <div className="sm:hidden">
+                      <DownloadPdfButton userId={username} />
+                    </div>
+                    <div className="hidden sm:block">
+                      <DownloadPdfButton userId={username} />
+                    </div>
                   </div>
                 </div>
               </div>
@@ -181,9 +187,9 @@ export default async function CVPage({ params }: PageProps) {
             </Card>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-3 gap-4 sm:gap-8">
             {/* Sidebar */}
-            <div className="space-y-8">
+            <div className="space-y-4 sm:space-y-8">
               {/* Technologies */}
               <Card>
                 <CardHeader>
@@ -246,7 +252,7 @@ export default async function CVPage({ params }: PageProps) {
             </div>
 
             {/* Main Content */}
-            <div className="md:col-span-2 space-y-8">
+            <div className="md:col-span-2 space-y-4 sm:space-y-8">
               {/* Work Experience */}
               <WorkExperienceSection workExperience={cv.workExperience} />
 

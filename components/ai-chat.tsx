@@ -3,6 +3,7 @@
 import { useState, useRef, useImperativeHandle, forwardRef } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useSessionStorage } from "@/hooks/use-session-storage";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -56,7 +57,10 @@ export const AiChat = forwardRef<AiChatRef, AiChatProps>(function AiChat(
   { models, selectedModel, onModelChange, isLoadingModels, userId, cvData },
   ref
 ) {
-  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [messages, setMessages, clearMessages] = useSessionStorage<ChatMessage[]>(
+    `chat-messages-${userId}`,
+    []
+  );
   const [isLoading, setIsLoading] = useState(false);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const { addHighlight, clearHighlights } = useHighlights();
@@ -97,10 +101,12 @@ export const AiChat = forwardRef<AiChatRef, AiChatProps>(function AiChat(
             setMessages((prev) => {
               const updated = [...prev];
               const lastIndex = updated.length - 1;
-              updated[lastIndex] = {
-                ...updated[lastIndex],
-                content: updated[lastIndex].content + chunk.content,
-              };
+              if (updated[lastIndex]) {
+                updated[lastIndex] = {
+                  ...updated[lastIndex],
+                  content: (updated[lastIndex].content || "") + chunk.content,
+                };
+              }
               return updated;
             });
 
@@ -164,7 +170,8 @@ export const AiChat = forwardRef<AiChatRef, AiChatProps>(function AiChat(
   };
 
   const handleResetChat = () => {
-    setMessages([]);
+    clearMessages();
+    clearHighlights();
     reset();
     if (textareaRef.current) {
       textareaRef.current.style.height = "auto";
@@ -207,40 +214,34 @@ export const AiChat = forwardRef<AiChatRef, AiChatProps>(function AiChat(
             </div>
           ) : (
             <div className="space-y-4 py-4">
-              {messages.map(
-                (message, index) =>
-                  message.content && (
-                    <div
-                      key={index}
-                      className={`flex ${
-                        message.role === "user"
-                          ? "justify-end"
-                          : "justify-start"
-                      }`}
-                    >
-                      <div
-                        className={`max-w-[85%] rounded-lg px-4 py-2 ${
-                          message.role === "user"
-                            ? "bg-primary text-primary-foreground"
-                            : "bg-muted"
-                        }`}
-                      >
-                        <MessageContent content={message.content} />
+              {messages.map((message, index) => (
+                <div
+                  key={index}
+                  className={`flex ${
+                    message.role === "user"
+                      ? "justify-end"
+                      : "justify-start"
+                  }`}
+                >
+                  <div
+                    className={`max-w-[85%] rounded-lg px-4 py-2 ${
+                      message.role === "user"
+                        ? "bg-primary text-primary-foreground"
+                        : "bg-muted"
+                    }`}
+                  >
+                    {message.content ? (
+                      <MessageContent content={message.content} />
+                    ) : (
+                      <div className="flex gap-1">
+                        <div className="w-2 h-2 bg-muted-foreground/50 rounded-full animate-bounce" />
+                        <div className="w-2 h-2 bg-muted-foreground/50 rounded-full animate-bounce [animation-delay:0.2s]" />
+                        <div className="w-2 h-2 bg-muted-foreground/50 rounded-full animate-bounce [animation-delay:0.4s]" />
                       </div>
-                    </div>
-                  )
-              )}
-              {isLoading && (
-                <div className="flex justify-start">
-                  <div className="bg-muted rounded-lg px-4 py-4">
-                    <div className="flex gap-1">
-                      <div className="w-2 h-2 bg-muted-foreground/50 rounded-full animate-bounce" />
-                      <div className="w-2 h-2 bg-muted-foreground/50 rounded-full animate-bounce [animation-delay:0.2s]" />
-                      <div className="w-2 h-2 bg-muted-foreground/50 rounded-full animate-bounce [animation-delay:0.4s]" />
-                    </div>
+                    )}
                   </div>
                 </div>
-              )}
+              ))}
             </div>
           )}
         </ScrollArea>
