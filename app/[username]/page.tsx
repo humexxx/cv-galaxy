@@ -45,7 +45,8 @@ export async function generateMetadata({
     };
   }
 
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 
+    (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000");
 
   // Optimize title length (50-60 characters ideal)
   const title = `${cv.fullName} | ${cv.title} | CV Galaxy`;
@@ -60,7 +61,7 @@ export async function generateMetadata({
   const fullDescription = `${shortDescription} | Skills: ${technologies}`;
 
   const url = `${baseUrl}/${username}`;
-  const ogImageUrl = `${baseUrl}/api/og?username=${username}`;
+  const ogImageUrl = `${baseUrl}/api/og?username=${encodeURIComponent(username)}`;
 
   return {
     title,
