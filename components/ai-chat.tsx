@@ -61,6 +61,14 @@ export const AiChat = forwardRef<AiChatRef, AiChatProps>(function AiChat(
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const { addHighlight, clearHighlights } = useHighlights();
 
+  // Limpiar mensajes cuando cambia la página (userId cambia)
+  const [currentUserId, setCurrentUserId] = useState(userId);
+  if (userId !== currentUserId) {
+    setMessages([]);
+    setCurrentUserId(userId);
+    clearHighlights();
+  }
+
   const { register, handleSubmit, reset } = useForm<ChatInput>({
     resolver: zodResolver(chatInputSchema),
     defaultValues: { message: "" },
