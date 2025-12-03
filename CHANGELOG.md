@@ -1,3 +1,19 @@
+## [1.1.0](https://github.com/humexxx/cv-galaxy/compare/v1.0.0...v1.1.0) (2025-12-03)
+
+### ✨ Features
+
+* add description to AI Assistant in chat layout for improved accessibility ([32ed1e2](https://github.com/humexxx/cv-galaxy/commit/32ed1e2ef57b8ea2b858073dc164e8c9c3f8c9d1))
+* add Gigster company details and update CV entries for improved representation ([e279054](https://github.com/humexxx/cv-galaxy/commit/e279054ca3e0b55711784d9968241df4a5a3d85e))
+* add Storybook and NestJS to CV database skills ([08658e9](https://github.com/humexxx/cv-galaxy/commit/08658e9921c38d0a6039de302480eaceb5f3777f))
+* enhance mobile responsiveness of CV page and AppBar layout ([5c02b6a](https://github.com/humexxx/cv-galaxy/commit/5c02b6a791ed26d332b92b7f5b4991aada4d978d))
+* enhance mobile support with responsive chat layout and new hooks ([ec860a0](https://github.com/humexxx/cv-galaxy/commit/ec860a09e3f30e8dbfcb89142438c56152c531e0))
+* enhance Open Graph image generation with dynamic base URL and improved response handling ([b24f8d6](https://github.com/humexxx/cv-galaxy/commit/b24f8d61d746f0b683f1d322d007ffb52e7b6dfd))
+* implement useSessionStorage hook for managing session storage state ([0aa61cb](https://github.com/humexxx/cv-galaxy/commit/0aa61cb832f241b66396f5ed3a47d7c151c09f64))
+
+### 🐛 Bug Fixes
+
+* update AppBar logo styling for improved visibility ([df89dde](https://github.com/humexxx/cv-galaxy/commit/df89dde442c9cad385b0b5cce0f8bc4da81c2795))
+
 ## 1.0.0 (2025-12-02)
 
 ### ✨ Features
