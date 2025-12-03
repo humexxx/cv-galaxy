@@ -7,6 +7,7 @@ import {
   SheetContent,
   SheetHeader,
   SheetTitle,
+  SheetDescription,
 } from "@/components/ui/sheet";
 import AiButton from "@/components/ui/ai-button";
 import { AiChat, type AiChatRef } from "@/components/ai-chat";
@@ -76,7 +77,12 @@ export function CvWithChatLayout({ children, userId, cvData }: CvWithChatLayoutP
             className={`${chatWidth} p-0 flex flex-col outline-0`}
           >
             <SheetHeader className="px-6 pt-6 pb-4 flex flex-row items-center justify-between space-y-0">
-              <SheetTitle>AI Assistant</SheetTitle>
+              <div>
+                <SheetTitle>AI Assistant</SheetTitle>
+                <SheetDescription className="sr-only">
+                  Chat with AI to analyze and discuss the CV
+                </SheetDescription>
+              </div>
               <button
                 onClick={handleNewChat}
                 className="h-8 w-8 rounded-md hover:bg-accent flex items-center justify-center transition-opacity opacity-70 hover:opacity-100 cursor-pointer mr-8"
