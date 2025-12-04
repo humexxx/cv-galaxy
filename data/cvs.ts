@@ -104,7 +104,7 @@ export const cvDatabase: Record<string, CVData> = {
     title: "Senior Fullstack Developer",
     avatar: "/images/users/jason_hume.jpg",
     about:
-      "Senior Fullstack Developer with solid experience building web applications end-to-end using modern JavaScript/TypeScript frameworks and .NET backends. I combine strong logical thinking, creativity and a self-taught mindset to quickly understand complex domains and deliver high-quality, maintainable solutions. I actively leverage AI tools and integrate AI-powered features into applications to accelerate development and provide smarter user experiences. Comfortable working in distributed teams, collaborating with stakeholders, and taking ownership from design to production.",
+      "Senior Fullstack Developer with solid experience building web applications end-to-end using modern JavaScript/TypeScript frameworks and .NET backends. I combine strong logical thinking, creativity and a self-taught mindset to quickly understand complex domains and deliver high-quality, maintainable solutions. I actively leverage AI tools and integrate AI-powered features into applications to accelerate development and provide smarter user experiences. Comfortable working in distributed teams, collaborating with stakeholders, and taking ownership from design to production. I maintain a continuous learning mindset, especially with AI trends, and treat every product as if it were my own—taking full responsibility from design through delivery and ongoing improvement. I focus on team-first collaboration through clear communication and knowledge sharing, and I don't stop at the first obstacle; I iterate, test and refine until the solution is solid.",
     contact: {
       phone: "+506 8939 3381",
       email: "jahume92@gmail.com",
@@ -135,11 +135,12 @@ export const cvDatabase: Record<string, CVData> = {
     ],
     languages: ["Spanish (Native)", "English (Fluent)"],
     skills: [
-      "Creative problem solving",
-      "Ability to work under pressure",
-      "Fast self-learner / self-taught mindset",
-      "Excellent teamwork and communication",
-      "Continuously learning and leveraging AI tools to improve productivity and code quality",
+      "Creative problem solving with resilience and perseverance",
+      "Ability to work under pressure and iterate until solutions are solid",
+      "Fast self-learner with continuous learning mindset, especially in AI trends",
+      "Excellent teamwork and communication with team-first collaboration approach",
+      "Taking ownership and accountability from design through delivery",
+      "Leveraging AI tools to improve productivity and code quality",
     ],
     workExperience: [
       {

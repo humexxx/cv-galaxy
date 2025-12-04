@@ -98,10 +98,6 @@ export function generateCVHTML(cv: CVData): string {
       </div>
     `).join("");
 
-  const personalValues = cv.personalValues
-    .map((value) => `<li>${escapeHtml(value)}</li>`)
-    .join("");
-
   return `
     <!DOCTYPE html>
     <html lang="en">
@@ -498,13 +494,6 @@ export function generateCVHTML(cv: CVData): string {
       <section class="section">
         <h2 class="section-title">Personal Projects</h2>
         ${projects}
-      </section>
-      ` : ''}
-
-      ${cv.personalValues.length > 0 ? `
-      <section class="section">
-        <h2 class="section-title">What to Expect From Me</h2>
-        <ul class="personal-values-list">${personalValues}</ul>
       </section>
       ` : ''}
     </body>

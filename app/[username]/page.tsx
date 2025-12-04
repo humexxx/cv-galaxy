@@ -322,24 +322,6 @@ export default async function CVPage({ params }: PageProps) {
                 </Card>
               )}
 
-              {/* Personal Values */}
-              {cv.personalValues.length > 0 && (
-                <Card>
-                  <CardHeader>
-                    <CardTitle>What to Expect From Me</CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    {cv.personalValues.map((value, index) => (
-                      <div key={index}>
-                        {index > 0 && <Separator className="my-4" />}
-                        <TypographyMuted>
-                          <HighlightedText text={value} />
-                        </TypographyMuted>
-                      </div>
-                    ))}
-                  </CardContent>
-                </Card>
-              )}
             </div>
           </div>
         </div>
