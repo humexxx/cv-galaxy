@@ -1,3 +1,25 @@
+## [1.3.0](https://github.com/humexxx/cv-galaxy/compare/v1.2.0...v1.3.0) (2025-12-04)
+
+### ✨ Features
+
+* implement postinstall script to create Chromium tar archive and update dependencies ([f783342](https://github.com/humexxx/cv-galaxy/commit/f783342dc5810a5b5c9c1d741c2b8f4b36f311af))
+
+### 🐛 Bug Fixes
+
+* display version number in AppBar component ([781c3ff](https://github.com/humexxx/cv-galaxy/commit/781c3ff1d862f77eda8cab2f23b2a5185eaa809d))
+* improve filename handling for PDF downloads to support non-ASCII characters ([26b99a8](https://github.com/humexxx/cv-galaxy/commit/26b99a8c760328ebfda5efb7290793dcf5aab103))
+
+### ♻️ Code Refactoring
+
+* adjust Vercel function settings for PDF generation ([bc1e5e0](https://github.com/humexxx/cv-galaxy/commit/bc1e5e0dbe78762d07cce812505bccf5a31dd613))
+* enhance logging in postinstall script and update chromium pack URL handling ([35be23c](https://github.com/humexxx/cv-galaxy/commit/35be23c70d4670cedaec5d66782a1d634ebbb511))
+* streamline logging in postinstall script and improve clarity in getChromiumPath function ([f692b9e](https://github.com/humexxx/cv-galaxy/commit/f692b9eccbc277c07c223a6a2773a318a87ce1f7))
+* switch to @sparticuz/chromium-min for improved compatibility ([a56a297](https://github.com/humexxx/cv-galaxy/commit/a56a2972281ce47e75ba855c3fccccaf1dbfa425))
+* switch to local Chromium pack path and improve logging in getChromiumPath function ([05b18e2](https://github.com/humexxx/cv-galaxy/commit/05b18e214b3a9dadaae7887fc462a55c3f8d8d27))
+* update Chromium pack handling and enhance logging in PDF route ([c693bf8](https://github.com/humexxx/cv-galaxy/commit/c693bf8f0957632e92941e510f1ceaa4b2e6954e))
+* update Chromium pack handling and improve logging in getChromiumPath function ([06c19fb](https://github.com/humexxx/cv-galaxy/commit/06c19fbfac13a0a504ca9c307a34744510809509))
+* update chromium version and enhance PDF generation logging ([3bee085](https://github.com/humexxx/cv-galaxy/commit/3bee08528364290df6b697f0285dc1966f76fcaf))
+
 ## [1.2.0](https://github.com/humexxx/cv-galaxy/compare/v1.1.0...v1.2.0) (2025-12-04)
 
 ### ✨ Features
