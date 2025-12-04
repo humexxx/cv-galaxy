@@ -15,7 +15,14 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { DownloadPdfButton } from "@/components/download-pdf-button";
 import { Separator } from "@/components/ui/separator";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { WorkExperienceSection } from "@/components/work-experience-section";
+import { EducationSection } from "@/components/education-section";
 import {
   TypographyH1,
   TypographyLead,
@@ -282,6 +289,9 @@ export default async function CVPage({ params }: PageProps) {
               {/* Work Experience */}
               <WorkExperienceSection workExperience={cv.workExperience} />
 
+              {/* Education */}
+              <EducationSection education={cv.education} />
+
               {/* Projects */}
               {cv.projects.length > 0 && (
                 <Card>
@@ -297,7 +307,7 @@ export default async function CVPage({ params }: PageProps) {
                             <TypographyH3 className="text-lg">
                               <HighlightedText text={project.title} />
                             </TypographyH3>
-                            {project.link && (
+                            {project.link ? (
                               <a
                                 href={project.link}
                                 target="_blank"
@@ -306,7 +316,20 @@ export default async function CVPage({ params }: PageProps) {
                               >
                                 <ExternalLink className="h-4 w-4" />
                               </a>
-                            )}
+                            ) : project.comingSoon ? (
+                              <TooltipProvider>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <div className="text-muted-foreground/40 cursor-not-allowed">
+                                      <ExternalLink className="h-4 w-4" />
+                                    </div>
+                                  </TooltipTrigger>
+                                  <TooltipContent>
+                                    <p>Link will be available soon</p>
+                                  </TooltipContent>
+                                </Tooltip>
+                              </TooltipProvider>
+                            ) : null}
                           </div>
                           <TypographyMuted>
                             <HighlightedText text={project.description} />
@@ -318,24 +341,6 @@ export default async function CVPage({ params }: PageProps) {
                 </Card>
               )}
 
-              {/* Personal Values */}
-              {cv.personalValues.length > 0 && (
-                <Card>
-                  <CardHeader>
-                    <CardTitle>What to Expect From Me</CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    {cv.personalValues.map((value, index) => (
-                      <div key={index}>
-                        {index > 0 && <Separator className="my-4" />}
-                        <TypographyMuted>
-                          <HighlightedText text={value} />
-                        </TypographyMuted>
-                      </div>
-                    ))}
-                  </CardContent>
-                </Card>
-              )}
             </div>
           </div>
         </div>
