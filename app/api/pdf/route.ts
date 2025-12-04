@@ -110,11 +110,15 @@ export async function GET(request: NextRequest) {
 
     await browser.close();
 
+    // Create filename with proper encoding for non-ASCII characters
+    const filename = `${cvData.fullName.replace(/\s+/g, '_')}_CV.pdf`;
+    const encodedFilename = encodeURIComponent(filename);
+
     // Return PDF as response
     return new Response(Buffer.from(pdfBuffer), {
       headers: {
         'Content-Type': 'application/pdf',
-        'Content-Disposition': `attachment; filename="${cvData.fullName.replace(/\s+/g, '_')}_CV.pdf"`,
+        'Content-Disposition': `attachment; filename="${encodedFilename}"; filename*=UTF-8''${encodedFilename}`,
       },
     });
 
