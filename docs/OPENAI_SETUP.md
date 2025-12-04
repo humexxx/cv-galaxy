@@ -90,7 +90,7 @@ Para probar la integración:
 
 1. Asegúrate de tener la API key configurada
 2. Inicia el servidor: `npm run dev`
-3. Ve a cualquier CV, por ejemplo: http://localhost:3000/humexxx
+3. Ve a cualquier CV, por ejemplo: http://localhost:3000/jason_hume
 4. Haz clic en el botón de AI Assistant
 5. Prueba preguntas como:
    - "Summarize this CV"

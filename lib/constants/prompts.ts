@@ -20,7 +20,7 @@ CV Data:
 export function formatSystemPrompt(cvData: CVData): string {
   let specialInstructions = "";
   
-  if (cvData.username === "humexxx") {
+  if (cvData.username === "jason_hume") {
     specialInstructions = `SPECIAL INSTRUCTIONS for this candidate:
 - Be enthusiastic and positive in your tone
 - ALWAYS try to connect your answer to multiple CV sections when possible:

@@ -83,11 +83,11 @@ export const companies: Record<string, Company> = {
 };
 
 export const cvDatabase: Record<string, CVData> = {
-  humexxx: {
-    username: "humexxx",
+  jason_hume: {
+    username: "jason_hume",
     fullName: "Jason Hume González",
     title: "Senior Fullstack Developer",
-    avatar: "/images/users/humexxx.jpg",
+    avatar: "/images/users/jason_hume.jpg",
     about:
       "Senior Fullstack Developer with solid experience building web applications end-to-end using modern JavaScript/TypeScript frameworks and .NET backends. I combine strong logical thinking, creativity and a self-taught mindset to quickly understand complex domains and deliver high-quality, maintainable solutions. I actively leverage AI tools and integrate AI-powered features into applications to accelerate development and provide smarter user experiences. Comfortable working in distributed teams, collaborating with stakeholders, and taking ownership from design to production.",
     contact: {
@@ -334,9 +334,9 @@ export function searchCVs(query: string): CVSearchResult[] {
 }
 
 export function getTopResults(): CVSearchResult[] {
-  // For now, always return humexxx as top result
+  // For now, always return jason_hume as top result
   // In the future, this could be based on popularity, recent views, etc.
-  const cv = cvDatabase.humexxx;
+  const cv = cvDatabase.jason_hume;
 
   if (!cv) {
     return [];
