@@ -1,24 +1,32 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getCVByUsername } from "@/data/cvs";
 import { generateCVHTML } from "@/lib/templates/cv-pdf-template";
-import path from "path";
 
+// URL to the Chromium binary package hosted in /public
+// Use production URL if available, otherwise use the current deployment URL
+const CHROMIUM_PACK_URL = process.env.VERCEL_PROJECT_PRODUCTION_URL
+  ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}/chromium-pack.tar`
+  : process.env.VERCEL_URL
+  ? `https://${process.env.VERCEL_URL}/chromium-pack.tar`
+  : "https://github.com/humexxx/cv-galaxy/raw/refs/heads/develop/public/chromium-pack.tar";
+
+// Cache the Chromium executable path to avoid re-downloading on subsequent requests
 let cachedExecutablePath: string | null = null;
 let downloadPromise: Promise<string> | null = null;
 
+/**
+ * Downloads and caches the Chromium executable path.
+ * Uses a download promise to prevent concurrent downloads.
+ */
 async function getChromiumPath(): Promise<string> {
+  // Return cached path if available
   if (cachedExecutablePath) return cachedExecutablePath;
 
+  // Prevent concurrent downloads by reusing the same promise
   if (!downloadPromise) {
     const chromium = (await import("@sparticuz/chromium-min")).default;
-    
-    // Use local file path instead of HTTP URL
-    // In Vercel, the public folder is accessible via filesystem
-    const localPath = path.join(process.cwd(), "public", "chromium-pack.tar");
-    console.log("Using local Chromium pack:", localPath);
-    
     downloadPromise = chromium
-      .executablePath(`file://${localPath}`)
+      .executablePath(CHROMIUM_PACK_URL)
       .then((path) => {
         cachedExecutablePath = path;
         console.log("Chromium path resolved:", path);
@@ -26,8 +34,7 @@ async function getChromiumPath(): Promise<string> {
       })
       .catch((error) => {
         console.error("Failed to get Chromium path:", error);
-        console.error("Tried path:", localPath);
-        downloadPromise = null;
+        downloadPromise = null; // Reset on error to allow retry
         throw error;
       });
   }
@@ -56,51 +63,40 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    let browser;
+    // Configure browser based on environment
     const isVercel = !!process.env.VERCEL_ENV;
-    
-    console.log('Environment check:', { VERCEL_ENV: process.env.VERCEL_ENV, isVercel });
-    
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let puppeteer: any;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let launchOptions: any = {
+      headless: true,
+    };
+
     if (isVercel) {
       // Vercel: Use puppeteer-core with downloaded Chromium binary
-      console.log('Launching Chromium for Vercel...');
       const chromium = (await import("@sparticuz/chromium-min")).default;
-      const puppeteer = await import("puppeteer-core");
+      puppeteer = await import("puppeteer-core");
       const executablePath = await getChromiumPath();
-      
-      console.log('Chromium executable path:', executablePath);
-      
-      browser = await puppeteer.launch({
+      launchOptions = {
+        ...launchOptions,
         args: chromium.args,
-        defaultViewport: {
-          width: 1920,
-          height: 1080,
-        },
         executablePath,
-        headless: true,
-      });
-      console.log('Chromium launched successfully');
+      };
+      console.log("Launching browser with executable path:", executablePath);
     } else {
       // Local: Use regular puppeteer with bundled Chromium
-      console.log('Launching Chromium for local development...');
-      const puppeteer = await import("puppeteer");
-      browser = await puppeteer.launch({
-        headless: true,
-      });
-      console.log('Chromium launched successfully');
+      puppeteer = await import("puppeteer");
     }
 
-    console.log('Creating new page...');
+    // Launch browser
+    const browser = await puppeteer.launch(launchOptions);
     const page = await browser.newPage();
 
     // Generate HTML and set content
-    console.log('Generating HTML content...');
     const htmlContent = generateCVHTML(cvData);
-    console.log('Setting page content...');
     await page.setContent(htmlContent, { waitUntil: 'networkidle0' });
 
     // Generate PDF
-    console.log('Generating PDF...');
     const pdfBuffer = await page.pdf({
       format: 'A4',
       printBackground: true,
@@ -112,7 +108,6 @@ export async function GET(request: NextRequest) {
       }
     });
 
-    console.log('PDF generated successfully, size:', pdfBuffer.length, 'bytes');
     await browser.close();
 
     // Return PDF as response
@@ -125,12 +120,6 @@ export async function GET(request: NextRequest) {
 
   } catch (error) {
     console.error("PDF generation error:", error);
-    console.error("Error details:", {
-      message: error instanceof Error ? error.message : 'Unknown error',
-      stack: error instanceof Error ? error.stack : undefined,
-      name: error instanceof Error ? error.name : undefined,
-    });
-    
     return NextResponse.json(
       { 
         error: "Failed to generate PDF",
