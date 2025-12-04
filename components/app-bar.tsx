@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import packageJson from "../package.json"
 
 export function AppBar() {
   const router = useRouter()
@@ -78,7 +79,10 @@ export function AppBar() {
           <div className="flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded border-2">
             <FileText className="h-4 w-4 sm:h-5 sm:w-5" />
           </div>
-          <span className="font-semibold text-base sm:text-lg hidden sm:inline-flex">CV Galaxy</span>
+          <div className="hidden sm:flex items-baseline gap-2">
+            <span className="font-semibold text-base sm:text-lg">CV Galaxy</span>
+            <span className="text-xs text-muted-foreground">v{packageJson.version}</span>
+          </div>
         </Link>
         
         {/* Search Bar - Centered */}
