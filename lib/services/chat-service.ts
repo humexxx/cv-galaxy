@@ -2,7 +2,7 @@ import { chatRequestSchema } from "@/schemas/chat";
 import type { ChatMessage, ChatResponse, ChatRequest, StreamChunk } from "@/types/chat";
 import type { AIModelsResponse } from "@/types/ai";
 import type { CVData } from "@/types/cv";
-import { CVMatcher } from "@/lib/services/cv-matcher";
+import { CVMatcher } from "@/lib/utils/cv-matcher";
 
 export class ChatService {
   private static readonly API_URL = "/api/chat";

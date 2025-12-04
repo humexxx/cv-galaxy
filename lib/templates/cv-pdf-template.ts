@@ -94,7 +94,7 @@ export function generateCVHTML(cv: CVData): string {
       <div class="project-item">
         <h4 class="project-title">${escapeHtml(project.title)}</h4>
         <p class="project-description">${escapeHtml(project.description)}</p>
-        ${project.link && project.link !== 'TBD' ? `<a href="${escapeHtml(project.link)}" class="project-link">View Project →</a>` : ''}
+        ${project.link ? `<a href="${escapeHtml(project.link)}" class="project-link">View Project →</a>` : ''}
       </div>
     `).join("");
 

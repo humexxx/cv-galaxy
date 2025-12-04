@@ -318,13 +318,13 @@ export const cvDatabase: Record<string, CVData> = {
         title: "Champions – Personal Growth & Financial Wellness Platform",
         description:
           "Designing and building a personal growth platform that helps users organize their finances, track investments, build healthy habits, plan workouts and maintain balanced entertainment. The product combines social sharing features with 3D animations and gamification elements to create a motivating and healthy environment for friends and communities. Built with React and Firebase, currently approaching beta release.",
-        link: "TBD",
+        comingSoon: true,
       },
       {
         title: "Trim Success – Business Performance Analytics",
         description:
           "Developing a private analytics tool to measure company performance using multiple financial and operational metrics. The system provides dashboards and visualisations to understand profitability and growth over time. Implemented with React and Firebase, designed for iterative refinement and potential onboarding of test accounts.",
-        link: "TBD",
+        comingSoon: true,
       },
       {
         title: "AI-Driven Micro Projects",

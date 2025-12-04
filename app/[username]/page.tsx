@@ -15,6 +15,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { DownloadPdfButton } from "@/components/download-pdf-button";
 import { Separator } from "@/components/ui/separator";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { WorkExperienceSection } from "@/components/work-experience-section";
 import { EducationSection } from "@/components/education-section";
 import {
@@ -301,7 +307,7 @@ export default async function CVPage({ params }: PageProps) {
                             <TypographyH3 className="text-lg">
                               <HighlightedText text={project.title} />
                             </TypographyH3>
-                            {project.link && (
+                            {project.link ? (
                               <a
                                 href={project.link}
                                 target="_blank"
@@ -310,7 +316,20 @@ export default async function CVPage({ params }: PageProps) {
                               >
                                 <ExternalLink className="h-4 w-4" />
                               </a>
-                            )}
+                            ) : project.comingSoon ? (
+                              <TooltipProvider>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <div className="text-muted-foreground/40 cursor-not-allowed">
+                                      <ExternalLink className="h-4 w-4" />
+                                    </div>
+                                  </TooltipTrigger>
+                                  <TooltipContent>
+                                    <p>Link will be available soon</p>
+                                  </TooltipContent>
+                                </Tooltip>
+                              </TooltipProvider>
+                            ) : null}
                           </div>
                           <TypographyMuted>
                             <HighlightedText text={project.description} />

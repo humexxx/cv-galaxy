@@ -1,8 +1,28 @@
 import { NextRequest, NextResponse } from "next/server";
 import puppeteer from "puppeteer-core";
 import chromium from "@sparticuz/chromium";
+import { existsSync } from "fs";
 import { getCVByUsername } from "@/data/cvs";
 import { generateCVHTML } from "@/lib/templates/cv-pdf-template";
+
+function findChromeExecutable(): string | undefined {
+  const possiblePaths = [
+    'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
+    'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe',
+    process.env.LOCALAPPDATA + '\\Google\\Chrome\\Application\\chrome.exe',
+  ];
+  
+  for (const path of possiblePaths) {
+    try {
+      if (existsSync(path)) {
+        return path;
+      }
+    } catch {
+      continue;
+    }
+  }
+  return undefined;
+}
 
 export async function GET(request: NextRequest) {
   try {
@@ -25,18 +45,33 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const browser = await puppeteer.launch(
-      process.env.VERCEL
-        ? {
-            args: chromium.args,
-            executablePath: await chromium.executablePath(),
-            headless: true,
-          }
-        : {
-            headless: true,
-            args: ['--no-sandbox', '--disable-setuid-sandbox'],
-          }
-    );
+    let browser;
+    
+    if (process.env.VERCEL) {
+      // Production: Use Chromium from Sparticuz
+      browser = await puppeteer.launch({
+        args: chromium.args,
+        executablePath: await chromium.executablePath(),
+        headless: true,
+      });
+    } else {
+      // Local development: Try to find Chrome
+      const chromeExecutable = findChromeExecutable();
+      
+      if (!chromeExecutable) {
+        console.error("Chrome not found. Please install Google Chrome or set CHROME_EXECUTABLE_PATH environment variable.");
+        return NextResponse.json(
+          { error: "Chrome browser not found. Please install Google Chrome to generate PDFs locally." },
+          { status: 500 }
+        );
+      }
+      
+      browser = await puppeteer.launch({
+        executablePath: process.env.CHROME_EXECUTABLE_PATH || chromeExecutable,
+        headless: true,
+        args: ['--no-sandbox', '--disable-setuid-sandbox'],
+      });
+    }
 
     const page = await browser.newPage();
 

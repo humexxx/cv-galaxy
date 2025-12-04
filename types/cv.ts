@@ -21,6 +21,7 @@ export interface Project {
   title: string;
   description: string;
   link?: string;
+  comingSoon?: boolean;
 }
 
 export interface Institution {
