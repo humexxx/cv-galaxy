@@ -3,10 +3,18 @@ import { getCVByUsername } from "@/data/cvs";
 import { generateCVHTML } from "@/lib/templates/cv-pdf-template";
 
 // Use the deployment URL to fetch chromium pack
-// Falls back to a public example if not available
 const CHROMIUM_PACK_URL = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}/chromium-pack.tar`
-  : "https://github.com/gabenunez/puppeteer-on-vercel/raw/refs/heads/main/example/chromium-dont-use-in-prod.tar";
+  : undefined;
+
+// Log configuration on module load
+if (process.env.VERCEL_ENV) {
+  console.log('Chromium configuration:', {
+    VERCEL_URL: process.env.VERCEL_URL,
+    VERCEL_PROJECT_PRODUCTION_URL: process.env.VERCEL_PROJECT_PRODUCTION_URL,
+    CHROMIUM_PACK_URL,
+  });
+}
 
 let cachedExecutablePath: string | null = null;
 let downloadPromise: Promise<string> | null = null;
