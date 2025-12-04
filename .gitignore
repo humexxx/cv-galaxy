@@ -38,3 +38,6 @@ next-env.d.ts
 .vscode/*
 .vercel
 .env*.local
+
+# chromium pack (generated at build time)
+/public/chromium-pack.tar

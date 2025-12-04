@@ -1,27 +1,36 @@
 import { NextRequest, NextResponse } from "next/server";
-import puppeteer from "puppeteer-core";
-import chromium from "@sparticuz/chromium-min";
-import { existsSync } from "fs";
 import { getCVByUsername } from "@/data/cvs";
 import { generateCVHTML } from "@/lib/templates/cv-pdf-template";
 
-function findChromeExecutable(): string | undefined {
-  const possiblePaths = [
-    'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
-    'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe',
-    process.env.LOCALAPPDATA + '\\Google\\Chrome\\Application\\chrome.exe',
-  ];
-  
-  for (const path of possiblePaths) {
-    try {
-      if (existsSync(path)) {
+const CHROMIUM_PACK_URL = process.env.VERCEL_PROJECT_PRODUCTION_URL
+  ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}/chromium-pack.tar`
+  : process.env.VERCEL_URL
+  ? `https://${process.env.VERCEL_URL}/chromium-pack.tar`
+  : undefined;
+
+let cachedExecutablePath: string | null = null;
+let downloadPromise: Promise<string> | null = null;
+
+async function getChromiumPath(): Promise<string> {
+  if (cachedExecutablePath) return cachedExecutablePath;
+
+  if (!downloadPromise) {
+    const chromium = (await import("@sparticuz/chromium-min")).default;
+    downloadPromise = chromium
+      .executablePath(CHROMIUM_PACK_URL)
+      .then((path) => {
+        cachedExecutablePath = path;
+        console.log("Chromium path resolved:", path);
         return path;
-      }
-    } catch {
-      continue;
-    }
+      })
+      .catch((error) => {
+        console.error("Failed to get Chromium path:", error);
+        downloadPromise = null;
+        throw error;
+      });
   }
-  return undefined;
+
+  return downloadPromise;
 }
 
 export async function GET(request: NextRequest) {
@@ -46,15 +55,17 @@ export async function GET(request: NextRequest) {
     }
 
     let browser;
-    const isProduction = process.env.VERCEL === '1' || process.env.NODE_ENV === 'production';
+    const isVercel = !!process.env.VERCEL_ENV;
     
-    console.log('Environment check:', { VERCEL: process.env.VERCEL, NODE_ENV: process.env.NODE_ENV, isProduction });
+    console.log('Environment check:', { VERCEL_ENV: process.env.VERCEL_ENV, isVercel });
     
-    if (isProduction) {
-      // Production: Use Chromium from Sparticuz
-      console.log('Launching Chromium for production...');
+    if (isVercel) {
+      // Vercel: Use puppeteer-core with downloaded Chromium binary
+      console.log('Launching Chromium for Vercel...');
+      const chromium = (await import("@sparticuz/chromium-min")).default;
+      const puppeteer = await import("puppeteer-core");
+      const executablePath = await getChromiumPath();
       
-      const executablePath = await chromium.executablePath();
       console.log('Chromium executable path:', executablePath);
       
       browser = await puppeteer.launch({
@@ -68,25 +79,13 @@ export async function GET(request: NextRequest) {
       });
       console.log('Chromium launched successfully');
     } else {
-      // Local development: Try to find Chrome
-      console.log('Looking for Chrome executable for local development...');
-      const chromeExecutable = findChromeExecutable();
-      
-      if (!chromeExecutable) {
-        console.error("Chrome not found. Please install Google Chrome or set CHROME_EXECUTABLE_PATH environment variable.");
-        return NextResponse.json(
-          { error: "Chrome browser not found. Please install Google Chrome to generate PDFs locally." },
-          { status: 500 }
-        );
-      }
-      
-      console.log('Chrome found at:', chromeExecutable);
+      // Local: Use regular puppeteer with bundled Chromium
+      console.log('Launching Chromium for local development...');
+      const puppeteer = await import("puppeteer");
       browser = await puppeteer.launch({
-        executablePath: process.env.CHROME_EXECUTABLE_PATH || chromeExecutable,
         headless: true,
-        args: ['--no-sandbox', '--disable-setuid-sandbox'],
       });
-      console.log('Chrome launched successfully');
+      console.log('Chromium launched successfully');
     }
 
     console.log('Creating new page...');
