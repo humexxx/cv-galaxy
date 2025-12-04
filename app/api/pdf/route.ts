@@ -1,20 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getCVByUsername } from "@/data/cvs";
 import { generateCVHTML } from "@/lib/templates/cv-pdf-template";
-
-// Use the deployment URL to fetch chromium pack
-const CHROMIUM_PACK_URL = process.env.VERCEL_URL
-  ? `https://${process.env.VERCEL_URL}/chromium-pack.tar`
-  : undefined;
-
-// Log configuration on module load
-if (process.env.VERCEL_ENV) {
-  console.log('Chromium configuration:', {
-    VERCEL_URL: process.env.VERCEL_URL,
-    VERCEL_PROJECT_PRODUCTION_URL: process.env.VERCEL_PROJECT_PRODUCTION_URL,
-    CHROMIUM_PACK_URL,
-  });
-}
+import path from "path";
 
 let cachedExecutablePath: string | null = null;
 let downloadPromise: Promise<string> | null = null;
@@ -23,10 +10,15 @@ async function getChromiumPath(): Promise<string> {
   if (cachedExecutablePath) return cachedExecutablePath;
 
   if (!downloadPromise) {
-    console.log("Attempting to download Chromium from:", CHROMIUM_PACK_URL);
     const chromium = (await import("@sparticuz/chromium-min")).default;
+    
+    // Use local file path instead of HTTP URL
+    // In Vercel, the public folder is accessible via filesystem
+    const localPath = path.join(process.cwd(), "public", "chromium-pack.tar");
+    console.log("Using local Chromium pack:", localPath);
+    
     downloadPromise = chromium
-      .executablePath(CHROMIUM_PACK_URL)
+      .executablePath(`file://${localPath}`)
       .then((path) => {
         cachedExecutablePath = path;
         console.log("Chromium path resolved:", path);
@@ -34,7 +26,7 @@ async function getChromiumPath(): Promise<string> {
       })
       .catch((error) => {
         console.error("Failed to get Chromium path:", error);
-        console.error("Tried URL:", CHROMIUM_PACK_URL);
+        console.error("Tried path:", localPath);
         downloadPromise = null;
         throw error;
       });
