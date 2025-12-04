@@ -2,11 +2,11 @@ import { NextRequest, NextResponse } from "next/server";
 import { getCVByUsername } from "@/data/cvs";
 import { generateCVHTML } from "@/lib/templates/cv-pdf-template";
 
-const CHROMIUM_PACK_URL = process.env.VERCEL_PROJECT_PRODUCTION_URL
-  ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}/chromium-pack.tar`
-  : process.env.VERCEL_URL
+// Use the deployment URL to fetch chromium pack
+// Falls back to a public example if not available
+const CHROMIUM_PACK_URL = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}/chromium-pack.tar`
-  : undefined;
+  : "https://github.com/gabenunez/puppeteer-on-vercel/raw/refs/heads/main/example/chromium-dont-use-in-prod.tar";
 
 let cachedExecutablePath: string | null = null;
 let downloadPromise: Promise<string> | null = null;
@@ -15,6 +15,7 @@ async function getChromiumPath(): Promise<string> {
   if (cachedExecutablePath) return cachedExecutablePath;
 
   if (!downloadPromise) {
+    console.log("Attempting to download Chromium from:", CHROMIUM_PACK_URL);
     const chromium = (await import("@sparticuz/chromium-min")).default;
     downloadPromise = chromium
       .executablePath(CHROMIUM_PACK_URL)
@@ -25,6 +26,7 @@ async function getChromiumPath(): Promise<string> {
       })
       .catch((error) => {
         console.error("Failed to get Chromium path:", error);
+        console.error("Tried URL:", CHROMIUM_PACK_URL);
         downloadPromise = null;
         throw error;
       });

@@ -9,16 +9,23 @@ const projectRoot = dirname(__dirname);
 async function main() {
   try {
     console.log("📦 Starting postinstall script...");
+    console.log("   Platform:", process.platform);
+    console.log("   Node version:", process.version);
 
     // Resolve chromium package location
     const chromiumResolvedPath = import.meta.resolve("@sparticuz/chromium");
+    console.log("   Chromium package resolved:", chromiumResolvedPath);
 
     // Convert file:// URL to regular path
     const chromiumPath = chromiumResolvedPath.replace(/^file:\/\/\//, "");
+    console.log("   Chromium path:", chromiumPath);
 
     // Get the package root directory (goes up from build/esm/index.js to package root)
     const chromiumDir = dirname(dirname(dirname(chromiumPath)));
     const binDir = join(chromiumDir, "bin");
+    
+    console.log("   Bin directory:", binDir);
+    console.log("   Bin exists:", existsSync(binDir));
 
     if (!existsSync(binDir)) {
       console.log(
@@ -38,16 +45,21 @@ async function main() {
     // Tar the contents of bin/ directly (without bin prefix)
     // Use cross-platform commands
     if (process.platform === "win32") {
+      console.log("   Using Windows commands...");
       execSync(`if not exist "${publicDir}" mkdir "${publicDir}"`, { stdio: "inherit", cwd: projectRoot });
       execSync(`tar -cf "${outputPath}" -C "${binDir}" .`, { stdio: "inherit", cwd: projectRoot });
     } else {
-      execSync(`mkdir -p ${publicDir} && tar -cf "${outputPath}" -C "${binDir}" .`, {
-        stdio: "inherit",
-        cwd: projectRoot,
-      });
+      console.log("   Using Unix commands...");
+      execSync(`mkdir -p "${publicDir}"`, { stdio: "inherit", cwd: projectRoot });
+      execSync(`tar -cf "${outputPath}" -C "${binDir}" .`, { stdio: "inherit", cwd: projectRoot });
     }
 
-    console.log("✅ Chromium archive created successfully!");
+    if (existsSync(outputPath)) {
+      console.log("✅ Chromium archive created successfully!");
+      console.log("   File size:", (await import("node:fs")).statSync(outputPath).size, "bytes");
+    } else {
+      console.error("❌ Archive file was not created!");
+    }
   } catch (error) {
     console.error("❌ Failed to create chromium archive:", error.message);
     console.log("⚠️  This is not critical for local development");
