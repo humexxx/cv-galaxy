@@ -29,12 +29,11 @@ async function getChromiumPath(): Promise<string> {
       .executablePath(CHROMIUM_PACK_URL)
       .then((path) => {
         cachedExecutablePath = path;
-        console.log("Chromium path resolved:", path);
         return path;
       })
       .catch((error) => {
         console.error("Failed to get Chromium path:", error);
-        downloadPromise = null; // Reset on error to allow retry
+        downloadPromise = null;
         throw error;
       });
   }
@@ -82,7 +81,6 @@ export async function GET(request: NextRequest) {
         args: chromium.args,
         executablePath,
       };
-      console.log("Launching browser with executable path:", executablePath);
     } else {
       // Local: Use regular puppeteer with bundled Chromium
       puppeteer = await import("puppeteer");
