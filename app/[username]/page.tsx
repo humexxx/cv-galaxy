@@ -16,6 +16,7 @@ import { Badge } from "@/components/ui/badge";
 import { DownloadPdfButton } from "@/components/download-pdf-button";
 import { Separator } from "@/components/ui/separator";
 import { WorkExperienceSection } from "@/components/work-experience-section";
+import { EducationSection } from "@/components/education-section";
 import {
   TypographyH1,
   TypographyLead,
@@ -281,6 +282,9 @@ export default async function CVPage({ params }: PageProps) {
             <div className="md:col-span-2 space-y-4 sm:space-y-8">
               {/* Work Experience */}
               <WorkExperienceSection workExperience={cv.workExperience} />
+
+              {/* Education */}
+              <EducationSection education={cv.education} />
 
               {/* Projects */}
               {cv.projects.length > 0 && (

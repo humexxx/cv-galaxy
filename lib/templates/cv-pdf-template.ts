@@ -1,4 +1,4 @@
-import type { CVData, WorkExperience, Project } from "@/types/cv";
+import type { CVData, WorkExperience, Project, Education } from "@/types/cv";
 
 const SPACING = {
   xs: '4px',
@@ -74,6 +74,20 @@ export function generateCVHTML(cv: CVData): string {
         </div>
       `;
     }).join("");
+
+  const education = cv.education
+    .map((edu: Education) => `
+      <div class="education-item">
+        <div class="education-header">
+          <div class="education-title-row">
+            <h3 class="education-degree">${escapeHtml(edu.degree)}</h3>
+            <span class="education-period">${formatDate(edu.period.start)} – ${formatDate(edu.period.end)}</span>
+          </div>
+          <div class="education-institution">${escapeHtml(edu.institution.name)}</div>
+        </div>
+        <div class="education-description">${escapeHtml(edu.description)}</div>
+      </div>
+    `).join("");
 
   const projects = cv.projects
     .map((project: Project) => `
@@ -330,6 +344,56 @@ export function generateCVHTML(cv: CVData): string {
           font-weight: bold;
         }
 
+        .education-item {
+          margin-bottom: ${SPACING.lg};
+        }
+
+        .education-item:not(:last-child) {
+          padding-bottom: ${SPACING.md};
+          border-bottom: 1px solid ${COLORS.border.light};
+        }
+
+        .education-header {
+          margin-bottom: ${SPACING.sm};
+        }
+
+        .education-title-row {
+          display: flex;
+          justify-content: space-between;
+          align-items: baseline;
+          margin-bottom: ${SPACING.xs};
+          gap: ${SPACING.md};
+        }
+
+        .education-degree {
+          font-size: 11pt;
+          color: ${COLORS.text.primary};
+          font-weight: 600;
+          flex: 1;
+        }
+
+        .education-period {
+          font-size: 9pt;
+          color: ${COLORS.text.tertiary};
+          font-weight: 500;
+          white-space: nowrap;
+          font-style: italic;
+        }
+
+        .education-institution {
+          font-size: 10pt;
+          color: ${COLORS.text.secondary};
+          font-weight: 500;
+          margin-bottom: ${SPACING.xs};
+        }
+
+        .education-description {
+          font-size: 9pt;
+          line-height: 1.6;
+          color: ${COLORS.text.secondary};
+          font-style: italic;
+        }
+
         .project-item {
           margin-bottom: ${SPACING.md};
         }
@@ -408,6 +472,11 @@ export function generateCVHTML(cv: CVData): string {
       <section class="section">
         <h2 class="section-title">Work Experience</h2>
         ${workExperience}
+      </section>
+
+      <section class="section">
+        <h2 class="section-title">Education</h2>
+        ${education}
       </section>
 
       <section class="section">

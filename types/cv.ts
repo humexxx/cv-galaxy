@@ -23,6 +23,23 @@ export interface Project {
   link?: string;
 }
 
+export interface Institution {
+  id: string;
+  name: string;
+  website?: string;
+  logo?: string;
+}
+
+export interface Education {
+  degree: string;
+  institution: Institution;
+  period: {
+    start: Date;
+    end: Date;
+  };
+  description: string;
+}
+
 export interface ContactInfo {
   phone?: string;
   email: string;
@@ -40,6 +57,7 @@ export interface CVData {
   languages: string[];
   skills: string[];
   workExperience: WorkExperience[];
+  education: Education[];
   projects: Project[];
   personalValues: string[];
 }

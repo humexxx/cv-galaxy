@@ -82,6 +82,21 @@ export const companies: Record<string, Company> = {
   }
 };
 
+export const institutions: Record<string, Company> = {
+  ctpUlloa: {
+    id: "ctpUlloa",
+    name: "Colegio Técnico Profesional de Ulloa",
+    website: "https://www.mep.go.cr/",
+    logo: "/images/institutions/ctp-ulloa.jpg",
+  },
+  una: {
+    id: "una",
+    name: "Universidad Nacional de Costa Rica",
+    website: "https://www.una.ac.cr/",
+    logo: "/images/institutions/una.webp",
+  },
+};
+
 export const cvDatabase: Record<string, CVData> = {
   jason_hume: {
     username: "jason_hume",
@@ -273,6 +288,28 @@ export const cvDatabase: Record<string, CVData> = {
           "Maintained and updated drivers used in aircraft-related systems.",
           "Created queries and small web modules using JavaScript, CSS and HTML.",
         ],
+      },
+    ],
+    education: [
+      {
+        degree: "Bachelor's Degree in Information Systems Engineering",
+        institution: institutions.una,
+        period: {
+          start: new Date(2012, 0),
+          end: new Date(2017, 11),
+        },
+        description:
+          "Earned a Bachelor's degree in Information Systems Engineering from one of Costa Rica's leading universities, nationally recognized for its excellence in computer science and technology education. The program provided comprehensive training in software development, database management, systems analysis, and software engineering principles.",
+      },
+      {
+        degree: "Technical Diploma in Information Systems Engineering",
+        institution: institutions.ctpUlloa,
+        period: {
+          start: new Date(2008, 0),
+          end: new Date(2011, 11),
+        },
+        description:
+          "Completed a specialized technical education program with emphasis on Information Systems Engineering. The last three years focused on networking fundamentals, computer science principles, and programming foundations, providing a solid technical base for subsequent university studies and professional development.",
       },
     ],
     projects: [
