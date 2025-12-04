@@ -1,3 +1,19 @@
+## [1.2.0](https://github.com/humexxx/cv-galaxy/compare/v1.1.0...v1.2.0) (2025-12-04)
+
+### ✨ Features
+
+* add education section to CV and update related data structures ([89afd7a](https://github.com/humexxx/cv-galaxy/commit/89afd7a1c37460746c011407b81b130eb989a056))
+* enhance project link handling with tooltip for upcoming projects and add comingSoon flag to project type ([a300d66](https://github.com/humexxx/cv-galaxy/commit/a300d666ef5ab87aa2cd5564c14ef3b7a9bdb6e5))
+* improve CV page layout for better mobile responsiveness and enhance contact information display ([8faf594](https://github.com/humexxx/cv-galaxy/commit/8faf594fdf24d86f81552ba5af406d39a6fc92f0))
+* update CV user details from 'humexxx' to 'jason_hume' and adjust related references ([9fa35cd](https://github.com/humexxx/cv-galaxy/commit/9fa35cd5d0bbddf07e1f4530435ceeead302bacc))
+* update dependencies and add CV PDF generation template ([ed57778](https://github.com/humexxx/cv-galaxy/commit/ed57778cef9bf8e4ec3f13b96a9253bc1e23a6ba))
+* update metadata type to 'website' and enhance Open Graph tags for better social sharing ([15eeb85](https://github.com/humexxx/cv-galaxy/commit/15eeb853a068f16e37df7d5b665fe8cf643bb3aa))
+
+### ♻️ Code Refactoring
+
+* remove personal values section from CV display and PDF generation ([87c3bd2](https://github.com/humexxx/cv-galaxy/commit/87c3bd2f8fc7b5fdd8665a568f5af98a6409efeb))
+* update CV assistant prompt for clarity and structure ([306e248](https://github.com/humexxx/cv-galaxy/commit/306e248acdeac4fb05255e99c9c9cb7067fc4856))
+
 ## [1.1.0](https://github.com/humexxx/cv-galaxy/compare/v1.0.0...v1.1.0) (2025-12-03)
 
 ### ✨ Features
