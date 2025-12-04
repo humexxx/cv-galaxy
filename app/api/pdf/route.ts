@@ -5,6 +5,9 @@ import { existsSync } from "fs";
 import { getCVByUsername } from "@/data/cvs";
 import { generateCVHTML } from "@/lib/templates/cv-pdf-template";
 
+// Configure chromium for Vercel
+chromium.setGraphicsMode = false;
+
 function findChromeExecutable(): string | undefined {
   const possiblePaths = [
     'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
@@ -46,16 +49,30 @@ export async function GET(request: NextRequest) {
     }
 
     let browser;
+    const isProduction = process.env.VERCEL === '1' || process.env.NODE_ENV === 'production';
     
-    if (process.env.VERCEL) {
+    console.log('Environment check:', { VERCEL: process.env.VERCEL, NODE_ENV: process.env.NODE_ENV, isProduction });
+    
+    if (isProduction) {
       // Production: Use Chromium from Sparticuz
+      console.log('Launching Chromium for production...');
+      
+      const executablePath = await chromium.executablePath();
+      console.log('Chromium executable path:', executablePath);
+      
       browser = await puppeteer.launch({
         args: chromium.args,
-        executablePath: await chromium.executablePath(),
+        defaultViewport: {
+          width: 1920,
+          height: 1080,
+        },
+        executablePath,
         headless: true,
       });
+      console.log('Chromium launched successfully');
     } else {
       // Local development: Try to find Chrome
+      console.log('Looking for Chrome executable for local development...');
       const chromeExecutable = findChromeExecutable();
       
       if (!chromeExecutable) {
@@ -66,20 +83,26 @@ export async function GET(request: NextRequest) {
         );
       }
       
+      console.log('Chrome found at:', chromeExecutable);
       browser = await puppeteer.launch({
         executablePath: process.env.CHROME_EXECUTABLE_PATH || chromeExecutable,
         headless: true,
         args: ['--no-sandbox', '--disable-setuid-sandbox'],
       });
+      console.log('Chrome launched successfully');
     }
 
+    console.log('Creating new page...');
     const page = await browser.newPage();
 
     // Generate HTML and set content
+    console.log('Generating HTML content...');
     const htmlContent = generateCVHTML(cvData);
+    console.log('Setting page content...');
     await page.setContent(htmlContent, { waitUntil: 'networkidle0' });
 
     // Generate PDF
+    console.log('Generating PDF...');
     const pdfBuffer = await page.pdf({
       format: 'A4',
       printBackground: true,
@@ -91,6 +114,7 @@ export async function GET(request: NextRequest) {
       }
     });
 
+    console.log('PDF generated successfully, size:', pdfBuffer.length, 'bytes');
     await browser.close();
 
     // Return PDF as response
@@ -103,8 +127,17 @@ export async function GET(request: NextRequest) {
 
   } catch (error) {
     console.error("PDF generation error:", error);
+    console.error("Error details:", {
+      message: error instanceof Error ? error.message : 'Unknown error',
+      stack: error instanceof Error ? error.stack : undefined,
+      name: error instanceof Error ? error.name : undefined,
+    });
+    
     return NextResponse.json(
-      { error: "Failed to generate PDF" },
+      { 
+        error: "Failed to generate PDF",
+        details: process.env.NODE_ENV === 'development' ? (error instanceof Error ? error.message : 'Unknown error') : undefined
+      },
       { status: 500 }
     );
   }
