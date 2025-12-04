@@ -1,19 +1,8 @@
 {
   "functions": {
     "app/api/pdf/route.ts": {
-      "maxDuration": 60,
-      "memory": 3008
+      "maxDuration": 30,
+      "memory": 1024
     }
-  },
-  "headers": [
-    {
-      "source": "/api/pdf",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "no-cache, no-store, must-revalidate"
-        }
-      ]
-    }
-  ]
+  }
 }
