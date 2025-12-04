@@ -9,8 +9,12 @@ export class CVMatcher {
       terms.set(tech.toLowerCase(), { section: "technologies", color: "yellow" });
     });
 
+    cvData.languages.forEach(lang => {
+      terms.set(lang.toLowerCase(), { section: "languages", color: "green" });
+    });
+
     cvData.skills.forEach(skill => {
-      terms.set(skill.toLowerCase(), { section: "skills", color: "green" });
+      terms.set(skill.toLowerCase(), { section: "skills", color: "blue" });
     });
 
     cvData.workExperience.forEach(exp => {
@@ -23,6 +27,15 @@ export class CVMatcher {
 
     cvData.projects.forEach(project => {
       terms.set(project.title.toLowerCase(), { section: "projects", color: "purple" });
+    });
+
+    cvData.education.forEach(edu => {
+      terms.set(edu.degree.toLowerCase(), { section: "workExperience", color: "blue" });
+      terms.set(edu.institution.name.toLowerCase(), { section: "workExperience", color: "blue" });
+    });
+
+    cvData.personalValues.forEach(value => {
+      terms.set(value.toLowerCase(), { section: "personalValues", color: "green" });
     });
 
     return terms;
@@ -47,8 +60,16 @@ export class CVMatcher {
       return { section: "technologies", color: "yellow" };
     }
 
+    if (cvData.languages.some(l => l.toLowerCase() === lowerText)) {
+      return { section: "languages", color: "green" };
+    }
+
     if (cvData.skills.some(s => s.toLowerCase() === lowerText)) {
-      return { section: "skills", color: "green" };
+      return { section: "skills", color: "blue" };
+    }
+
+    if (cvData.personalValues.some(v => v.toLowerCase() === lowerText)) {
+      return { section: "personalValues", color: "green" };
     }
 
     for (const exp of cvData.workExperience) {
@@ -59,6 +80,16 @@ export class CVMatcher {
         return { section: "workExperience", color: "blue" };
       }
       const descLower = exp.description.toLowerCase();
+      if (descLower.includes(lowerText)) {
+        return { section: "workExperience", color: "blue" };
+      }
+    }
+
+    for (const edu of cvData.education) {
+      if (edu.degree.toLowerCase() === lowerText || edu.institution.name.toLowerCase() === lowerText) {
+        return { section: "workExperience", color: "blue" };
+      }
+      const descLower = edu.description.toLowerCase();
       if (descLower.includes(lowerText)) {
         return { section: "workExperience", color: "blue" };
       }

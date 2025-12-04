@@ -82,14 +82,29 @@ export const companies: Record<string, Company> = {
   }
 };
 
+export const institutions: Record<string, Company> = {
+  ctpUlloa: {
+    id: "ctpUlloa",
+    name: "Colegio Técnico Profesional de Ulloa",
+    website: "https://www.mep.go.cr/",
+    logo: "/images/institutions/ctp-ulloa.jpg",
+  },
+  una: {
+    id: "una",
+    name: "Universidad Nacional de Costa Rica",
+    website: "https://www.una.ac.cr/",
+    logo: "/images/institutions/una.webp",
+  },
+};
+
 export const cvDatabase: Record<string, CVData> = {
-  humexxx: {
-    username: "humexxx",
+  jason_hume: {
+    username: "jason_hume",
     fullName: "Jason Hume González",
     title: "Senior Fullstack Developer",
-    avatar: "/images/users/humexxx.jpg",
+    avatar: "/images/users/jason_hume.jpg",
     about:
-      "Senior Fullstack Developer with solid experience building web applications end-to-end using modern JavaScript/TypeScript frameworks and .NET backends. I combine strong logical thinking, creativity and a self-taught mindset to quickly understand complex domains and deliver high-quality, maintainable solutions. I actively leverage AI tools and integrate AI-powered features into applications to accelerate development and provide smarter user experiences. Comfortable working in distributed teams, collaborating with stakeholders, and taking ownership from design to production.",
+      "Senior Fullstack Developer with solid experience building web applications end-to-end using modern JavaScript/TypeScript frameworks and .NET backends. I combine strong logical thinking, creativity and a self-taught mindset to quickly understand complex domains and deliver high-quality, maintainable solutions. I actively leverage AI tools and integrate AI-powered features into applications to accelerate development and provide smarter user experiences. Comfortable working in distributed teams, collaborating with stakeholders, and taking ownership from design to production. I maintain a continuous learning mindset, especially with AI trends, and treat every product as if it were my own—taking full responsibility from design through delivery and ongoing improvement. I focus on team-first collaboration through clear communication and knowledge sharing, and I don't stop at the first obstacle; I iterate, test and refine until the solution is solid.",
     contact: {
       phone: "+506 8939 3381",
       email: "jahume92@gmail.com",
@@ -120,11 +135,12 @@ export const cvDatabase: Record<string, CVData> = {
     ],
     languages: ["Spanish (Native)", "English (Fluent)"],
     skills: [
-      "Creative problem solving",
-      "Ability to work under pressure",
-      "Fast self-learner / self-taught mindset",
-      "Excellent teamwork and communication",
-      "Continuously learning and leveraging AI tools to improve productivity and code quality",
+      "Creative problem solving with resilience and perseverance",
+      "Ability to work under pressure and iterate until solutions are solid",
+      "Fast self-learner with continuous learning mindset, especially in AI trends",
+      "Excellent teamwork and communication with team-first collaboration approach",
+      "Taking ownership and accountability from design through delivery",
+      "Leveraging AI tools to improve productivity and code quality",
     ],
     workExperience: [
       {
@@ -275,18 +291,40 @@ export const cvDatabase: Record<string, CVData> = {
         ],
       },
     ],
+    education: [
+      {
+        degree: "Bachelor's Degree in Information Systems Engineering",
+        institution: institutions.una,
+        period: {
+          start: new Date(2012, 0),
+          end: new Date(2017, 11),
+        },
+        description:
+          "Earned a Bachelor's degree in Information Systems Engineering from one of Costa Rica's leading universities, nationally recognized for its excellence in computer science and technology education. The program provided comprehensive training in software development, database management, systems analysis, and software engineering principles.",
+      },
+      {
+        degree: "Technical Diploma in Information Systems Engineering",
+        institution: institutions.ctpUlloa,
+        period: {
+          start: new Date(2008, 0),
+          end: new Date(2011, 11),
+        },
+        description:
+          "Completed a specialized technical education program with emphasis on Information Systems Engineering. The last three years focused on networking fundamentals, computer science principles, and programming foundations, providing a solid technical base for subsequent university studies and professional development.",
+      },
+    ],
     projects: [
       {
         title: "Champions – Personal Growth & Financial Wellness Platform",
         description:
           "Designing and building a personal growth platform that helps users organize their finances, track investments, build healthy habits, plan workouts and maintain balanced entertainment. The product combines social sharing features with 3D animations and gamification elements to create a motivating and healthy environment for friends and communities. Built with React and Firebase, currently approaching beta release.",
-        link: "TBD",
+        comingSoon: true,
       },
       {
         title: "Trim Success – Business Performance Analytics",
         description:
           "Developing a private analytics tool to measure company performance using multiple financial and operational metrics. The system provides dashboards and visualisations to understand profitability and growth over time. Implemented with React and Firebase, designed for iterative refinement and potential onboarding of test accounts.",
-        link: "TBD",
+        comingSoon: true,
       },
       {
         title: "AI-Driven Micro Projects",
@@ -334,9 +372,9 @@ export function searchCVs(query: string): CVSearchResult[] {
 }
 
 export function getTopResults(): CVSearchResult[] {
-  // For now, always return humexxx as top result
+  // For now, always return jason_hume as top result
   // In the future, this could be based on popularity, recent views, etc.
-  const cv = cvDatabase.humexxx;
+  const cv = cvDatabase.jason_hume;
 
   if (!cv) {
     return [];

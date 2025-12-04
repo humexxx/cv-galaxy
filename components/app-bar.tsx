@@ -29,7 +29,6 @@ export function AppBar() {
   const [feedbackOpen, setFeedbackOpen] = useState(false)
   const [localSearchValue, setLocalSearchValue] = useState("")
   
-  // Check if we're on a CV page (e.g., /humexxx)
   const isOnCVPage = pathname !== "/" && pathname !== "/settings" && !pathname.startsWith("/_")
   
   // Use query params on home page, local state on CV pages
