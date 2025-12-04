@@ -1,27 +1,44 @@
 import { NextRequest, NextResponse } from "next/server";
-import puppeteer from "puppeteer-core";
-import chromium from "@sparticuz/chromium";
-import { existsSync } from "fs";
 import { getCVByUsername } from "@/data/cvs";
 import { generateCVHTML } from "@/lib/templates/cv-pdf-template";
 
-function findChromeExecutable(): string | undefined {
-  const possiblePaths = [
-    'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
-    'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe',
-    process.env.LOCALAPPDATA + '\\Google\\Chrome\\Application\\chrome.exe',
-  ];
-  
-  for (const path of possiblePaths) {
-    try {
-      if (existsSync(path)) {
+// URL to the Chromium binary package hosted in /public
+// Use production URL if available, otherwise use the current deployment URL
+const CHROMIUM_PACK_URL = process.env.VERCEL_PROJECT_PRODUCTION_URL
+  ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}/chromium-pack.tar`
+  : process.env.VERCEL_URL
+  ? `https://${process.env.VERCEL_URL}/chromium-pack.tar`
+  : "https://github.com/humexxx/cv-galaxy/raw/refs/heads/develop/public/chromium-pack.tar";
+
+// Cache the Chromium executable path to avoid re-downloading on subsequent requests
+let cachedExecutablePath: string | null = null;
+let downloadPromise: Promise<string> | null = null;
+
+/**
+ * Downloads and caches the Chromium executable path.
+ * Uses a download promise to prevent concurrent downloads.
+ */
+async function getChromiumPath(): Promise<string> {
+  // Return cached path if available
+  if (cachedExecutablePath) return cachedExecutablePath;
+
+  // Prevent concurrent downloads by reusing the same promise
+  if (!downloadPromise) {
+    const chromium = (await import("@sparticuz/chromium-min")).default;
+    downloadPromise = chromium
+      .executablePath(CHROMIUM_PACK_URL)
+      .then((path) => {
+        cachedExecutablePath = path;
         return path;
-      }
-    } catch {
-      continue;
-    }
+      })
+      .catch((error) => {
+        console.error("Failed to get Chromium path:", error);
+        downloadPromise = null;
+        throw error;
+      });
   }
-  return undefined;
+
+  return downloadPromise;
 }
 
 export async function GET(request: NextRequest) {
@@ -45,34 +62,32 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    let browser;
-    
-    if (process.env.VERCEL) {
-      // Production: Use Chromium from Sparticuz
-      browser = await puppeteer.launch({
+    // Configure browser based on environment
+    const isVercel = !!process.env.VERCEL_ENV;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let puppeteer: any;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let launchOptions: any = {
+      headless: true,
+    };
+
+    if (isVercel) {
+      // Vercel: Use puppeteer-core with downloaded Chromium binary
+      const chromium = (await import("@sparticuz/chromium-min")).default;
+      puppeteer = await import("puppeteer-core");
+      const executablePath = await getChromiumPath();
+      launchOptions = {
+        ...launchOptions,
         args: chromium.args,
-        executablePath: await chromium.executablePath(),
-        headless: true,
-      });
+        executablePath,
+      };
     } else {
-      // Local development: Try to find Chrome
-      const chromeExecutable = findChromeExecutable();
-      
-      if (!chromeExecutable) {
-        console.error("Chrome not found. Please install Google Chrome or set CHROME_EXECUTABLE_PATH environment variable.");
-        return NextResponse.json(
-          { error: "Chrome browser not found. Please install Google Chrome to generate PDFs locally." },
-          { status: 500 }
-        );
-      }
-      
-      browser = await puppeteer.launch({
-        executablePath: process.env.CHROME_EXECUTABLE_PATH || chromeExecutable,
-        headless: true,
-        args: ['--no-sandbox', '--disable-setuid-sandbox'],
-      });
+      // Local: Use regular puppeteer with bundled Chromium
+      puppeteer = await import("puppeteer");
     }
 
+    // Launch browser
+    const browser = await puppeteer.launch(launchOptions);
     const page = await browser.newPage();
 
     // Generate HTML and set content
@@ -93,18 +108,25 @@ export async function GET(request: NextRequest) {
 
     await browser.close();
 
+    // Create filename with proper encoding for non-ASCII characters
+    const filename = `${cvData.fullName.replace(/\s+/g, '_')}_CV.pdf`;
+    const encodedFilename = encodeURIComponent(filename);
+
     // Return PDF as response
     return new Response(Buffer.from(pdfBuffer), {
       headers: {
         'Content-Type': 'application/pdf',
-        'Content-Disposition': `attachment; filename="${cvData.fullName.replace(/\s+/g, '_')}_CV.pdf"`,
+        'Content-Disposition': `attachment; filename="${encodedFilename}"; filename*=UTF-8''${encodedFilename}`,
       },
     });
 
   } catch (error) {
     console.error("PDF generation error:", error);
     return NextResponse.json(
-      { error: "Failed to generate PDF" },
+      { 
+        error: "Failed to generate PDF",
+        details: process.env.NODE_ENV === 'development' ? (error instanceof Error ? error.message : 'Unknown error') : undefined
+      },
       { status: 500 }
     );
   }
