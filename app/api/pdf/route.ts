@@ -1,12 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import puppeteer from "puppeteer-core";
-import chromium from "@sparticuz/chromium";
+import chromium from "@sparticuz/chromium-min";
 import { existsSync } from "fs";
 import { getCVByUsername } from "@/data/cvs";
 import { generateCVHTML } from "@/lib/templates/cv-pdf-template";
-
-// Configure chromium for Vercel
-chromium.setGraphicsMode = false;
 
 function findChromeExecutable(): string | undefined {
   const possiblePaths = [
