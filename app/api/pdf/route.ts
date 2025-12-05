@@ -1,13 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getCVByUsername } from "@/data/cvs";
 import { generateCVHTML } from "@/lib/templates/cv-pdf-template";
+import { env } from "@/lib/env";
 
 // URL to the Chromium binary package hosted in /public
 // Use production URL if available, otherwise use the current deployment URL
-const CHROMIUM_PACK_URL = process.env.VERCEL_PROJECT_PRODUCTION_URL
-  ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}/chromium-pack.tar`
-  : process.env.VERCEL_URL
-  ? `https://${process.env.VERCEL_URL}/chromium-pack.tar`
+const CHROMIUM_PACK_URL = env.VERCEL_PROJECT_PRODUCTION_URL
+  ? `https://${env.VERCEL_PROJECT_PRODUCTION_URL}/chromium-pack.tar`
+  : env.VERCEL_URL
+  ? `https://${env.VERCEL_URL}/chromium-pack.tar`
   : "https://github.com/humexxx/cv-galaxy/raw/refs/heads/develop/public/chromium-pack.tar";
 
 // Cache the Chromium executable path to avoid re-downloading on subsequent requests
@@ -63,7 +64,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Configure browser based on environment
-    const isVercel = !!process.env.VERCEL_ENV;
+    const isVercel = !!env.VERCEL_ENV;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let puppeteer: any;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -125,7 +126,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(
       { 
         error: "Failed to generate PDF",
-        details: process.env.NODE_ENV === 'development' ? (error instanceof Error ? error.message : 'Unknown error') : undefined
+        details: env.NODE_ENV === 'development' ? (error instanceof Error ? error.message : 'Unknown error') : undefined
       },
       { status: 500 }
     );

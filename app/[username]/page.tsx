@@ -1,4 +1,5 @@
 import { getCVByUsername } from "@/data/cvs";
+import { getBaseUrl } from "@/lib/env";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import {
@@ -52,8 +53,7 @@ export async function generateMetadata({
     };
   }
 
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 
-    (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000");
+  const baseUrl = getBaseUrl();
 
   // Optimize title length (50-60 characters ideal)
   const title = `${cv.fullName} | ${cv.title} | CV Galaxy`;
