@@ -62,3 +62,10 @@ export interface CVData {
   projects: Project[];
   personalValues: string[];
 }
+
+export interface CVSearchResult {
+  username: string;
+  fullName: string;
+  title: string;
+  avatar?: string;
+}

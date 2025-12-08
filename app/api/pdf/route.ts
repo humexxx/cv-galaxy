@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getCVByUsername } from "@/data/cvs";
+import { cvService } from "@/lib/services/cv-service";
 import { generateCVHTML } from "@/lib/templates/cv-pdf-template";
 import { env } from "@/lib/env";
 
@@ -54,7 +54,7 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const cvData = getCVByUsername(userId);
+    const cvData = await cvService.getCVByUsername(userId);
 
     if (!cvData) {
       return NextResponse.json(

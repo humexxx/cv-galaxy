@@ -2,7 +2,7 @@
 
 import Image from "next/image"
 import { User } from "lucide-react"
-import { CVSearchResult } from "@/data/cvs"
+import type { CVSearchResult } from "@/types/cv"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Separator } from "@/components/ui/separator"
 import { ScrollArea } from "@/components/ui/scroll-area"

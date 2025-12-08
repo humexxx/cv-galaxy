@@ -1,4 +1,4 @@
-import { getCVByUsername } from "@/data/cvs";
+import { cvService } from "@/lib/services/cv-service";
 import { getBaseUrl } from "@/lib/env";
 import { notFound } from "next/navigation";
 import Image from "next/image";
@@ -45,7 +45,7 @@ export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
   const { username } = await params;
-  const cv = getCVByUsername(username);
+  const cv = await cvService.getCVByUsername(username);
 
   if (!cv) {
     return {
@@ -111,7 +111,7 @@ export async function generateMetadata({
 
 export default async function CVPage({ params }: PageProps) {
   const { username } = await params;
-  const cv = getCVByUsername(username);
+  const cv = await cvService.getCVByUsername(username);
 
   if (!cv) {
     notFound();

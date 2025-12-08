@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useMemo } from "react"
+import { useState } from "react"
 import Link from "next/link"
 import { useRouter, useSearchParams, usePathname } from "next/navigation"
 import { FileText, Settings } from "lucide-react"
@@ -8,8 +8,8 @@ import { ModeToggle } from "@/components/mode-toggle"
 import { SearchBar } from "@/components/search-bar"
 import { SearchDropdown } from "@/components/search-dropdown"
 import { Button } from "@/components/ui/button"
-import { searchCVs, getTopResults } from "@/data/cvs"
 import { useDebounce } from "@/hooks/use-debounce"
+import { useSearchCVs } from "@/hooks/use-search-cvs"
 import {
   Dialog,
   DialogContent,
@@ -36,21 +36,14 @@ export function AppBar() {
   const searchValue = isOnCVPage ? localSearchValue : (searchParams.get("q") || "")
   const debouncedSearch = useDebounce(searchValue, 300)
   
-  const isLoading = searchValue.trim() !== debouncedSearch.trim()
+  const { data: searchData, loading: searchLoading } = useSearchCVs(isOnCVPage ? debouncedSearch : "")
+  const isLoading = searchValue.trim() !== debouncedSearch.trim() || searchLoading
   
   // Search results for dropdown (only on CV pages)
-  const searchResults = useMemo(() => {
-    if (!isOnCVPage || !debouncedSearch.trim()) {
-      return { top: [], all: [] }
-    }
-    const results = searchCVs(debouncedSearch)
-    const top = getTopResults()
-    
-    return {
-      top: debouncedSearch.trim() ? top : [],
-      all: results
-    }
-  }, [isOnCVPage, debouncedSearch])
+  const searchResults = {
+    top: debouncedSearch.trim() ? searchData.top : [],
+    all: searchData.results
+  }
 
   const handleSearchChange = (value: string) => {
     if (isOnCVPage) {

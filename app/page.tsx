@@ -3,9 +3,9 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { Search } from "lucide-react";
 import { SearchResults } from "@/components/search-results";
-import { searchCVs, getTopResults } from "@/data/cvs";
 import { useDebounce } from "@/hooks/use-debounce";
-import { useMemo, Suspense } from "react";
+import { useSearchCVs } from "@/hooks/use-search-cvs";
+import { Suspense } from "react";
 import { TypographyH2, TypographyMuted } from "@/components/ui/typography";
 
 function HomeContent() {
@@ -14,20 +14,14 @@ function HomeContent() {
   const queryParam = searchParams.get("q") || "";
   const debouncedQuery = useDebounce(queryParam, 300);
 
-  const isLoading = queryParam.trim() !== debouncedQuery.trim();
+  const { data: searchData, loading: searchLoading } = useSearchCVs(debouncedQuery);
+  const isLoading = queryParam.trim() !== debouncedQuery.trim() || searchLoading;
 
-  const searchResults = useMemo(() => {
-    if (debouncedQuery.trim()) {
-      const results = searchCVs(debouncedQuery);
-      const top = getTopResults();
-      return {
-        top,
-        all: results,
-        loading: false
-      };
-    }
-    return { top: [], all: [], loading: false };
-  }, [debouncedQuery]);
+  const searchResults = {
+    top: searchData.top,
+    all: searchData.results,
+    loading: isLoading
+  };
 
   const handleSelectResult = (username: string) => {
     router.push(`/${username}`);
