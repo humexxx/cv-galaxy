@@ -1,13 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getCVByUsername } from "@/data/cvs";
+import { cvService } from "@/lib/services/cv-service";
 import { generateCVHTML } from "@/lib/templates/cv-pdf-template";
+import { PreferencesServerService } from "@/lib/services/preferences-server-service";
+import { env } from "@/lib/env";
 
 // URL to the Chromium binary package hosted in /public
 // Use production URL if available, otherwise use the current deployment URL
-const CHROMIUM_PACK_URL = process.env.VERCEL_PROJECT_PRODUCTION_URL
-  ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}/chromium-pack.tar`
-  : process.env.VERCEL_URL
-  ? `https://${process.env.VERCEL_URL}/chromium-pack.tar`
+const CHROMIUM_PACK_URL = env.VERCEL_PROJECT_PRODUCTION_URL
+  ? `https://${env.VERCEL_PROJECT_PRODUCTION_URL}/chromium-pack.tar`
+  : env.VERCEL_URL
+  ? `https://${env.VERCEL_URL}/chromium-pack.tar`
   : "https://github.com/humexxx/cv-galaxy/raw/refs/heads/develop/public/chromium-pack.tar";
 
 // Cache the Chromium executable path to avoid re-downloading on subsequent requests
@@ -53,17 +55,22 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const cvData = getCVByUsername(userId);
+    // Get user preferences from database first
+    const preferences = await PreferencesServerService.getPreferencesFromDB(userId);
+    const showContractors = preferences.showContractors;
+
+    // Get CV data with contractors filtered based on preferences
+    const cvData = await cvService.getCVByUsername(userId, showContractors);
 
     if (!cvData) {
       return NextResponse.json(
-        { error: "CV not found for the specified user" },
+        { error: "CV not found" },
         { status: 404 }
       );
     }
 
     // Configure browser based on environment
-    const isVercel = !!process.env.VERCEL_ENV;
+    const isVercel = !!env.VERCEL_ENV;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let puppeteer: any;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -91,7 +98,7 @@ export async function GET(request: NextRequest) {
     const page = await browser.newPage();
 
     // Generate HTML and set content
-    const htmlContent = generateCVHTML(cvData);
+    const htmlContent = generateCVHTML(cvData, showContractors);
     await page.setContent(htmlContent, { waitUntil: 'networkidle0' });
 
     // Generate PDF
@@ -125,7 +132,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(
       { 
         error: "Failed to generate PDF",
-        details: process.env.NODE_ENV === 'development' ? (error instanceof Error ? error.message : 'Unknown error') : undefined
+        details: env.NODE_ENV === 'development' ? (error instanceof Error ? error.message : 'Unknown error') : undefined
       },
       { status: 500 }
     );

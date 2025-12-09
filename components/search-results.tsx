@@ -1,8 +1,9 @@
 "use client"
 
+import Link from "next/link"
 import Image from "next/image"
 import { FileText, User } from "lucide-react"
-import { CVSearchResult } from "@/data/cvs"
+import type { CVSearchResult } from "@/types/cv"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Separator } from "@/components/ui/separator"
 import { TypographyH2, TypographyMuted } from "@/components/ui/typography"
@@ -106,7 +107,8 @@ export function SearchResults({
 
 function ResultCard({ result, onClick }: { result: CVSearchResult; onClick: () => void }) {
   return (
-    <button
+    <Link
+      href={`/${result.username}`}
       onClick={onClick}
       className="flex flex-col items-center justify-center p-4 rounded-lg border bg-card hover:bg-accent transition-colors text-left w-full cursor-pointer"
     >
@@ -127,13 +129,14 @@ function ResultCard({ result, onClick }: { result: CVSearchResult; onClick: () =
         <p className="font-semibold text-sm truncate">{result.fullName}</p>
         <p className="text-xs text-muted-foreground truncate">{result.title}</p>
       </div>
-    </button>
+    </Link>
   )
 }
 
 function ResultRow({ result, onClick }: { result: CVSearchResult; onClick: () => void }) {
   return (
-    <button
+    <Link
+      href={`/${result.username}`}
       onClick={onClick}
       className="flex items-center gap-3 p-2 rounded-md hover:bg-accent transition-colors text-left w-full cursor-pointer"
     >
@@ -154,7 +157,7 @@ function ResultRow({ result, onClick }: { result: CVSearchResult; onClick: () =>
         <p className="font-medium text-sm truncate">{result.fullName}</p>
         <p className="text-xs text-muted-foreground truncate">{result.title}</p>
       </div>
-    </button>
+    </Link>
   )
 }
 

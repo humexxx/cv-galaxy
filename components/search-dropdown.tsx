@@ -1,8 +1,9 @@
 "use client"
 
+import Link from "next/link"
 import Image from "next/image"
 import { User } from "lucide-react"
-import { CVSearchResult } from "@/data/cvs"
+import type { CVSearchResult } from "@/types/cv"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Separator } from "@/components/ui/separator"
 import { ScrollArea } from "@/components/ui/scroll-area"
@@ -113,7 +114,8 @@ export function SearchDropdown({
 
 function ResultCard({ result, onClick }: { result: CVSearchResult; onClick: () => void }) {
   return (
-    <button
+    <Link
+      href={`/${result.username}`}
       onClick={onClick}
       className="flex flex-col items-center justify-center p-3 rounded-lg border bg-card hover:bg-accent transition-colors text-left w-full cursor-pointer"
     >
@@ -134,13 +136,14 @@ function ResultCard({ result, onClick }: { result: CVSearchResult; onClick: () =
         <p className="font-semibold text-xs truncate">{result.fullName}</p>
         <p className="text-[10px] text-muted-foreground truncate">{result.title}</p>
       </div>
-    </button>
+    </Link>
   )
 }
 
 function ResultRow({ result, onClick }: { result: CVSearchResult; onClick: () => void }) {
   return (
-    <button
+    <Link
+      href={`/${result.username}`}
       onClick={onClick}
       className="flex items-center gap-3 w-full p-2 rounded-md hover:bg-accent transition-colors text-left cursor-pointer"
     >
@@ -161,7 +164,7 @@ function ResultRow({ result, onClick }: { result: CVSearchResult; onClick: () =>
         <p className="font-medium text-sm truncate">{result.fullName}</p>
         <p className="text-xs text-muted-foreground truncate">{result.title}</p>
       </div>
-    </button>
+    </Link>
   )
 }
 
