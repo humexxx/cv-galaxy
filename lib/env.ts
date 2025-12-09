@@ -5,7 +5,7 @@ export interface Env {
   VERCEL_ENV?: string;
   VERCEL_PROJECT_PRODUCTION_URL?: string;
   NODE_ENV?: "development" | "production" | "test";
-  DATABASE_URL?: string;
+  DATABASE_URL: string;
   NEXT_PUBLIC_SUPABASE_URL?: string;
   NEXT_PUBLIC_SUPABASE_ANON_KEY?: string;
   NEXT_PUBLIC_AUTH_RETURN_URL?: string;
@@ -18,7 +18,7 @@ export const env: Env = {
   VERCEL_ENV: process.env.VERCEL_ENV,
   VERCEL_PROJECT_PRODUCTION_URL: process.env.VERCEL_PROJECT_PRODUCTION_URL,
   NODE_ENV: process.env.NODE_ENV as "development" | "production" | "test",
-  DATABASE_URL: process.env.DATABASE_URL,
+  DATABASE_URL: process.env.DATABASE_URL || "",
   NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
   NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
   NEXT_PUBLIC_AUTH_RETURN_URL: process.env.NEXT_PUBLIC_AUTH_RETURN_URL,
