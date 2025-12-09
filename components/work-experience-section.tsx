@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Briefcase } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CompanyAvatar } from "@/components/company-avatar";
@@ -23,10 +23,16 @@ interface WorkExperienceSectionProps {
 }
 
 export function WorkExperienceSection({ workExperience, showContractors = true, username, onToggle }: WorkExperienceSectionProps) {
+  const [isMounted, setIsMounted] = useState(false);
+  const [accordionValue, setAccordionValue] = useState<string | undefined>(undefined);
+  
   // Show first 2 always expanded, rest in accordion
   const alwaysVisible = workExperience.slice(0, 2);
   const collapsible = workExperience.slice(2);
-  const [accordionValue, setAccordionValue] = useState<string | undefined>(undefined);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   return (
     <Card>
@@ -92,7 +98,7 @@ export function WorkExperienceSection({ workExperience, showContractors = true, 
           ))}
         </div>
 
-        {collapsible.length > 0 && (
+        {collapsible.length > 0 && isMounted && (
           <Accordion 
             type="single" 
             collapsible 

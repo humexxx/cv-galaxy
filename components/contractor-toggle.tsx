@@ -13,7 +13,7 @@ interface ContractorToggleProps {
 }
 
 export function ContractorToggle({ username, onToggle }: ContractorToggleProps) {
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated, isLoading: authLoading } = useAuth();
   const [showContractors, setShowContractors] = useState(true);
   const [loading, setLoading] = useState(false);
   const [isOwnProfile, setIsOwnProfile] = useState(false);
@@ -55,8 +55,8 @@ export function ContractorToggle({ username, onToggle }: ContractorToggleProps) 
     }
   }, [isOwnProfile, username, onToggle]);
 
-  // Only show if viewing own profile
-  if (!isOwnProfile) {
+  // Only show if viewing own profile and auth is loaded
+  if (authLoading || !isOwnProfile) {
     return null;
   }
 

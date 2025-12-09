@@ -14,7 +14,7 @@ interface SearchBarProps {
 }
 
 export function SearchBar({ 
-  placeholder = "Search a username or describe your idea...",
+  placeholder = "Search a name, username, email, or keyword...",
   className,
   inputClassName,
   size = "md",

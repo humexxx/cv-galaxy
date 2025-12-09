@@ -1,4 +1,4 @@
-import { createClient as createSupabaseClient } from "@supabase/supabase-js";
+import { createBrowserClient } from "@supabase/ssr";
 
 function getSupabaseUrl(): string {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -20,18 +20,15 @@ function getSupabaseAnonKey(): string {
   return key;
 }
 
-let supabaseInstance: ReturnType<typeof createSupabaseClient> | null = null;
+// Client-side Supabase client (for browser usage)
+let supabaseInstance: ReturnType<typeof createBrowserClient> | null = null;
 
-export const supabase = new Proxy({} as ReturnType<typeof createSupabaseClient>, {
+export const supabase = new Proxy({} as ReturnType<typeof createBrowserClient>, {
   get(_, prop: string | symbol) {
     if (!supabaseInstance) {
-      supabaseInstance = createSupabaseClient(getSupabaseUrl(), getSupabaseAnonKey());
+      supabaseInstance = createBrowserClient(getSupabaseUrl(), getSupabaseAnonKey());
     }
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return (supabaseInstance as any)[prop];
   }
 });
-
-export function createClient() {
-  return createSupabaseClient(getSupabaseUrl(), getSupabaseAnonKey());
-}

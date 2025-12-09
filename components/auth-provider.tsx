@@ -7,6 +7,7 @@ import type { AuthSession } from "@/types/auth";
 interface AuthContextType extends AuthSession {
   signInWithLinkedIn: () => Promise<void>;
   signOut: () => Promise<void>;
+  isLoading: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -16,9 +17,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     user: null,
     isAuthenticated: false,
   });
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    AuthService.getSession().then(setSession);
+    AuthService.getSession().then((newSession) => {
+      setSession(newSession);
+      setIsLoading(false);
+    });
 
     const { data: { subscription } } = AuthService.onAuthStateChange(setSession);
 
@@ -47,6 +52,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     <AuthContext.Provider
       value={{
         ...session,
+        isLoading,
         signInWithLinkedIn,
         signOut,
       }}

@@ -1,6 +1,6 @@
 import { supabase } from "@/lib/supabase";
 import type { User, AuthSession } from "@/types/auth";
-import type { Provider } from "@supabase/supabase-js";
+import type { Provider, AuthChangeEvent, Session } from "@supabase/supabase-js";
 
 export class AuthService {
   static async signInWithOAuth(provider: Provider): Promise<{ error: Error | null }> {
@@ -51,7 +51,6 @@ export class AuthService {
       const username = await this.getUsernameFromDB();
 
       const user: User = {
-        id: session.user.id,
         email: session.user.email || "",
         username,
         fullName: session.user.user_metadata?.full_name || session.user.user_metadata?.name,
@@ -68,7 +67,7 @@ export class AuthService {
   }
 
   static onAuthStateChange(callback: (session: AuthSession) => void) {
-    return supabase.auth.onAuthStateChange(async (_event, session) => {
+    return supabase.auth.onAuthStateChange(async (_event: AuthChangeEvent, session: Session | null) => {
       if (!session) {
         callback({ user: null, isAuthenticated: false });
         return;
@@ -77,7 +76,6 @@ export class AuthService {
       const username = await this.getUsernameFromDB();
 
       const user: User = {
-        id: session.user.id,
         email: session.user.email || "",
         username,
         fullName: session.user.user_metadata?.full_name || session.user.user_metadata?.name,

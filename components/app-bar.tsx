@@ -1,9 +1,9 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import Link from "next/link"
 import { useRouter, useSearchParams, usePathname } from "next/navigation"
-import { FileText, Settings } from "lucide-react"
+import { FileText } from "lucide-react"
 import { ModeToggle } from "@/components/mode-toggle"
 import { SearchBar } from "@/components/search-bar"
 import { SearchDropdown } from "@/components/search-dropdown"
@@ -143,11 +143,6 @@ export function AppBar() {
               </DialogFooter>
             </DialogContent>
           </Dialog>
-          <Button variant="ghost" size="icon" className="h-8 w-8 sm:h-10 sm:w-10" asChild>
-            <Link href="/settings">
-              <Settings className="h-4 w-4 sm:h-5 sm:w-5" />
-            </Link>
-          </Button>
           <div className="[&>button]:h-8 [&>button]:w-8 sm:[&>button]:h-10 sm:[&>button]:w-10">
             <ModeToggle />
           </div>
