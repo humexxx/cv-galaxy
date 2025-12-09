@@ -12,6 +12,16 @@ export const users = pgTable("users", {
   about: text("about").notNull(),
   phone: text("phone"),
   location: text("location"),
+  supabaseUserId: text("supabase_user_id").notNull().unique(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+// User Preferences table
+export const userPreferences = pgTable("user_preferences", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  userId: uuid("user_id").notNull().unique().references(() => users.id, { onDelete: "cascade" }),
+  showContractors: boolean("show_contractors").notNull().default(true),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
@@ -114,7 +124,7 @@ export const personalValues = pgTable("personal_values", {
 });
 
 // Relations
-export const usersRelations = relations(users, ({ many }) => ({
+export const usersRelations = relations(users, ({ one, many }) => ({
   workExperience: many(workExperience),
   education: many(education),
   projects: many(projects),
@@ -122,6 +132,14 @@ export const usersRelations = relations(users, ({ many }) => ({
   languages: many(languages),
   skills: many(skills),
   personalValues: many(personalValues),
+  preferences: one(userPreferences),
+}));
+
+export const userPreferencesRelations = relations(userPreferences, ({ one }) => ({
+  user: one(users, {
+    fields: [userPreferences.userId],
+    references: [users.id],
+  }),
 }));
 
 export const workExperienceRelations = relations(workExperience, ({ one, many }) => ({

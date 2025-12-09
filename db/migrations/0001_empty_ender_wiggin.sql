@@ -1,0 +1,1 @@
+ALTER TABLE "users" ALTER COLUMN "supabase_user_id" SET NOT NULL;
