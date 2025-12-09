@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 import { Geist, Geist_Mono } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
+import { AuthProvider } from "@/components/auth-provider";
 import { AppBar } from "@/components/app-bar";
+import { Toaster } from "@/components/ui/sonner";
 import { getBaseUrl } from "@/lib/env";
 import "@/app/globals.css";
 
@@ -57,16 +59,19 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <div className="flex min-h-screen flex-col">
-            <Suspense fallback={
-              <header className="sticky top-0 z-50 w-full border-b bg-background h-16" />
-            }>
-              <AppBar />
-            </Suspense>
-            <main className="flex-1">
-              {children}
-            </main>
-          </div>
+          <AuthProvider>
+            <div className="flex min-h-screen flex-col">
+              <Suspense fallback={
+                <header className="sticky top-0 z-50 w-full border-b bg-background h-16" />
+              }>
+                <AppBar />
+              </Suspense>
+              <main className="flex-1">
+                {children}
+              </main>
+            </div>
+            <Toaster />
+          </AuthProvider>
         </ThemeProvider>
       </body>
     </html>

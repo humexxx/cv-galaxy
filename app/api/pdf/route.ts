@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cvService } from "@/lib/services/cv-service";
 import { generateCVHTML } from "@/lib/templates/cv-pdf-template";
+import { PreferencesServerService } from "@/lib/services/preferences-server-service";
 import { env } from "@/lib/env";
 
 // URL to the Chromium binary package hosted in /public
@@ -63,6 +64,10 @@ export async function GET(request: NextRequest) {
       );
     }
 
+    // Get user preferences from database
+    const preferences = await PreferencesServerService.getPreferencesFromDB(userId);
+    const showContractors = preferences.showContractors;
+
     // Configure browser based on environment
     const isVercel = !!env.VERCEL_ENV;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -92,7 +97,7 @@ export async function GET(request: NextRequest) {
     const page = await browser.newPage();
 
     // Generate HTML and set content
-    const htmlContent = generateCVHTML(cvData);
+    const htmlContent = generateCVHTML(cvData, showContractors);
     await page.setContent(htmlContent, { waitUntil: 'networkidle0' });
 
     // Generate PDF

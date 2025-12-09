@@ -12,13 +12,17 @@ import {
 } from "@/components/ui/accordion";
 import { TypographyH3, TypographyMuted } from "@/components/ui/typography";
 import { HighlightedText } from "@/components/highlighted-text";
+import { ContractorToggle } from "@/components/contractor-toggle";
 import type { CVData } from "@/types/cv";
 
 interface WorkExperienceSectionProps {
   workExperience: CVData["workExperience"];
+  showContractors?: boolean;
+  username: string;
+  onToggle: (show: boolean) => void;
 }
 
-export function WorkExperienceSection({ workExperience }: WorkExperienceSectionProps) {
+export function WorkExperienceSection({ workExperience, showContractors = true, username, onToggle }: WorkExperienceSectionProps) {
   // Show first 2 always expanded, rest in accordion
   const alwaysVisible = workExperience.slice(0, 2);
   const collapsible = workExperience.slice(2);
@@ -27,10 +31,13 @@ export function WorkExperienceSection({ workExperience }: WorkExperienceSectionP
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Briefcase className="h-5 w-5" />
-          Work Experience
-        </CardTitle>
+        <div className="flex items-center justify-between">
+          <CardTitle className="flex items-center gap-2">
+            <Briefcase className="h-5 w-5" />
+            Work Experience
+          </CardTitle>
+          <ContractorToggle username={username} onToggle={onToggle} />
+        </div>
       </CardHeader>
       <CardContent className="space-y-8">
         {/* First 2 jobs always visible */}
@@ -40,7 +47,8 @@ export function WorkExperienceSection({ workExperience }: WorkExperienceSectionP
               <CompanyAvatar 
                 company={exp.company} 
                 contractor={exp.contractor}
-                size={48} 
+                size={48}
+                showContractor={showContractors}
               />
               <div className="space-y-3 flex-1">
                 <div>
@@ -51,7 +59,7 @@ export function WorkExperienceSection({ workExperience }: WorkExperienceSectionP
                     <span className="font-medium">
                       <HighlightedText text={exp.company.name} />
                     </span>
-                    {exp.contractor && (
+                    {showContractors && exp.contractor && (
                       <>
                         <span>via</span>
                         <span className="font-medium">{exp.contractor.name}</span>
@@ -108,7 +116,8 @@ export function WorkExperienceSection({ workExperience }: WorkExperienceSectionP
                       <CompanyAvatar 
                         company={exp.company} 
                         contractor={exp.contractor}
-                        size={48} 
+                        size={48}
+                        showContractor={showContractors}
                       />
                       <div className="space-y-3 flex-1">
                         <div>
@@ -119,7 +128,7 @@ export function WorkExperienceSection({ workExperience }: WorkExperienceSectionP
                             <span className="font-medium">
                               <HighlightedText text={exp.company.name} />
                             </span>
-                            {exp.contractor && (
+                            {showContractors && exp.contractor && (
                               <>
                                 <span>via</span>
                                 <span className="font-medium">{exp.contractor.name}</span>

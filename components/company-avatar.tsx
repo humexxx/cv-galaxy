@@ -6,6 +6,7 @@ interface CompanyAvatarProps {
   company: Company;
   contractor?: Company;
   size?: number;
+  showContractor?: boolean;
 }
 
 function SingleAvatar({ 
@@ -72,14 +73,15 @@ function SingleAvatar({
 export function CompanyAvatar({ 
   company, 
   contractor, 
-  size = 48 
+  size = 48,
+  showContractor = true
 }: CompanyAvatarProps) {
-  // If no contractor, show single avatar
-  if (!contractor) {
+  // If no contractor or showContractor is false, show single avatar
+  if (!contractor || !showContractor) {
     return <SingleAvatar company={company} size={size} />;
   }
 
-  // Stacked avatars when contractor exists
+  // Stacked avatars when contractor exists and showContractor is true
   const contractorSize = size * 0.65; // Contractor avatar is 65% of main size
   const gap = 8; // 8px gap between avatars
   
