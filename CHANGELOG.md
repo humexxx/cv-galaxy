@@ -1,3 +1,32 @@
+## [1.4.0](https://github.com/humexxx/cv-galaxy/compare/v1.3.0...v1.4.0) (2025-12-09)
+
+### ✨ Features
+
+* add database commands and types for CV management ([a2f64b6](https://github.com/humexxx/cv-galaxy/commit/a2f64b6f5f1f1d42b584c7c031d8e8a4196af77a))
+* add initial database schema and user preferences table with relations ([4923963](https://github.com/humexxx/cv-galaxy/commit/49239633965a77bb6d7938ee27e32d249d54cadb))
+* add supabaseUserId field during user seeding process ([0531371](https://github.com/humexxx/cv-galaxy/commit/0531371f73cdc80569b3df03f371a2cf919d78d2))
+* add user preferences service and schema ([9f1a931](https://github.com/humexxx/cv-galaxy/commit/9f1a93179b7ea65fc6fc782b601e88b71ede1f56))
+* enhance user experience with CV management and preferences integration ([7d0b8a3](https://github.com/humexxx/cv-galaxy/commit/7d0b8a380cc9ac9cfeb134e2c940b27e83c3bc14))
+* implement search functionality with SearchProvider and update components for search integration ([4c16d17](https://github.com/humexxx/cv-galaxy/commit/4c16d1742421751b477c05987ab23c1a29741c02))
+* implement user preferences management and integrate with CV generation ([1824cc5](https://github.com/humexxx/cv-galaxy/commit/1824cc5c18fb2a808f6ca2fa644e62448328dd8a))
+* improve search handling in AppBar component with local state and URL synchronization ([4a0ca61](https://github.com/humexxx/cv-galaxy/commit/4a0ca614baa5c5ae98cb39cfa6f395bb772de7c0))
+* refactor authentication flow and integrate server-side Supabase client ([b332565](https://github.com/humexxx/cv-galaxy/commit/b33256512b276a0056d68e154653d07eefa8a690))
+* refactor environment variable handling by simplifying validation and removing unused schemas ([a6ceb6c](https://github.com/humexxx/cv-galaxy/commit/a6ceb6c4c9405a5655eb8081267e22317ca4b0a3))
+* remove unused ChatResponse type import in chat-service.ts ([9362869](https://github.com/humexxx/cv-galaxy/commit/936286952be0669883c674266b38d72a6becbfe6))
+* update Next.js to version 16.0.8 in package.json and package-lock.json ([503736a](https://github.com/humexxx/cv-galaxy/commit/503736aa6769dc067a60d0103c3e712ec7925da3))
+* wrap SearchProvider in Suspense for improved loading state handling ([fd8ef0a](https://github.com/humexxx/cv-galaxy/commit/fd8ef0aa07d94e9531d7fe11e1c73bb3e4cc7c36))
+
+### 🐛 Bug Fixes
+
+* add padding to loading animation for improved visibility ([4edd83e](https://github.com/humexxx/cv-galaxy/commit/4edd83e6ed79106bdb9994c6e76e87019e9977a9))
+* enforce DATABASE_URL as a required field in environment configuration ([d755948](https://github.com/humexxx/cv-galaxy/commit/d7559480f8a9397aaacbb21a45c126b288c12d77))
+* ensure DATABASE_URL defaults to an empty string if not set ([439943e](https://github.com/humexxx/cv-galaxy/commit/439943ed1fb7b4b751b5c392e722b251bcbdc4cf))
+
+### ♻️ Code Refactoring
+
+* centralize environment variable handling and improve base URL retrieval ([7146084](https://github.com/humexxx/cv-galaxy/commit/7146084ddf720fb2deb0cde047529b269697b0cb))
+* enhance CV assistant prompt for clarity and detail in responses ([111477e](https://github.com/humexxx/cv-galaxy/commit/111477e3ead6e3b6f9b5c4d3b5565f13296a1094))
+
 ## [1.3.0](https://github.com/humexxx/cv-galaxy/compare/v1.2.0...v1.3.0) (2025-12-04)
 
 ### ✨ Features
