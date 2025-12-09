@@ -1,5 +1,5 @@
 import { chatRequestSchema } from "@/schemas/chat";
-import type { ChatMessage, ChatResponse, ChatRequest, StreamChunk } from "@/types/chat";
+import type { ChatMessage, ChatRequest, StreamChunk } from "@/types/chat";
 import type { AIModelsResponse } from "@/types/ai";
 import type { CVData } from "@/types/cv";
 import { CVMatcher } from "@/lib/utils/cv-matcher";
