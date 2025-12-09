@@ -62,6 +62,7 @@ async function seed() {
       const [user] = await db
         .insert(users)
         .values({
+          supabaseUserId: `seed-${cv.username}`,
           username: cv.username,
           email: cv.contact.email,
           fullName: cv.fullName,
