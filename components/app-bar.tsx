@@ -1,18 +1,17 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import Link from "next/link"
-import { useRouter, useSearchParams, usePathname } from "next/navigation"
+import { useRouter, usePathname } from "next/navigation"
 import { FileText } from "lucide-react"
 import { ModeToggle } from "@/components/mode-toggle"
 import { SearchBar } from "@/components/search-bar"
 import { SearchDropdown } from "@/components/search-dropdown"
 import { Button } from "@/components/ui/button"
-import { useDebounce } from "@/hooks/use-debounce"
-import { useSearchCVs } from "@/hooks/use-search-cvs"
 import { LoginButton } from "@/components/login-button"
 import { UserMenu } from "@/components/user-menu"
 import { useAuth } from "@/components/auth-provider"
+import { useSearch } from "@/components/search-provider"
 import {
   Dialog,
   DialogContent,
@@ -29,54 +28,19 @@ import packageJson from "../package.json"
 export function AppBar() {
   const router = useRouter()
   const pathname = usePathname()
-  const searchParams = useSearchParams()
   const [feedbackOpen, setFeedbackOpen] = useState(false)
-  const [localSearchValue, setLocalSearchValue] = useState("")
   const { isAuthenticated } = useAuth()
+  const { searchQuery, setSearchQuery, searchResults, isLoading } = useSearch()
   
-  const isOnCVPage = pathname !== "/" && pathname !== "/settings" && !pathname.startsWith("/\_")
-  
-  // Always use local state for smooth typing
-  const searchValue = localSearchValue
-  const debouncedSearch = useDebounce(searchValue, 300)
-  
-  // Sync with URL params on home page
-  useEffect(() => {
-    if (!isOnCVPage) {
-      const queryParam = searchParams.get("q") || ""
-      setLocalSearchValue(queryParam)
-    } else {
-      // Clear on CV pages
-      setLocalSearchValue("")
-    }
-  }, [searchParams, isOnCVPage])
-  
-  const { data: searchData, loading: searchLoading } = useSearchCVs(isOnCVPage ? debouncedSearch : "")
-  const isLoading = searchValue.trim() !== debouncedSearch.trim() || searchLoading
-  
-  // Search results for dropdown (only on CV pages)
-  const searchResults = {
-    top: debouncedSearch.trim() ? searchData.top : [],
-    all: searchData.results
-  }
-
-  // Update URL when debounced search changes on home page
-  useEffect(() => {
-    if (!isOnCVPage && debouncedSearch.trim() !== (searchParams.get("q") || "").trim()) {
-      if (debouncedSearch.trim()) {
-        router.push(`/?q=${encodeURIComponent(debouncedSearch)}`, { scroll: false })
-      } else {
-        router.push("/", { scroll: false })
-      }
-    }
-  }, [debouncedSearch, isOnCVPage, searchParams, router])
+  const isHomePage = pathname === "/"
 
   const handleSearchChange = (value: string) => {
-    setLocalSearchValue(value)
+    setSearchQuery(value)
+    // El provider se encarga de actualizar la URL en home page
   }
   
   const handleSelectResult = (username: string) => {
-    setLocalSearchValue("")
+    setSearchQuery("")
     router.push(`/${username}`)
   }
 
@@ -99,10 +63,10 @@ export function AppBar() {
           <SearchBar 
             size="sm"
             inputClassName="bg-background"
-            value={searchValue}
+            value={searchQuery}
             onChange={handleSearchChange}
           />
-          {isOnCVPage && searchValue.trim() && (
+          {!isHomePage && searchQuery.trim() && (
             <SearchDropdown
               topResults={searchResults.top}
               allResults={searchResults.all}

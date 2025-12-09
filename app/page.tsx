@@ -1,33 +1,21 @@
 "use client"
 
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { Search } from "lucide-react";
 import { SearchResults } from "@/components/search-results";
-import { useDebounce } from "@/hooks/use-debounce";
-import { useSearchCVs } from "@/hooks/use-search-cvs";
-import { Suspense } from "react";
+import { useSearch } from "@/components/search-provider";
 import { TypographyH2, TypographyMuted } from "@/components/ui/typography";
 
-function HomeContent() {
+export default function Home() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const queryParam = searchParams.get("q") || "";
-  const debouncedQuery = useDebounce(queryParam, 300);
-
-  const { data: searchData, loading: searchLoading } = useSearchCVs(debouncedQuery);
-  const isLoading = queryParam.trim() !== debouncedQuery.trim() || searchLoading;
-
-  const searchResults = {
-    top: searchData.top,
-    all: searchData.results,
-    loading: isLoading
-  };
+  const { searchQuery, searchResults, isLoading, startNavigation } = useSearch();
 
   const handleSelectResult = (username: string) => {
+    startNavigation();
     router.push(`/${username}`);
   };
 
-  const hasQuery = queryParam.trim().length > 0;
+  const hasQuery = searchQuery.trim().length > 0;
 
   return (
     <div className="flex-1 flex flex-col">
@@ -61,14 +49,4 @@ function HomeContent() {
   );
 }
 
-export default function Home() {
-  return (
-    <Suspense fallback={
-      <div className="flex-1 flex items-center justify-center">
-        <div className="text-muted-foreground">Loading...</div>
-      </div>
-    }>
-      <HomeContent />
-    </Suspense>
-  );
-}
+
