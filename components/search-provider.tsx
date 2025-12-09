@@ -1,6 +1,6 @@
 "use client"
 
-import { createContext, useContext, useState, useEffect, ReactNode } from "react"
+import { createContext, useContext, useState, useEffect, ReactNode, Suspense } from "react"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { useDebounce } from "@/hooks/use-debounce"
 import { useSearchCVs } from "@/hooks/use-search-cvs"
@@ -21,7 +21,7 @@ interface SearchContextType {
 
 const SearchContext = createContext<SearchContextType | undefined>(undefined)
 
-export function SearchProvider({ children }: { children: ReactNode }) {
+function SearchProviderContent({ children }: { children: ReactNode }) {
   const pathname = usePathname()
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -86,6 +86,26 @@ export function SearchProvider({ children }: { children: ReactNode }) {
     }}>
       {children}
     </SearchContext.Provider>
+  )
+}
+
+export function SearchProvider({ children }: { children: ReactNode }) {
+  return (
+    <Suspense fallback={
+      <SearchContext.Provider value={{
+        searchQuery: "",
+        debouncedQuery: "",
+        setSearchQuery: () => {},
+        startNavigation: () => {},
+        isSearching: false,
+        searchResults: { top: [], all: [] },
+        isLoading: false
+      }}>
+        {children}
+      </SearchContext.Provider>
+    }>
+      <SearchProviderContent>{children}</SearchProviderContent>
+    </Suspense>
   )
 }
 
