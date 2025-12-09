@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Link from "next/link"
 import { useRouter, useSearchParams, usePathname } from "next/navigation"
 import { FileText } from "lucide-react"
@@ -34,11 +34,22 @@ export function AppBar() {
   const [localSearchValue, setLocalSearchValue] = useState("")
   const { isAuthenticated } = useAuth()
   
-  const isOnCVPage = pathname !== "/" && pathname !== "/settings" && !pathname.startsWith("/_")
+  const isOnCVPage = pathname !== "/" && pathname !== "/settings" && !pathname.startsWith("/\_")
   
-  // Use query params on home page, local state on CV pages
-  const searchValue = isOnCVPage ? localSearchValue : (searchParams.get("q") || "")
+  // Always use local state for smooth typing
+  const searchValue = localSearchValue
   const debouncedSearch = useDebounce(searchValue, 300)
+  
+  // Sync with URL params on home page
+  useEffect(() => {
+    if (!isOnCVPage) {
+      const queryParam = searchParams.get("q") || ""
+      setLocalSearchValue(queryParam)
+    } else {
+      // Clear on CV pages
+      setLocalSearchValue("")
+    }
+  }, [searchParams, isOnCVPage])
   
   const { data: searchData, loading: searchLoading } = useSearchCVs(isOnCVPage ? debouncedSearch : "")
   const isLoading = searchValue.trim() !== debouncedSearch.trim() || searchLoading
@@ -49,18 +60,19 @@ export function AppBar() {
     all: searchData.results
   }
 
-  const handleSearchChange = (value: string) => {
-    if (isOnCVPage) {
-      // On CV pages, just update local state (no navigation)
-      setLocalSearchValue(value)
-    } else {
-      // On home page, update URL
-      if (value.trim()) {
-        router.push(`/?q=${encodeURIComponent(value)}`, { scroll: false })
+  // Update URL when debounced search changes on home page
+  useEffect(() => {
+    if (!isOnCVPage && debouncedSearch.trim() !== (searchParams.get("q") || "").trim()) {
+      if (debouncedSearch.trim()) {
+        router.push(`/?q=${encodeURIComponent(debouncedSearch)}`, { scroll: false })
       } else {
         router.push("/", { scroll: false })
       }
     }
+  }, [debouncedSearch, isOnCVPage, searchParams, router])
+
+  const handleSearchChange = (value: string) => {
+    setLocalSearchValue(value)
   }
   
   const handleSelectResult = (username: string) => {
