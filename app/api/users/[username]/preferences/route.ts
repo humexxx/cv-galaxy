@@ -1,8 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { db } from "@/db";
 import { userPreferences, users } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { userPreferencesSchema } from "@/schemas/auth";
+import { requireAuth, requireOwnership } from "@/lib/utils/auth-helpers";
 
 export async function GET(
   request: NextRequest,
@@ -49,19 +51,16 @@ export async function PATCH(
 
     const validated = userPreferencesSchema.partial().parse(body);
 
-    const user = await db.query.users.findFirst({
-      where: eq(users.username, username),
-    });
+    // Verificar autenticación
+    const { error: authError, session } = await requireAuth();
+    if (authError) return authError;
 
-    if (!user) {
-      return NextResponse.json(
-        { error: "User not found" },
-        { status: 404 }
-      );
-    }
+    // Verificar ownership
+    const { error: ownerError, user } = await requireOwnership(username, session!);
+    if (ownerError) return ownerError;
 
     const existingPrefs = await db.query.userPreferences.findFirst({
-      where: eq(userPreferences.userId, user.id),
+      where: eq(userPreferences.userId, user!.id),
     });
 
     if (existingPrefs) {
@@ -71,13 +70,16 @@ export async function PATCH(
           ...validated,
           updatedAt: new Date(),
         })
-        .where(eq(userPreferences.userId, user.id));
+        .where(eq(userPreferences.userId, user!.id));
     } else {
       await db.insert(userPreferences).values({
-        userId: user.id,
+        userId: user!.id,
         showContractors: validated.showContractors ?? true,
       });
     }
+
+    // Invalidar la caché del CV para reflejar el cambio
+    revalidatePath(`/${username}`);
 
     return NextResponse.json({ success: true });
   } catch (error) {

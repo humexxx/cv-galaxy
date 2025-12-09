@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { chatRequestSchema } from "@/schemas/chat";
 import { OpenAIService } from "@/lib/services/openai-service";
 import { cvService } from "@/lib/services/cv-service";
+import { PreferencesServerService } from "@/lib/services/preferences-server-service";
 
 export async function POST(request: NextRequest) {
   try {
@@ -18,7 +19,8 @@ export async function POST(request: NextRequest) {
 
     const { messages, model, userId } = validationResult.data;
 
-    const cvData = await cvService.getCVByUsername(userId);
+    const preferences = await PreferencesServerService.getPreferencesFromDB(userId);
+    const cvData = await cvService.getCVByUsername(userId, preferences.showContractors);
 
     if (!cvData) {
       return NextResponse.json(

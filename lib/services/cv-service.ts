@@ -5,7 +5,7 @@ import type { CVData, WorkExperience, Education, Project } from "@/types/cv";
 import type { DbCVWithRelations } from "@/types/db";
 
 export class CVService {
-  async getCVByUsername(username: string): Promise<CVData | null> {
+  async getCVByUsername(username: string, showContractors: boolean = true): Promise<CVData | null> {
     const cv = await db.query.users.findFirst({
       where: eq(users.username, username.toLowerCase()),
       with: {
@@ -46,7 +46,7 @@ export class CVService {
     if (!cv) return null;
 
     // Transform database result to CVData format
-    return this.transformToCVData(cv);
+    return this.transformToCVData(cv, showContractors);
   }
 
   async searchCVs(query: string) {
@@ -97,7 +97,7 @@ export class CVService {
     }));
   }
 
-  private transformToCVData(cv: DbCVWithRelations): CVData {
+  private transformToCVData(cv: DbCVWithRelations, showContractors: boolean = true): CVData {
     const workExperience: WorkExperience[] = cv.workExperience.map((work) => ({
       title: work.title,
       company: {
@@ -106,7 +106,7 @@ export class CVService {
         website: work.company.website ?? undefined,
         logo: work.company.logo ?? undefined,
       },
-      contractor: work.contractor
+      contractor: showContractors && work.contractor
         ? {
             id: work.contractor.id,
             name: work.contractor.name,

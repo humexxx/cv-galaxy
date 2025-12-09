@@ -28,6 +28,18 @@ export class AuthService {
     }
   }
 
+  static async getUsernameFromDB(): Promise<string | null> {
+    try {
+      const response = await fetch('/api/auth/me');
+      if (!response.ok) return null;
+      const data = await response.json();
+      return data.username;
+    } catch (error) {
+      console.error("Error fetching username:", error);
+      return null;
+    }
+  }
+
   static async getSession(): Promise<AuthSession> {
     try {
       const { data: { session } } = await supabase.auth.getSession();
@@ -36,10 +48,12 @@ export class AuthService {
         return { user: null, isAuthenticated: false };
       }
 
+      const username = await this.getUsernameFromDB();
+
       const user: User = {
         id: session.user.id,
         email: session.user.email || "",
-        username: session.user.user_metadata?.username,
+        username,
         fullName: session.user.user_metadata?.full_name || session.user.user_metadata?.name,
         avatar: session.user.user_metadata?.avatar_url || 
                 session.user.user_metadata?.picture || 
@@ -60,10 +74,12 @@ export class AuthService {
         return;
       }
 
+      const username = await this.getUsernameFromDB();
+
       const user: User = {
         id: session.user.id,
         email: session.user.email || "",
-        username: session.user.user_metadata?.username,
+        username,
         fullName: session.user.user_metadata?.full_name || session.user.user_metadata?.name,
         avatar: session.user.user_metadata?.avatar_url || 
                 session.user.user_metadata?.picture || 

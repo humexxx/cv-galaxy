@@ -55,18 +55,19 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const cvData = await cvService.getCVByUsername(userId);
+    // Get user preferences from database first
+    const preferences = await PreferencesServerService.getPreferencesFromDB(userId);
+    const showContractors = preferences.showContractors;
+
+    // Get CV data with contractors filtered based on preferences
+    const cvData = await cvService.getCVByUsername(userId, showContractors);
 
     if (!cvData) {
       return NextResponse.json(
-        { error: "CV not found for the specified user" },
+        { error: "CV not found" },
         { status: 404 }
       );
     }
-
-    // Get user preferences from database
-    const preferences = await PreferencesServerService.getPreferencesFromDB(userId);
-    const showContractors = preferences.showContractors;
 
     // Configure browser based on environment
     const isVercel = !!env.VERCEL_ENV;

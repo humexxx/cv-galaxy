@@ -1,15 +1,19 @@
 import { z } from "zod";
 
 // Detect if running DB tooling (drizzle-kit, seed scripts, etc.)
-const isDbTooling = process.argv.some((arg) => 
+const isDbTooling = typeof process !== 'undefined' && process.argv?.some((arg) => 
   arg.includes("drizzle") || arg.includes("db/seed") || arg.includes("db\\seed")
 );
 
-const envSchema = z.object({
+// Detect if running in browser
+const isBrowser = typeof window !== 'undefined';
+
+// Server-side env schema
+const serverEnvSchema = z.object({
   OPENAI_API_KEY: isDbTooling 
     ? z.string().optional() 
     : z.string().min(1, "OPENAI_API_KEY is required"),
-  NEXT_PUBLIC_BASE_URL: z.url().optional(),
+  NEXT_PUBLIC_BASE_URL: z.string().optional(),
   VERCEL_URL: z.string().optional(),
   VERCEL_ENV: z.string().optional(),
   VERCEL_PROJECT_PRODUCTION_URL: z.string().optional(),
@@ -17,34 +21,54 @@ const envSchema = z.object({
   DATABASE_URL: z.string().min(1, "DATABASE_URL is required"),
   NEXT_PUBLIC_SUPABASE_URL: isDbTooling
     ? z.string().optional()
-    : z.url("NEXT_PUBLIC_SUPABASE_URL must be a valid URL"),
+    : z.string().min(1, "NEXT_PUBLIC_SUPABASE_URL is required"),
   NEXT_PUBLIC_SUPABASE_ANON_KEY: isDbTooling
     ? z.string().optional()
     : z.string().min(1, "NEXT_PUBLIC_SUPABASE_ANON_KEY is required"),
+  NEXT_PUBLIC_AUTH_RETURN_URL: z.string().optional(),
 });
 
-export type Env = z.infer<typeof envSchema>;
+// Client-side env schema (only NEXT_PUBLIC_* variables are available)
+const clientEnvSchema = z.object({
+  NEXT_PUBLIC_BASE_URL: z.string().optional(),
+  NEXT_PUBLIC_SUPABASE_URL: z.string().min(1, "NEXT_PUBLIC_SUPABASE_URL is required"),
+  NEXT_PUBLIC_SUPABASE_ANON_KEY: z.string().min(1, "NEXT_PUBLIC_SUPABASE_ANON_KEY is required"),
+  NEXT_PUBLIC_AUTH_RETURN_URL: z.string().optional(),
+});
+
+export type Env = z.infer<typeof serverEnvSchema>;
+
+let cachedEnv: Env | null = null;
 
 function validateEnv(): Env {
-  const parsed = envSchema.safeParse(process.env);
+  if (cachedEnv) return cachedEnv;
+
+  const schema = isBrowser ? clientEnvSchema : serverEnvSchema;
+  const parsed = schema.safeParse(process.env);
 
   if (!parsed.success) {
-    console.error("❌ Invalid environment variables:", z.treeifyError(parsed.error));
+    console.error("❌ Invalid environment variables:", parsed.error.format());
     throw new Error("Invalid environment variables");
   }
 
-  return parsed.data;
+  cachedEnv = parsed.data as Env;
+  return cachedEnv;
 }
 
-export const env = validateEnv();
+export const env = new Proxy({} as Env, {
+  get(_, prop: string) {
+    const validated = validateEnv();
+    return validated[prop as keyof Env];
+  }
+});
 
 export function getBaseUrl(): string {
-  if (env.NEXT_PUBLIC_BASE_URL) {
-    return env.NEXT_PUBLIC_BASE_URL;
+  if (process.env.NEXT_PUBLIC_BASE_URL) {
+    return process.env.NEXT_PUBLIC_BASE_URL;
   }
 
-  if (env.VERCEL_URL) {
-    return `https://${env.VERCEL_URL}`;
+  if (process.env.VERCEL_URL) {
+    return `https://${process.env.VERCEL_URL}`;
   }
 
   return "http://localhost:3000";

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Link from "next/link"
 import { useRouter, useSearchParams, usePathname } from "next/navigation"
 import { FileText, Settings } from "lucide-react"
@@ -10,6 +10,9 @@ import { SearchDropdown } from "@/components/search-dropdown"
 import { Button } from "@/components/ui/button"
 import { useDebounce } from "@/hooks/use-debounce"
 import { useSearchCVs } from "@/hooks/use-search-cvs"
+import { LoginButton } from "@/components/login-button"
+import { UserMenu } from "@/components/user-menu"
+import { useAuth } from "@/components/auth-provider"
 import {
   Dialog,
   DialogContent,
@@ -29,6 +32,7 @@ export function AppBar() {
   const searchParams = useSearchParams()
   const [feedbackOpen, setFeedbackOpen] = useState(false)
   const [localSearchValue, setLocalSearchValue] = useState("")
+  const { isAuthenticated } = useAuth()
   
   const isOnCVPage = pathname !== "/" && pathname !== "/settings" && !pathname.startsWith("/_")
   
@@ -147,6 +151,7 @@ export function AppBar() {
           <div className="[&>button]:h-8 [&>button]:w-8 sm:[&>button]:h-10 sm:[&>button]:w-10">
             <ModeToggle />
           </div>
+          {(isAuthenticated ? <UserMenu /> : <LoginButton />)}
         </div>
       </div>
     </header>
