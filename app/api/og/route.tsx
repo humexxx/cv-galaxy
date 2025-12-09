@@ -1,5 +1,6 @@
 import { ImageResponse } from "@vercel/og";
-import { getCVByUsername } from "@/data/cvs";
+import { cvService } from "@/lib/services/cv-service";
+import { getBaseUrl } from "@/lib/env";
 
 export const runtime = "edge";
 
@@ -12,7 +13,7 @@ export async function GET(request: Request) {
       return new Response("Missing username parameter", { status: 400 });
     }
 
-    const cv = getCVByUsername(username);
+    const cv = await cvService.getCVByUsername(username);
 
     if (!cv) {
       return new Response("CV not found", { status: 404 });
@@ -67,7 +68,7 @@ export async function GET(request: Request) {
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src={`${process.env.NEXT_PUBLIC_BASE_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000")}${cv.avatar}`}
+                  src={`${getBaseUrl()}${cv.avatar}`}
                   alt={cv.fullName}
                   width="120"
                   height="120"

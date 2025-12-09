@@ -41,7 +41,7 @@ function escapeHtml(text: string): string {
   return text.replace(/[&<>"']/g, (char) => map[char]);
 }
 
-export function generateCVHTML(cv: CVData): string {
+export function generateCVHTML(cv: CVData, showContractors: boolean = true): string {
   const technologies = cv.technologies
     .map((tech) => `<span class="tech-badge">${escapeHtml(tech)}</span>`)
     .join("");
@@ -60,6 +60,10 @@ export function generateCVHTML(cv: CVData): string {
         .map((resp) => `<li>${escapeHtml(resp)}</li>`)
         .join("");
       
+      const contractorInfo = showContractors && exp.contractor
+        ? ` <span class="via-text">via</span> ${escapeHtml(exp.contractor.name)}`
+        : '';
+      
       return `
         <div class="work-item">
           <div class="work-header">
@@ -67,7 +71,7 @@ export function generateCVHTML(cv: CVData): string {
               <h3 class="work-title">${escapeHtml(exp.title)}</h3>
               <span class="work-period">${formatDate(exp.period.start)} – ${formatDate(exp.period.end)}</span>
             </div>
-            <div class="work-company">${escapeHtml(exp.company.name)}${exp.contractor ? ` <span class="via-text">via</span> ${escapeHtml(exp.contractor.name)}` : ''}</div>
+            <div class="work-company">${escapeHtml(exp.company.name)}${contractorInfo}</div>
           </div>
           <div class="work-description">${escapeHtml(exp.description)}</div>
           ${responsibilities ? `<ul class="responsibilities-list">${responsibilities}</ul>` : ''}

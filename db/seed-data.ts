@@ -1,17 +1,9 @@
-import { CVData, Company } from "@/types/cv";
+import type { CVData, Company } from "@/types/cv";
 
-// TODO: Move this data to a database in the future
-// This is temporary data storage for CV information
+// Seed data for initial database population
+// This file contains static data that will be migrated to the database once
 
-export interface CVSearchResult {
-  username: string;
-  fullName: string;
-  title: string;
-  avatar?: string;
-}
-
-// Company database
-export const companies: Record<string, Company> = {
+export const companiesData: Record<string, Company> = {
   intel: {
     id: "intel",
     name: "Intel",
@@ -82,7 +74,7 @@ export const companies: Record<string, Company> = {
   }
 };
 
-export const institutions: Record<string, Company> = {
+export const institutionsData: Record<string, Company> = {
   ctpUlloa: {
     id: "ctpUlloa",
     name: "Colegio Técnico Profesional de Ulloa",
@@ -145,8 +137,8 @@ export const cvDatabase: Record<string, CVData> = {
     workExperience: [
       {
         title: "Senior Frontend Developer / Tech Lead",
-        company: companies.prestige,
-        contractor: companies.tech9,
+        company: companiesData.prestige,
+        contractor: companiesData.tech9,
         period: {
           start: new Date(2024, 0), // Jan 2024
           end: "Present",
@@ -162,8 +154,8 @@ export const cvDatabase: Record<string, CVData> = {
       },
       {
         title: "Senior Fullstack Developer",
-        company: companies.justserve,
-        contractor: companies.tech9,
+        company: companiesData.justserve,
+        contractor: companiesData.tech9,
         period: {
           start: new Date(2022, 3), // Apr 2022
           end: new Date(2023, 6), // Jul 2023
@@ -179,7 +171,7 @@ export const cvDatabase: Record<string, CVData> = {
       },
       {
         title: "Senior Frontend and Technical Lead",
-        company: companies.intel,
+        company: companiesData.intel,
         period: {
           start: new Date(2021, 3),
           end: new Date(2022, 3),
@@ -194,8 +186,8 @@ export const cvDatabase: Record<string, CVData> = {
       },
       {
         title: "Senior Fullstack Developer",
-        company: companies.silac,
-        contractor: companies.smash,
+        company: companiesData.silac,
+        contractor: companiesData.smash,
         period: {
           start: new Date(2020, 3),
           end: new Date(2021, 3),
@@ -211,8 +203,8 @@ export const cvDatabase: Record<string, CVData> = {
       },
       {
         title: "Senior Back-end Developer",
-        company: companies.gigster,
-        contractor: companies.altimetrik,
+        company: companiesData.gigster,
+        contractor: companiesData.altimetrik,
         period: {
           start: new Date(2019, 0),
           end: new Date(2020, 3),
@@ -228,8 +220,8 @@ export const cvDatabase: Record<string, CVData> = {
       },
       {
         title: "Senior Software Developer",
-        company: companies.paypal,
-        contractor: companies.altimetrik,
+        company: companiesData.paypal,
+        contractor: companiesData.altimetrik,
         period: {
           start: new Date(2018, 6),
           end: new Date(2019, 6),
@@ -245,7 +237,7 @@ export const cvDatabase: Record<string, CVData> = {
       },
       {
         title: "Fullstack Developer",
-        company: companies.freelancer,
+        company: companiesData.freelancer,
         period: {
           start: new Date(2017, 10),
           end: new Date(2019, 0), 
@@ -261,8 +253,8 @@ export const cvDatabase: Record<string, CVData> = {
       },
       {
         title: "AngularJs and .NET Developer",
-        company: companies.intel,
-        contractor: companies.praxis,
+        company: companiesData.intel,
+        contractor: companiesData.praxis,
         period: {
           start: new Date(2016, 10), 
           end: new Date(2017, 10), 
@@ -277,7 +269,7 @@ export const cvDatabase: Record<string, CVData> = {
       },
       {
         title: "Junior Software Developer",
-        company: companies.avionyx,
+        company: companiesData.avionyx,
         period: {
           start: new Date(2016, 0), 
           end: new Date(2016, 6), 
@@ -294,7 +286,7 @@ export const cvDatabase: Record<string, CVData> = {
     education: [
       {
         degree: "Bachelor's Degree in Information Systems Engineering",
-        institution: institutions.una,
+        institution: institutionsData.una,
         period: {
           start: new Date(2012, 0),
           end: new Date(2017, 11),
@@ -304,7 +296,7 @@ export const cvDatabase: Record<string, CVData> = {
       },
       {
         degree: "Technical Diploma in Information Systems Engineering",
-        institution: institutions.ctpUlloa,
+        institution: institutionsData.ctpUlloa,
         period: {
           start: new Date(2008, 0),
           end: new Date(2011, 11),
@@ -340,52 +332,3 @@ export const cvDatabase: Record<string, CVData> = {
     ],
   },
 };
-
-export function getCVByUsername(username: string): CVData | null {
-  return cvDatabase[username.toLowerCase()] || null;
-}
-
-export function searchCVs(query: string): CVSearchResult[] {
-  if (!query.trim()) {
-    return [];
-  }
-
-  const lowerQuery = query.toLowerCase();
-  const results: CVSearchResult[] = [];
-
-  Object.values(cvDatabase).forEach((cv) => {
-    if (
-      cv.username.toLowerCase().includes(lowerQuery) ||
-      cv.fullName.toLowerCase().includes(lowerQuery) ||
-      cv.title.toLowerCase().includes(lowerQuery)
-    ) {
-      results.push({
-        username: cv.username,
-        fullName: cv.fullName,
-        title: cv.title,
-        avatar: cv.avatar,
-      });
-    }
-  });
-
-  return results;
-}
-
-export function getTopResults(): CVSearchResult[] {
-  // For now, always return jason_hume as top result
-  // In the future, this could be based on popularity, recent views, etc.
-  const cv = cvDatabase.jason_hume;
-
-  if (!cv) {
-    return [];
-  }
-
-  return [
-    {
-      username: cv.username,
-      fullName: cv.fullName,
-      title: cv.title,
-      avatar: cv.avatar,
-    },
-  ];
-}
