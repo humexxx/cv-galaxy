@@ -35,3 +35,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: npx semantic-release
+
+  sync_develop:
+    name: Sync develop with main
+    needs: release
+    if: ${{ needs.release.result == 'success' }}
+    uses: ./.github/workflows/sync-develop.yml
+    secrets: inherit
