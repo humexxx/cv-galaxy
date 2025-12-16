@@ -8,7 +8,6 @@ export interface Env {
   DATABASE_URL: string;
   NEXT_PUBLIC_SUPABASE_URL?: string;
   NEXT_PUBLIC_SUPABASE_ANON_KEY?: string;
-  NEXT_PUBLIC_AUTH_RETURN_URL?: string;
 }
 
 export const env: Env = {
@@ -21,7 +20,6 @@ export const env: Env = {
   DATABASE_URL: process.env.DATABASE_URL || "",
   NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
   NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
-  NEXT_PUBLIC_AUTH_RETURN_URL: process.env.NEXT_PUBLIC_AUTH_RETURN_URL,
 };
 
 export function getBaseUrl(): string {
