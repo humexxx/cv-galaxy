@@ -1,3 +1,13 @@
+## [1.4.1](https://github.com/humexxx/cv-galaxy/compare/v1.4.0...v1.4.1) (2025-12-16)
+
+### 🐛 Bug Fixes
+
+* update CI and release workflows to remove unnecessary push triggers and streamline sync process ([35e10c0](https://github.com/humexxx/cv-galaxy/commit/35e10c09bf3ac358cffb6b701ae3d1d09a2e3037))
+
+### ♻️ Code Refactoring
+
+* remove NEXT_PUBLIC_AUTH_RETURN_URL and use getBaseUrl for redirect in AuthService ([69593fc](https://github.com/humexxx/cv-galaxy/commit/69593fc0198bc5010826ce463e19db3710d659f8))
+
 ## [1.4.0](https://github.com/humexxx/cv-galaxy/compare/v1.3.0...v1.4.0) (2025-12-09)
 
 ### ✨ Features
