@@ -1,11 +1,8 @@
 name: Sync Develop
 
 on:
-  push:
-    branches: [main]
-    paths:
-      - 'CHANGELOG.md'
-      - 'package.json'
+  workflow_call:
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -14,11 +11,9 @@ jobs:
   sync:
     name: Sync develop with main
     runs-on: ubuntu-latest
-    # Solo corre si es un commit de release
-    if: ${{ contains(github.event.head_commit.message, 'chore(release)') }}
-    
+
     steps:
-      - name: Checkout code
+      - name: Checkout develop
         uses: actions/checkout@v4
         with:
           ref: develop
@@ -28,5 +23,6 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+          git fetch origin main
           git merge origin/main --no-edit
           git push origin develop

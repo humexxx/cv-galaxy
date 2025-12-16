@@ -1,11 +1,13 @@
 import { supabase } from "@/lib/supabase";
 import type { User, AuthSession } from "@/types/auth";
 import type { Provider, AuthChangeEvent, Session } from "@supabase/supabase-js";
+import { getBaseUrl } from "../env";
 
 export class AuthService {
   static async signInWithOAuth(provider: Provider): Promise<{ error: Error | null }> {
+
     try {
-      const redirectTo = process.env.NEXT_PUBLIC_AUTH_RETURN_URL || `${window.location.origin}/auth/callback`;
+      const redirectTo = getBaseUrl();
       const { error } = await supabase.auth.signInWithOAuth({
         provider,
         options: {
