@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { db } from "@/db";
 import { users } from "@/db/schema";
 import { eq, or, ilike } from "drizzle-orm";
@@ -167,3 +168,10 @@ export class CVService {
 }
 
 export const cvService = new CVService();
+
+// Per-request deduplication: multiple server components/generateMetadata
+// calling this with the same args within one request share one DB query.
+export const getCVByUsername = cache(
+  async (username: string, showContractors: boolean = true): Promise<CVData | null> =>
+    cvService.getCVByUsername(username, showContractors)
+);

@@ -39,3 +39,9 @@ next-env.d.ts
 .vercel
 .env*.local
 .env
+
+# skills (restored via skills-lock.json, like node_modules)
+/skills
+/.agent
+/.agents
+/.claude

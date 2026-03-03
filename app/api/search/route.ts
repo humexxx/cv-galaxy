@@ -12,8 +12,10 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ results, top: results });
     }
 
-    const results = await cvService.searchCVs(query);
-    const top = await cvService.getTopResults();
+    const [results, top] = await Promise.all([
+      cvService.searchCVs(query),
+      cvService.getTopResults(),
+    ]);
 
     return NextResponse.json({ results, top });
   } catch (error) {

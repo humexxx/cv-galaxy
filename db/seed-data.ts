@@ -140,8 +140,8 @@ export const cvDatabase: Record<string, CVData> = {
         company: companiesData.prestige,
         contractor: companiesData.tech9,
         period: {
-          start: new Date(2024, 0), // Jan 2024
-          end: "Present",
+          start: new Date(2023, 11), // Dec 2023
+          end: new Date(2026, 0), // Jan 2026
         },
         description:
           "Leading frontend development and technical direction for internal and external-facing applications.",
@@ -158,7 +158,7 @@ export const cvDatabase: Record<string, CVData> = {
         contractor: companiesData.tech9,
         period: {
           start: new Date(2022, 3), // Apr 2022
-          end: new Date(2023, 6), // Jul 2023
+          end: new Date(2023, 10), // Nov 2023
         },
         description:
           "Migrated and enhanced a volunteer opportunity platform from AngularJS to Next.js with a focus on performance, SEO and user experience.",
@@ -173,8 +173,8 @@ export const cvDatabase: Record<string, CVData> = {
         title: "Senior Frontend and Technical Lead",
         company: companiesData.intel,
         period: {
-          start: new Date(2021, 3),
-          end: new Date(2022, 3),
+          start: new Date(2021, 2), // Mar 2021
+          end: new Date(2022, 11), // Dec 2022
         },
         description:
           "Led a frontend team to build internal applications.",
@@ -189,8 +189,8 @@ export const cvDatabase: Record<string, CVData> = {
         company: companiesData.silac,
         contractor: companiesData.smash,
         period: {
-          start: new Date(2020, 3),
-          end: new Date(2021, 3),
+          start: new Date(2019, 2), // Mar 2019
+          end: new Date(2021, 2), // Mar 2021
         },
         description:
           "Full-stack development focused on policy management systems.",
@@ -206,8 +206,8 @@ export const cvDatabase: Record<string, CVData> = {
         company: companiesData.gigster,
         contractor: companiesData.altimetrik,
         period: {
-          start: new Date(2019, 0),
-          end: new Date(2020, 3),
+          start: new Date(2020, 0), // Jan 2020
+          end: new Date(2022, 0), // Jan 2022
         },
         description:
           "Develop the main mobile app and add integrations with 3rd party apps.",
@@ -223,8 +223,8 @@ export const cvDatabase: Record<string, CVData> = {
         company: companiesData.paypal,
         contractor: companiesData.altimetrik,
         period: {
-          start: new Date(2018, 6),
-          end: new Date(2019, 6),
+          start: new Date(2020, 0), // Jan 2020
+          end: new Date(2022, 0), // Jan 2022
         },
         description:
           "Provided technical support and enhancements for PayPal helpcenter micro frontend.",
@@ -239,8 +239,8 @@ export const cvDatabase: Record<string, CVData> = {
         title: "Fullstack Developer",
         company: companiesData.freelancer,
         period: {
-          start: new Date(2017, 10),
-          end: new Date(2019, 0), 
+          start: new Date(2017, 10), // Nov 2017
+          end: new Date(2020, 0), // Jan 2020
         },
         description:
           "Delivered diverse web applications for various clients across different domains.",
@@ -256,8 +256,8 @@ export const cvDatabase: Record<string, CVData> = {
         company: companiesData.intel,
         contractor: companiesData.praxis,
         period: {
-          start: new Date(2016, 10), 
-          end: new Date(2017, 10), 
+          start: new Date(2016, 9), // Oct 2016
+          end: new Date(2017, 10), // Nov 2017
         },
         description:
           "Backend and internal tool development for Intel projects.",
@@ -271,8 +271,8 @@ export const cvDatabase: Record<string, CVData> = {
         title: "Junior Software Developer",
         company: companiesData.avionyx,
         period: {
-          start: new Date(2016, 0), 
-          end: new Date(2016, 6), 
+          start: new Date(2015, 11), // Dec 2015
+          end: new Date(2016, 5), // Jun 2016
         },
         description:
           "Started professional career working on macros and aircraft maintenance systems.",
