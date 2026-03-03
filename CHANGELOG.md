@@ -1,3 +1,13 @@
+## [1.4.2](https://github.com/humexxx/cv-galaxy/compare/v1.4.1...v1.4.2) (2026-03-03)
+
+### 🐛 Bug Fixes
+
+* update employment periods in cvDatabase for accuracy ([fc877bd](https://github.com/humexxx/cv-galaxy/commit/fc877bd4b954ba7888a1958192d68740cd26b544))
+
+### ♻️ Code Refactoring
+
+* update CV retrieval to use caching and optimize search API calls ([d6b81a7](https://github.com/humexxx/cv-galaxy/commit/d6b81a78fecce9da48ed9e18dc98dc062540fe24))
+
 ## [1.4.1](https://github.com/humexxx/cv-galaxy/compare/v1.4.0...v1.4.1) (2025-12-16)
 
 ### 🐛 Bug Fixes
