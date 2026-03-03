@@ -1,4 +1,4 @@
-import { cvService } from "@/lib/services/cv-service";
+import { getCVByUsername } from "@/lib/services/cv-service";
 import { PreferencesServerService } from "@/lib/services/preferences-server-service";
 import { getBaseUrl } from "@/lib/env";
 import { notFound } from "next/navigation";
@@ -16,7 +16,7 @@ export async function generateMetadata({
 }: PageProps): Promise<Metadata> {
   const { username } = await params;
   // For metadata, we don't need to filter contractors
-  const cv = await cvService.getCVByUsername(username, true);
+  const cv = await getCVByUsername(username, true);
 
   if (!cv) {
     return {
@@ -86,8 +86,9 @@ export default async function CVPage({ params }: PageProps) {
   // Get user preferences from database (server-side)
   const preferences = await PreferencesServerService.getPreferencesFromDB(username);
   
-  // Get CV with contractors filtered based on preferences
-  const cv = await cvService.getCVByUsername(username, preferences.showContractors);
+  // Get CV with contractors filtered based on preferences.
+  // React.cache() deduplicates this call when showContractors=true (same as generateMetadata).
+  const cv = await getCVByUsername(username, preferences.showContractors);
 
   if (!cv) {
     notFound();

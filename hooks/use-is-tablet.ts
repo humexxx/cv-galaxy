@@ -8,10 +8,10 @@ export function useIsTablet() {
   React.useEffect(() => {
     const mql = window.matchMedia(`(max-width: ${TABLET_BREAKPOINT - 1}px)`)
     const onChange = () => {
-      setIsTablet(window.innerWidth < TABLET_BREAKPOINT)
+      setIsTablet(mql.matches)
     }
     mql.addEventListener("change", onChange)
-    setIsTablet(window.innerWidth < TABLET_BREAKPOINT)
+    setIsTablet(mql.matches)
     return () => mql.removeEventListener("change", onChange)
   }, [])
 

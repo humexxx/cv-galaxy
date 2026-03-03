@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useTransition } from "react";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
@@ -15,7 +15,7 @@ interface ContractorToggleProps {
 export function ContractorToggle({ username, onToggle }: ContractorToggleProps) {
   const { user, isAuthenticated, isLoading: authLoading } = useAuth();
   const [showContractors, setShowContractors] = useState(true);
-  const [loading, setLoading] = useState(false);
+  const [isPending, startTransition] = useTransition();
   const [isOwnProfile, setIsOwnProfile] = useState(false);
 
   // Check if viewing own profile
@@ -60,21 +60,21 @@ export function ContractorToggle({ username, onToggle }: ContractorToggleProps) 
     return null;
   }
 
-  const handleToggle = async (checked: boolean) => {
+  const handleToggle = (checked: boolean) => {
     setShowContractors(checked);
     onToggle(checked);
-    
-    setLoading(true);
-    const { error } = await PreferencesService.updatePreferences(username, {
-      showContractors: checked,
-    });
-    setLoading(false);
 
-    if (error) {
-      toast.error("Failed to update preference");
-    } else {
-      toast.success(checked ? "Contractors will be shown" : "Contractors hidden");
-    }
+    startTransition(async () => {
+      const { error } = await PreferencesService.updatePreferences(username, {
+        showContractors: checked,
+      });
+
+      if (error) {
+        toast.error("Failed to update preference");
+      } else {
+        toast.success(checked ? "Contractors will be shown" : "Contractors hidden");
+      }
+    });
   };
 
   return (
@@ -86,7 +86,7 @@ export function ContractorToggle({ username, onToggle }: ContractorToggleProps) 
         id="contractor-toggle"
         checked={showContractors}
         onCheckedChange={handleToggle}
-        disabled={loading}
+        disabled={isPending}
       />
     </div>
   );

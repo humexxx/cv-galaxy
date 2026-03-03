@@ -66,7 +66,7 @@ export function AppBar() {
             value={searchQuery}
             onChange={handleSearchChange}
           />
-          {!isHomePage && searchQuery.trim() && (
+          {!isHomePage && searchQuery.trim() !== "" && (
             <SearchDropdown
               topResults={searchResults.top}
               allResults={searchResults.all}
