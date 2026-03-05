@@ -1,3 +1,9 @@
+## [1.5.0](https://github.com/humexxx/cv-galaxy/compare/v1.4.2...v1.5.0) (2026-03-05)
+
+### ✨ Features
+
+* update CV schemas and types for work experience and technologies ([fa361d3](https://github.com/humexxx/cv-galaxy/commit/fa361d3e8d80899a7b580e5871097463c90556fa))
+
 ## [1.4.2](https://github.com/humexxx/cv-galaxy/compare/v1.4.1...v1.4.2) (2026-03-03)
 
 ### 🐛 Bug Fixes
