@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { Briefcase } from "lucide-react";
+import { Briefcase, Pencil } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { CompanyAvatar } from "@/components/company-avatar";
 import {
   Accordion,
@@ -13,13 +14,102 @@ import {
 import { TypographyH3, TypographyMuted } from "@/components/ui/typography";
 import { HighlightedText } from "@/components/highlighted-text";
 import { ContractorToggle } from "@/components/contractor-toggle";
-import type { CVData } from "@/types/cv";
+import { EditWorkExperienceDialog } from "@/components/edit-work-experience-dialog";
+import { useAuth } from "@/components/auth-provider";
+import type { CVData, WorkExperience } from "@/types/cv";
 
 interface WorkExperienceSectionProps {
   workExperience: CVData["workExperience"];
   showContractors?: boolean;
   username: string;
   onToggle: (show: boolean) => void;
+}
+
+interface WorkExperienceItemProps {
+  exp: WorkExperience;
+  showContractors: boolean;
+  isOwner: boolean;
+  username: string;
+}
+
+function WorkExperienceItem({
+  exp,
+  showContractors,
+  isOwner,
+  username,
+}: WorkExperienceItemProps) {
+  const [dialogOpen, setDialogOpen] = useState(false);
+
+  return (
+    <div className="flex gap-4">
+      <CompanyAvatar
+        company={exp.company}
+        contractor={exp.contractor}
+        size={48}
+        showContractor={showContractors}
+      />
+      <div className="space-y-3 flex-1">
+        <div>
+          <div className="flex items-start justify-between gap-2">
+            <TypographyH3 className="text-lg">
+              <HighlightedText text={exp.title} />
+            </TypographyH3>
+            {isOwner && (
+              <>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="shrink-0 h-7 w-7 text-muted-foreground hover:text-foreground"
+                  onClick={() => setDialogOpen(true)}
+                  aria-label="Edit work experience"
+                >
+                  <Pencil className="h-3.5 w-3.5" />
+                </Button>
+                <EditWorkExperienceDialog
+                  open={dialogOpen}
+                  onOpenChange={setDialogOpen}
+                  workExperience={exp}
+                  username={username}
+                />
+              </>
+            )}
+          </div>
+          <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground mt-1">
+            <span className="font-medium">
+              <HighlightedText text={exp.company.name} />
+            </span>
+            {showContractors && exp.contractor && (
+              <>
+                <span>via</span>
+                <span className="font-medium">{exp.contractor.name}</span>
+              </>
+            )}
+            <span>•</span>
+            <span>
+              {exp.period.start.toLocaleDateString("en-US", {
+                month: "short",
+                year: "numeric",
+              })}{" "}
+              -{" "}
+              {exp.period.end === "Present"
+                ? "Present"
+                : exp.period.end.toLocaleDateString("en-US", {
+                    month: "short",
+                    year: "numeric",
+                  })}
+            </span>
+          </div>
+        </div>
+        <TypographyMuted>
+          <HighlightedText text={exp.description} />
+        </TypographyMuted>
+        <div
+          className="prose prose-sm dark:prose-invert max-w-none text-sm"
+          dangerouslySetInnerHTML={{ __html: exp.responsibilitiesHtml ?? "" }}
+        />
+      </div>
+    </div>
+  );
 }
 
 export function WorkExperienceSection({
@@ -31,6 +121,8 @@ export function WorkExperienceSection({
   const [accordionValue, setAccordionValue] = useState<string | undefined>(
     undefined
   );
+  const { user } = useAuth();
+  const isOwner = user?.username === username;
 
   // Show first 2 always expanded, rest in accordion
   const alwaysVisible = workExperience.slice(0, 2);
@@ -48,67 +140,15 @@ export function WorkExperienceSection({
         </div>
       </CardHeader>
       <CardContent className="space-y-8">
-        {/* First 2 jobs always visible */}
         <div className="space-y-8">
-          {alwaysVisible.map((exp, index) => (
-            <div key={index} className="flex gap-4">
-              <CompanyAvatar
-                company={exp.company}
-                contractor={exp.contractor}
-                size={48}
-                showContractor={showContractors}
-              />
-              <div className="space-y-3 flex-1">
-                <div>
-                  <TypographyH3 className="text-lg">
-                    <HighlightedText text={exp.title} />
-                  </TypographyH3>
-                  <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground mt-1">
-                    <span className="font-medium">
-                      <HighlightedText text={exp.company.name} />
-                    </span>
-                    {showContractors && exp.contractor && (
-                      <>
-                        <span>via</span>
-                        <span className="font-medium">
-                          {exp.contractor.name}
-                        </span>
-                      </>
-                    )}
-                    <span>•</span>
-                    <span>
-                      {exp.period.start.toLocaleDateString("en-US", {
-                        month: "short",
-                        year: "numeric",
-                      })}{" "}
-                      -{" "}
-                      {exp.period.end === "Present"
-                        ? "Present"
-                        : exp.period.end.toLocaleDateString("en-US", {
-                            month: "short",
-                            year: "numeric",
-                          })}
-                    </span>
-                  </div>
-                </div>
-                <TypographyMuted>
-                  <HighlightedText text={exp.description} />
-                </TypographyMuted>
-                <ul className="space-y-2">
-                  {exp.responsibilities.map((resp, idx) => (
-                    <li
-                      key={idx}
-                      className="flex gap-2 text-sm leading-relaxed"
-                    >
-                      <span className="text-muted-foreground mt-0.5">•</span>
-                      <span className="flex-1">
-                        <HighlightedText text={resp} />
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
+          {alwaysVisible.map((exp) => (
+            <WorkExperienceItem
+              key={exp.id}
+              exp={exp}
+              showContractors={showContractors}
+              isOwner={isOwner}
+              username={username}
+            />
           ))}
         </div>
 
@@ -132,67 +172,14 @@ export function WorkExperienceSection({
               </AccordionTrigger>
               <AccordionContent>
                 <div className="space-y-8 pt-4">
-                  {collapsible.map((exp, index) => (
-                    <div key={index} className="flex gap-4">
-                      <CompanyAvatar
-                        company={exp.company}
-                        contractor={exp.contractor}
-                        size={48}
-                        showContractor={showContractors}
-                      />
-                      <div className="space-y-3 flex-1">
-                        <div>
-                          <TypographyH3 className="text-lg">
-                            <HighlightedText text={exp.title} />
-                          </TypographyH3>
-                          <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground mt-1">
-                            <span className="font-medium">
-                              <HighlightedText text={exp.company.name} />
-                            </span>
-                            {showContractors && exp.contractor && (
-                              <>
-                                <span>via</span>
-                                <span className="font-medium">
-                                  {exp.contractor.name}
-                                </span>
-                              </>
-                            )}
-                            <span>•</span>
-                            <span>
-                              {exp.period.start.toLocaleDateString("en-US", {
-                                month: "short",
-                                year: "numeric",
-                              })}{" "}
-                              -{" "}
-                              {exp.period.end === "Present"
-                                ? "Present"
-                                : exp.period.end.toLocaleDateString("en-US", {
-                                    month: "short",
-                                    year: "numeric",
-                                  })}
-                            </span>
-                          </div>
-                        </div>
-                        <TypographyMuted>
-                          <HighlightedText text={exp.description} />
-                        </TypographyMuted>
-                        <ul className="space-y-2">
-                          {exp.responsibilities.map((resp, idx) => (
-                            <li
-                              key={idx}
-                              className="flex gap-2 text-sm leading-relaxed"
-                            >
-                              <span className="text-muted-foreground mt-0.5">
-                                •
-                              </span>
-                              <span className="flex-1">
-                                <HighlightedText text={resp} />
-                              </span>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    </div>
+                  {collapsible.map((exp) => (
+                    <WorkExperienceItem
+                      key={exp.id}
+                      exp={exp}
+                      showContractors={showContractors}
+                      isOwner={isOwner}
+                      username={username}
+                    />
                   ))}
                 </div>
               </AccordionContent>
@@ -203,3 +190,4 @@ export function WorkExperienceSection({
     </Card>
   );
 }
+

@@ -1,0 +1,1 @@
+ALTER TABLE "work_experience" ADD COLUMN "responsibilities_html" text DEFAULT '' NOT NULL;

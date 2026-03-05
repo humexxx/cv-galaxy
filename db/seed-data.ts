@@ -145,12 +145,7 @@ export const cvDatabase: Record<string, CVData> = {
         },
         description:
           "Leading frontend development and technical direction for internal and external-facing applications.",
-        responsibilities: [
-          "Use Blazor and .NET to design and implement multiple internal tools and customer-facing applications.",
-          "Integrate AI capabilities into internal applications to improve task assignment, triage and overall efficiency for internal agents.",
-          "Maintain and evolve shared NuGet packages and service libraries to ensure scalability, reusability and consistent integrations across applications, including those built with Angular and other technologies.",
-          "Quickly ramped up on Blazor within a few weeks and was promoted to tech lead for a key project, delivering on time while defining improved patterns for DTO usage, data mapping, error handling and view model design.",
-        ],
+        responsibilitiesHtml: "<ul><li><p>Use Blazor and .NET to design and implement multiple internal tools and customer-facing applications.</p></li><li><p>Integrate AI capabilities into internal applications to improve task assignment, triage and overall efficiency for internal agents.</p></li><li><p>Maintain and evolve shared NuGet packages and service libraries to ensure scalability, reusability and consistent integrations across applications, including those built with Angular and other technologies.</p></li><li><p>Quickly ramped up on Blazor within a few weeks and was promoted to tech lead for a key project, delivering on time while defining improved patterns for DTO usage, data mapping, error handling and view model design.</p></li></ul>",
       },
       {
         title: "Senior Fullstack Developer",
@@ -162,12 +157,7 @@ export const cvDatabase: Record<string, CVData> = {
         },
         description:
           "Migrated and enhanced a volunteer opportunity platform from AngularJS to Next.js with a focus on performance, SEO and user experience.",
-        responsibilities: [
-          "Implemented core features of the main landing and search pages so visitors could discover and filter volunteer opportunities.",
-          "Used Next.js as the primary framework, leveraging server-side rendering and static generation to improve SEO and ensure rich link previews when projects were shared via chat or social media.",
-          "Integrated Google Maps APIs to provide advanced location and area-based filters for volunteer projects.",
-          "Contributed to internal shared libraries consumed by multiple projects, promoting consistency and reducing duplicated logic.",
-        ],
+        responsibilitiesHtml: "<ul><li><p>Implemented core features of the main landing and search pages so visitors could discover and filter volunteer opportunities.</p></li><li><p>Used Next.js as the primary framework, leveraging server-side rendering and static generation to improve SEO and ensure rich link previews when projects were shared via chat or social media.</p></li><li><p>Integrated Google Maps APIs to provide advanced location and area-based filters for volunteer projects.</p></li><li><p>Contributed to internal shared libraries consumed by multiple projects, promoting consistency and reducing duplicated logic.</p></li></ul>",
       },
       {
         title: "Senior Frontend and Technical Lead",
@@ -178,11 +168,7 @@ export const cvDatabase: Record<string, CVData> = {
         },
         description:
           "Led a frontend team to build internal applications.",
-        responsibilities: [
-          "Migrated an Angular-based project to React to improve maintainability and developer experience.",
-          "Created a lot of integration tests to ensure stability during the migration and future feature additions.",
-          "Mentored junior developers and conducted code reviews to maintain high code quality standards.",
-        ],
+        responsibilitiesHtml: "<ul><li><p>Migrated an Angular-based project to React to improve maintainability and developer experience.</p></li><li><p>Created a lot of integration tests to ensure stability during the migration and future feature additions.</p></li><li><p>Mentored junior developers and conducted code reviews to maintain high code quality standards.</p></li></ul>",
       },
       {
         title: "Senior Fullstack Developer",
@@ -194,12 +180,7 @@ export const cvDatabase: Record<string, CVData> = {
         },
         description:
           "Full-stack development focused on policy management systems.",
-        responsibilities: [
-          "Using React and Python/Django, developed features for an insurance policy management system.",
-          "Created a component library with Storybook and React to ensure consistency across multiple applications.",
-          "Redesigned and expanded the project to allow clients and agents to visualise policy performance over time.",
-          "Enhanced calculations based on selected products within policies, ensuring accuracy and reliability.",
-        ],
+        responsibilitiesHtml: "<ul><li><p>Using React and Python/Django, developed features for an insurance policy management system.</p></li><li><p>Created a component library with Storybook and React to ensure consistency across multiple applications.</p></li><li><p>Redesigned and expanded the project to allow clients and agents to visualise policy performance over time.</p></li><li><p>Enhanced calculations based on selected products within policies, ensuring accuracy and reliability.</p></li></ul>",
       },
       {
         title: "Senior Back-end Developer",
@@ -211,12 +192,7 @@ export const cvDatabase: Record<string, CVData> = {
         },
         description:
           "Develop the main mobile app and add integrations with 3rd party apps.",
-        responsibilities: [
-          "Using React Native and NestJS, created the main mobile application for requesting gigs and managing the payment process.",
-          "Integrated multiple 3rd party services such as Stripe for payments, various integrations with already existing platforms and identity providers for authentication.",
-          "Collaborated closely with UX designers to implement a smooth and intuitive user experience.",
-          "Eventhough my focus was more in the backend using NestJS, I also helped the frontend team with complex features and bug fixes in the React Native app.",
-        ],
+        responsibilitiesHtml: "<ul><li><p>Using React Native and NestJS, created the main mobile application for requesting gigs and managing the payment process.</p></li><li><p>Integrated multiple 3rd party services such as Stripe for payments, various integrations with already existing platforms and identity providers for authentication.</p></li><li><p>Collaborated closely with UX designers to implement a smooth and intuitive user experience.</p></li><li><p>Eventhough my focus was more in the backend using NestJS, I also helped the frontend team with complex features and bug fixes in the React Native app.</p></li></ul>",
       },
       {
         title: "Senior Software Developer",
@@ -228,12 +204,7 @@ export const cvDatabase: Record<string, CVData> = {
         },
         description:
           "Provided technical support and enhancements for PayPal helpcenter micro frontend.",
-        responsibilities: [
-          "Supported and maintained PayPal's help platform used by millions of customers.",
-          "Implemented new features and UX improvements to enhance user experience.",
-          "Monitored performance and resolved issues to keep the platform stable and responsive.",
-          "Redesign of the Help Center's micro frontend using React, improving maintainability and user experience.",
-        ],
+        responsibilitiesHtml: "<ul><li><p>Supported and maintained PayPal's help platform used by millions of customers.</p></li><li><p>Implemented new features and UX improvements to enhance user experience.</p></li><li><p>Monitored performance and resolved issues to keep the platform stable and responsive.</p></li><li><p>Redesign of the Help Center's micro frontend using React, improving maintainability and user experience.</p></li></ul>",
       },
       {
         title: "Fullstack Developer",
@@ -244,12 +215,7 @@ export const cvDatabase: Record<string, CVData> = {
         },
         description:
           "Delivered diverse web applications for various clients across different domains.",
-        responsibilities: [
-          "Developed web applications for vehicle fleet monitoring and management using React, Node.js and SQL/NoSQL databases.",
-          "Built systems for medical office group management, integrating multiple REST APIs and third-party services.",
-          "Created hybrid and mobile-ready solutions with React Native and Ionic.",
-          "Closely coollaborated with a Intel manager to build some applications for international clients.",
-        ],
+        responsibilitiesHtml: "<ul><li><p>Developed web applications for vehicle fleet monitoring and management using React, Node.js and SQL/NoSQL databases.</p></li><li><p>Built systems for medical office group management, integrating multiple REST APIs and third-party services.</p></li><li><p>Created hybrid and mobile-ready solutions with React Native and Ionic.</p></li><li><p>Closely coollaborated with a Intel manager to build some applications for international clients.</p></li></ul>",
       },
       {
         title: "AngularJs and .NET Developer",
@@ -261,11 +227,7 @@ export const cvDatabase: Record<string, CVData> = {
         },
         description:
           "Backend and internal tool development for Intel projects.",
-        responsibilities: [
-          "Developed internal tools using AngularJS, .NET C#, SQL Server and related technologies.",
-          "Implemented logical parsing of PDF files with specific patterns for data extraction.",
-          "Used a lot of LINQ queries + Entity Framework + Kendo UI + JQuery for frontend components.",
-        ],
+        responsibilitiesHtml: "<ul><li><p>Developed internal tools using AngularJS, .NET C#, SQL Server and related technologies.</p></li><li><p>Implemented logical parsing of PDF files with specific patterns for data extraction.</p></li><li><p>Used a lot of LINQ queries + Entity Framework + Kendo UI + JQuery for frontend components.</p></li></ul>",
       },
       {
         title: "Junior Software Developer",
@@ -276,11 +238,7 @@ export const cvDatabase: Record<string, CVData> = {
         },
         description:
           "Started professional career working on macros and aircraft maintenance systems.",
-        responsibilities: [
-          "Developed macros with Visual Basic to automate repetitive tasks.",
-          "Maintained and updated drivers used in aircraft-related systems.",
-          "Created queries and small web modules using JavaScript, CSS and HTML.",
-        ],
+        responsibilitiesHtml: "<ul><li><p>Developed macros with Visual Basic to automate repetitive tasks.</p></li><li><p>Maintained and updated drivers used in aircraft-related systems.</p></li><li><p>Created queries and small web modules using JavaScript, CSS and HTML.</p></li></ul>",
       },
     ],
     education: [

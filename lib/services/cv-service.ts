@@ -15,9 +15,6 @@ export class CVService {
           with: {
             company: true,
             contractor: true,
-            responsibilities: {
-              orderBy: (responsibilities, { asc }) => [asc(responsibilities.sortOrder)],
-            },
           },
         },
         education: {
@@ -100,6 +97,7 @@ export class CVService {
 
   private transformToCVData(cv: DbCVWithRelations, showContractors: boolean = true): CVData {
     const workExperience: WorkExperience[] = cv.workExperience.map((work) => ({
+      id: work.id,
       title: work.title,
       company: {
         id: work.company.id,
@@ -120,7 +118,7 @@ export class CVService {
         end: work.endDate ? new Date(work.endDate) : "Present",
       },
       description: work.description,
-      responsibilities: work.responsibilities.map((r) => r.responsibility),
+      responsibilitiesHtml: work.responsibilitiesHtml,
     }));
 
     const education: Education[] = cv.education.map((edu) => ({

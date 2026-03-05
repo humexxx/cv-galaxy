@@ -17,18 +17,15 @@ export type DbInstitution = {
   logo: string | null;
 };
 
-export type DbResponsibility = { 
-  responsibility: string;
-};
-
 export type DbWorkExperience = {
+  id: string;
   title: string;
   startDate: string;
   endDate: string | null;
   description: string;
+  responsibilitiesHtml: string;
   company: DbCompany;
   contractor: DbCompany | null;
-  responsibilities: DbResponsibility[];
 };
 
 export type DbEducation = {

@@ -54,17 +54,12 @@ export const workExperience = pgTable("work_experience", {
   startDate: date("start_date").notNull(),
   endDate: date("end_date"), // null means "Present"
   description: text("description").notNull(),
+  responsibilitiesHtml: text("responsibilities_html").notNull().default(""),
   sortOrder: integer("sort_order").notNull().default(0),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
-// Work Experience Responsibilities (many-to-one with work_experience)
-export const workResponsibilities = pgTable("work_responsibilities", {
-  id: uuid("id").primaryKey().defaultRandom(),
-  workExperienceId: uuid("work_experience_id").notNull().references(() => workExperience.id, { onDelete: "cascade" }),
-  responsibility: text("responsibility").notNull(),
-  sortOrder: integer("sort_order").notNull().default(0),
-});
+// Work Experience Responsibilities table removed — responsibilities stored as HTML in work_experience.responsibilities_html
 
 // Education table
 export const education = pgTable("education", {
@@ -154,14 +149,6 @@ export const workExperienceRelations = relations(workExperience, ({ one, many })
   contractor: one(companies, {
     fields: [workExperience.contractorId],
     references: [companies.id],
-  }),
-  responsibilities: many(workResponsibilities),
-}));
-
-export const workResponsibilitiesRelations = relations(workResponsibilities, ({ one }) => ({
-  workExperience: one(workExperience, {
-    fields: [workResponsibilities.workExperienceId],
-    references: [workExperience.id],
   }),
 }));
 

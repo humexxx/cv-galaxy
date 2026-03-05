@@ -56,10 +56,8 @@ export function generateCVHTML(cv: CVData, showContractors: boolean = true): str
 
   const workExperience = cv.workExperience
     .map((exp: WorkExperience) => {
-      const responsibilities = exp.responsibilities
-        .map((resp) => `<li>${escapeHtml(resp)}</li>`)
-        .join("");
-      
+      const responsibilities = exp.responsibilitiesHtml ?? "";
+      const hasResponsibilities = responsibilities.trim().length > 0;
       const contractorInfo = showContractors && exp.contractor
         ? ` <span class="via-text">via</span> ${escapeHtml(exp.contractor.name)}`
         : '';
@@ -74,7 +72,7 @@ export function generateCVHTML(cv: CVData, showContractors: boolean = true): str
             <div class="work-company">${escapeHtml(exp.company.name)}${contractorInfo}</div>
           </div>
           <div class="work-description">${escapeHtml(exp.description)}</div>
-          ${responsibilities ? `<ul class="responsibilities-list">${responsibilities}</ul>` : ''}
+          ${hasResponsibilities ? `<div class="responsibilities-html">${responsibilities}</div>` : ''}
         </div>
       `;
     }).join("");
