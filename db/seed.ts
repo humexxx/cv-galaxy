@@ -4,7 +4,6 @@ import {
   companies,
   institutions,
   workExperience,
-  workResponsibilities,
   education,
   projects,
   technologies,
@@ -139,18 +138,10 @@ async function seed() {
             startDate: work.period.start.toISOString().split("T")[0],
             endDate: endDate,
             description: work.description,
+            responsibilitiesHtml: work.responsibilitiesHtml,
             sortOrder: i,
           })
           .returning();
-
-        // Insert responsibilities
-        for (let j = 0; j < work.responsibilities.length; j++) {
-          await db.insert(workResponsibilities).values({
-            workExperienceId: workExp.id,
-            responsibility: work.responsibilities[j],
-            sortOrder: j,
-          });
-        }
       }
       console.log(`  ✓ ${cv.workExperience.length} work experiences`);
 

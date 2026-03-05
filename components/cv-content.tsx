@@ -11,9 +11,11 @@ import {
   Award,
   Lightbulb,
   ExternalLink,
+  Pencil,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { DownloadPdfButton } from "@/components/download-pdf-button";
 import { Separator } from "@/components/ui/separator";
 import {
@@ -33,6 +35,8 @@ import {
 import { CvWithChatLayout } from "@/components/cv-with-chat-layout";
 import { CVHighlightProvider } from "@/components/cv-highlight-provider";
 import { HighlightedText } from "@/components/highlighted-text";
+import { EditTechnologiesDialog } from "@/components/edit-technologies-dialog";
+import { useAuth } from "@/components/auth-provider";
 import type { CVData } from "@/types/cv";
 
 interface CVContentProps {
@@ -43,6 +47,9 @@ interface CVContentProps {
 
 export function CVContent({ username, cv, initialShowContractors = true }: CVContentProps) {
   const [showContractors, setShowContractors] = useState(initialShowContractors);
+  const [techDialogOpen, setTechDialogOpen] = useState(false);
+  const { user } = useAuth();
+  const isOwner = user?.username === username;
 
   return (
     <CVHighlightProvider>
@@ -153,9 +160,30 @@ export function CVContent({ username, cv, initialShowContractors = true }: CVCon
               {/* Technologies */}
               <Card>
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-lg">
-                    <Code className="h-5 w-5" />
-                    Technologies
+                  <CardTitle className="flex items-center justify-between text-lg">
+                    <span className="flex items-center gap-2">
+                      <Code className="h-5 w-5" />
+                      Technologies
+                    </span>
+                    {isOwner && (
+                      <>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-7 w-7 text-muted-foreground hover:text-foreground"
+                          onClick={() => setTechDialogOpen(true)}
+                          aria-label="Edit technologies"
+                        >
+                          <Pencil className="h-3.5 w-3.5" />
+                        </Button>
+                        <EditTechnologiesDialog
+                          open={techDialogOpen}
+                          onOpenChange={setTechDialogOpen}
+                          technologies={cv.technologies}
+                          username={username}
+                        />
+                      </>
+                    )}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>

@@ -6,6 +6,7 @@ export interface Company {
 }
 
 export interface WorkExperience {
+  id?: string;
   title: string;
   company: Company;
   contractor?: Company; // Contracting company if working as contractor
@@ -14,7 +15,7 @@ export interface WorkExperience {
     end: Date | "Present";
   };
   description: string;
-  responsibilities: string[];
+  responsibilitiesHtml: string;
 }
 
 export interface Project {

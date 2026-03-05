@@ -15,6 +15,20 @@
       "when": 1765242757228,
       "tag": "0001_empty_ender_wiggin",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1772730159167,
+      "tag": "0002_great_darkstar",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1772731575537,
+      "tag": "0003_superb_dark_phoenix",
+      "breakpoints": true
     }
   ]
 }
