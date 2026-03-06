@@ -342,6 +342,64 @@ export function generateCVHTML(cv: CVData, showContractors: boolean = true): str
           font-weight: bold;
         }
 
+        .responsibilities-html {
+          font-size: 9pt;
+          line-height: 1.6;
+          color: ${COLORS.text.secondary};
+          margin-top: ${SPACING.sm};
+        }
+
+        .responsibilities-html p {
+          margin-bottom: ${SPACING.xs};
+        }
+
+        .responsibilities-html ul,
+        .responsibilities-html ol {
+          margin: ${SPACING.xs} 0 ${SPACING.xs} ${SPACING.xl};
+          padding: 0;
+        }
+
+        .responsibilities-html ul {
+          list-style-type: disc;
+        }
+
+        .responsibilities-html ol {
+          list-style-type: decimal;
+        }
+
+        .responsibilities-html li {
+          margin-bottom: ${SPACING.xs};
+          line-height: 1.6;
+        }
+
+        .responsibilities-html strong {
+          font-weight: 700;
+          color: ${COLORS.text.primary};
+        }
+
+        .responsibilities-html em {
+          font-style: italic;
+        }
+
+        .responsibilities-html h2 {
+          font-size: 11pt;
+          font-weight: 700;
+          color: ${COLORS.text.primary};
+          margin: ${SPACING.sm} 0 ${SPACING.xs};
+        }
+
+        .responsibilities-html h3 {
+          font-size: 10pt;
+          font-weight: 600;
+          color: ${COLORS.text.primary};
+          margin: ${SPACING.sm} 0 ${SPACING.xs};
+        }
+
+        .responsibilities-html a {
+          color: ${COLORS.primary};
+          text-decoration: underline;
+        }
+
         .education-item {
           margin-bottom: ${SPACING.lg};
         }
