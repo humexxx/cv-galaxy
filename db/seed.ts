@@ -12,6 +12,7 @@ import {
   personalValues,
 } from "./schema";
 import { cvDatabase, companiesData, institutionsData } from "./seed-data.js";
+import { toDateOnlyString } from "@/lib/utils/date";
 
 async function seed() {
   console.log("🌱 Starting database seed...");
@@ -126,22 +127,22 @@ async function seed() {
           continue;
         }
 
-        const endDate = work.period.end === "Present" ? null : work.period.end.toISOString().split("T")[0];
+        // seed-data builds these with `new Date(2026, 2)` — local midnight. Going
+        // through toISOString() would shift them into the previous month west of
+        // Greenwich, so read the calendar fields directly instead.
+        const endDate = work.period.end === "Present" ? null : toDateOnlyString(work.period.end);
 
-        const [workExp] = await db
-          .insert(workExperience)
-          .values({
-            userId: user.id,
-            title: work.title,
-            companyId: companyId,
-            contractorId: contractorId,
-            startDate: work.period.start.toISOString().split("T")[0],
-            endDate: endDate,
-            description: work.description,
-            responsibilitiesHtml: work.responsibilitiesHtml,
-            sortOrder: i,
-          })
-          .returning();
+        await db.insert(workExperience).values({
+          userId: user.id,
+          title: work.title,
+          companyId: companyId,
+          contractorId: contractorId,
+          startDate: toDateOnlyString(work.period.start),
+          endDate: endDate,
+          description: work.description,
+          responsibilitiesHtml: work.responsibilitiesHtml,
+          sortOrder: i,
+        });
       }
       console.log(`  ✓ ${cv.workExperience.length} work experiences`);
 
@@ -159,8 +160,8 @@ async function seed() {
           userId: user.id,
           degree: edu.degree,
           institutionId: institutionId,
-          startDate: edu.period.start.toISOString().split("T")[0],
-          endDate: edu.period.end.toISOString().split("T")[0],
+          startDate: toDateOnlyString(edu.period.start),
+          endDate: toDateOnlyString(edu.period.end),
           description: edu.description,
           sortOrder: i,
         });

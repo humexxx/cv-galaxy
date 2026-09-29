@@ -4,7 +4,7 @@ import { cvService } from "@/lib/services/cv-service";
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const query = searchParams.get("q");
+    const query = searchParams.get("q")?.slice(0, 100).trim();
 
     if (!query) {
       // Return top results when no query

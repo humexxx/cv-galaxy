@@ -7,7 +7,8 @@ export class PreferencesServerService {
   static async getPreferencesFromDB(username: string): Promise<UserPreferences> {
     try {
       const user = await db.query.users.findFirst({
-        where: eq(users.username, username),
+        // Usernames are stored lowercase; every other lookup normalises too.
+        where: eq(users.username, username.toLowerCase()),
         with: {
           preferences: true,
         },

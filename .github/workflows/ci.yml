@@ -1,8 +1,20 @@
 name: CI
 
 on:
+  push:
+    branches: [develop, main]
   pull_request:
     branches: [develop, main]
+
+# Least privilege: the jobs only read the repo and upload an artifact
+# (upload-artifact does not require any repository permission).
+permissions:
+  contents: read
+
+# Supersede in-flight runs for the same ref instead of burning minutes.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   lint-and-typecheck:
@@ -22,8 +34,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      # Strict: warnings are failures in CI so lint debt cannot accumulate.
       - name: Run ESLint
-        run: npm run lint
+        run: npm run lint -- --max-warnings 0
 
       - name: Run TypeScript type check
         run: npx tsc --noEmit

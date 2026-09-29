@@ -85,7 +85,7 @@ export function CvWithChatLayout({ children, userId, cvData }: CvWithChatLayoutP
               </div>
               <button
                 onClick={handleNewChat}
-                className="h-8 w-8 rounded-md hover:bg-accent flex items-center justify-center transition-opacity opacity-70 hover:opacity-100 cursor-pointer mr-8"
+                className="ios-press h-8 w-8 rounded-full hover:bg-accent flex items-center justify-center transition-opacity opacity-70 hover:opacity-100 cursor-pointer mr-8"
                 aria-label="New chat"
                 title="New chat"
               >
@@ -106,13 +106,13 @@ export function CvWithChatLayout({ children, userId, cvData }: CvWithChatLayoutP
         </Sheet>
       ) : (
         isChatOpen && (
-          <div className="fixed right-0 top-[65px] h-[calc(100vh-65px)] w-[350px] xl:w-[400px] border-l bg-background flex flex-col z-40">
+          <div className="fixed right-0 top-[65px] h-[calc(100vh-65px)] w-[350px] xl:w-[400px] border-l border-border/60 bg-card flex flex-col z-40">
             <div className="px-6 pt-6 pb-4 flex flex-row items-center justify-between border-b">
               <h2 className="text-lg font-semibold">AI Assistant</h2>
               <div className="flex items-center gap-1">
                 <button
                   onClick={handleNewChat}
-                  className="h-8 w-8 rounded-md hover:bg-accent flex items-center justify-center transition-opacity opacity-70 hover:opacity-100 cursor-pointer"
+                  className="ios-press h-8 w-8 rounded-full hover:bg-accent flex items-center justify-center transition-opacity opacity-70 hover:opacity-100 cursor-pointer"
                   aria-label="New chat"
                   title="New chat"
                 >
@@ -120,7 +120,7 @@ export function CvWithChatLayout({ children, userId, cvData }: CvWithChatLayoutP
                 </button>
                 <button
                   onClick={handleCloseChat}
-                  className="h-8 w-8 rounded-md hover:bg-accent flex items-center justify-center transition-opacity opacity-70 hover:opacity-100 cursor-pointer"
+                  className="ios-press h-8 w-8 rounded-full hover:bg-accent flex items-center justify-center transition-opacity opacity-70 hover:opacity-100 cursor-pointer"
                   aria-label="Close chat"
                   title="Close chat"
                 >

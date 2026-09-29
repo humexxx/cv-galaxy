@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { getCVByUsername } from "@/lib/services/cv-service";
 import { PreferencesServerService } from "@/lib/services/preferences-server-service";
 import { getBaseUrl } from "@/lib/env";
@@ -11,12 +12,25 @@ interface PageProps {
   }>;
 }
 
+const getPreferences = cache((username: string) =>
+  PreferencesServerService.getPreferencesFromDB(username)
+);
+
+/**
+ * `generateMetadata` and the page render in the same request, so both must call
+ * `getCVByUsername` with *identical* arguments for React's `cache()` to collapse
+ * them into one DB round-trip. Hence the shared preference lookup.
+ */
+const getCV = cache(async (username: string) => {
+  const preferences = await getPreferences(username);
+  return getCVByUsername(username, preferences.showContractors);
+});
+
 export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
   const { username } = await params;
-  // For metadata, we don't need to filter contractors
-  const cv = await getCVByUsername(username, true);
+  const cv = await getCV(username);
 
   if (!cv) {
     return {
@@ -82,13 +96,11 @@ export async function generateMetadata({
 
 export default async function CVPage({ params }: PageProps) {
   const { username } = await params;
-  
-  // Get user preferences from database (server-side)
-  const preferences = await PreferencesServerService.getPreferencesFromDB(username);
-  
-  // Get CV with contractors filtered based on preferences.
-  // React.cache() deduplicates this call when showContractors=true (same as generateMetadata).
-  const cv = await getCVByUsername(username, preferences.showContractors);
+
+  const [preferences, cv] = await Promise.all([
+    getPreferences(username),
+    getCV(username),
+  ]);
 
   if (!cv) {
     notFound();

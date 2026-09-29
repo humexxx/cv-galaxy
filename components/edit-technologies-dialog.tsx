@@ -115,7 +115,7 @@ export function EditTechnologiesDialog({
             </p>
           </div>
 
-          <div className="min-h-20 rounded-md border bg-muted/30 p-3">
+          <div className="min-h-20 rounded-xl border border-border/60 bg-muted/30 p-3">
             {techs.length === 0 ? (
               <p className="text-sm text-muted-foreground">
                 No technologies added yet.

@@ -18,6 +18,16 @@ export async function PATCH(
 ) {
   try {
     const { username, id } = await params;
+
+    const { error: authError, authUser } = await requireAuth();
+    if (authError) return authError;
+
+    const { error: ownerError, user } = await requireOwnership(
+      username,
+      authUser!
+    );
+    if (ownerError) return ownerError;
+
     const body = await request.json();
 
     const validationResult = workExperienceUpdateSchema.safeParse(body);
@@ -27,12 +37,6 @@ export async function PATCH(
         { status: 400 }
       );
     }
-
-    const { error: authError, session } = await requireAuth();
-    if (authError) return authError;
-
-    const { error: ownerError, user } = await requireOwnership(username, session!);
-    if (ownerError) return ownerError;
 
     const existing = await db.query.workExperience.findFirst({
       where: and(

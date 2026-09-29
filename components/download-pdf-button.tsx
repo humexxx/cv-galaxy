@@ -36,7 +36,7 @@ export function DownloadPdfButton({ userId }: DownloadPdfButtonProps) {
     <button
       onClick={handleDownload}
       disabled={isLoading}
-      className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors cursor-pointer shrink-0 disabled:cursor-not-allowed disabled:opacity-60"
+      className="ios-press flex items-center gap-2 text-sm font-medium text-primary hover:opacity-80 transition-opacity cursor-pointer shrink-0 disabled:cursor-not-allowed disabled:opacity-60"
     >
       {isLoading ? (
         <Loader2 className="h-4 w-4 animate-spin" />

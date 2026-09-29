@@ -1,6 +1,16 @@
 "use client"
 
-import { createContext, useContext, useState, useEffect, ReactNode, Suspense } from "react"
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  ReactNode,
+  Suspense,
+} from "react"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { useDebounce } from "@/hooks/use-debounce"
 import { useSearchCVs } from "@/hooks/use-search-cvs"
@@ -21,44 +31,73 @@ interface SearchContextType {
 
 const SearchContext = createContext<SearchContextType | undefined>(undefined)
 
-function SearchProviderContent({ children }: { children: ReactNode }) {
+/**
+ * Reads the initial `?q=` exactly once and hands it to the provider.
+ *
+ * `useSearchParams()` forces a Suspense boundary during static rendering, so it
+ * lives here — in a component that renders nothing — instead of in the provider
+ * itself. That keeps the boundary off `{children}`: the app subtree is rendered
+ * once, by one owner, with one context value.
+ */
+function InitialSearchParams({ onRead }: { onRead: (query: string) => void }) {
+  const searchParams = useSearchParams()
+  const hasRead = useRef(false)
+
+  useEffect(() => {
+    if (hasRead.current) return
+    hasRead.current = true
+    onRead(searchParams.get("q") ?? "")
+  }, [searchParams, onRead])
+
+  return null
+}
+
+export function SearchProvider({ children }: { children: ReactNode }) {
   const pathname = usePathname()
   const router = useRouter()
-  const searchParams = useSearchParams()
-  
-  // Inicializar desde query params solo una vez
-  const [searchQuery, setSearchQuery] = useState(() => searchParams.get("q") || "")
+
+  const [searchQuery, setSearchQuery] = useState("")
   const [isNavigating, setIsNavigating] = useState(false)
+  // Until the initial `?q=` has been read we must not write the URL, or we'd
+  // clobber a deep-linked query before it is applied to state.
+  const [didReadInitialQuery, setDidReadInitialQuery] = useState(false)
   const debouncedQuery = useDebounce(searchQuery, 300)
-  
+
   const isHomePage = pathname === "/"
   const isSearching = searchQuery.trim() !== debouncedQuery.trim()
-  
+
   // Buscar si hay query (excepto en páginas internas como /_next, etc)
   const shouldSearch = !pathname.startsWith("/_") && debouncedQuery.trim() !== ""
-  
+
   const { data: searchData, loading: searchLoading } = useSearchCVs(
     shouldSearch ? debouncedQuery : ""
   )
-  
+
   const isLoading = isSearching || searchLoading
-  
-  const searchResults = {
-    top: debouncedQuery.trim() ? searchData.top : [],
-    all: searchData.results
-  }
-  
-  // Actualizar URL inmediatamente (solo en home page y cuando no estamos navegando)
+
+  const handleInitialQuery = useCallback((query: string) => {
+    // Don't stomp on anything the user already typed while the boundary resolved.
+    setSearchQuery((current) => current || query)
+    setDidReadInitialQuery(true)
+  }, [])
+
+  // Sync the URL from the *debounced* query with `replace`, so the history
+  // stack doesn't get one entry per keystroke.
   useEffect(() => {
-    if (!isHomePage || isNavigating) return
-    
-    if (searchQuery.trim()) {
-      router.push(`/?q=${encodeURIComponent(searchQuery)}`, { scroll: false })
-    } else {
-      router.push("/", { scroll: false })
-    }
-  }, [searchQuery, isHomePage, isNavigating, router])
-  
+    if (!didReadInitialQuery || !isHomePage || isNavigating) return
+
+    const currentQuery =
+      new URLSearchParams(window.location.search).get("q") ?? ""
+    const nextQuery = debouncedQuery.trim()
+
+    if (currentQuery === nextQuery) return
+
+    router.replace(
+      nextQuery ? `/?q=${encodeURIComponent(nextQuery)}` : "/",
+      { scroll: false }
+    )
+  }, [debouncedQuery, didReadInitialQuery, isHomePage, isNavigating, router])
+
   // Limpiar query y reset flag cuando sales de home page
   useEffect(() => {
     if (!isHomePage) {
@@ -70,42 +109,40 @@ function SearchProviderContent({ children }: { children: ReactNode }) {
     }
   }, [isHomePage])
 
-  const startNavigation = () => {
+  const startNavigation = useCallback(() => {
     setIsNavigating(true)
-  }
+  }, [])
 
-  return (
-    <SearchContext.Provider value={{ 
-      searchQuery, 
-      debouncedQuery, 
+  const value = useMemo<SearchContextType>(
+    () => ({
+      searchQuery,
+      debouncedQuery,
       setSearchQuery,
       startNavigation,
       isSearching,
-      searchResults,
-      isLoading
-    }}>
+      searchResults: {
+        top: debouncedQuery.trim() ? searchData.top : [],
+        all: searchData.results,
+      },
+      isLoading,
+    }),
+    [
+      searchQuery,
+      debouncedQuery,
+      startNavigation,
+      isSearching,
+      searchData,
+      isLoading,
+    ]
+  )
+
+  return (
+    <SearchContext.Provider value={value}>
+      <Suspense fallback={null}>
+        <InitialSearchParams onRead={handleInitialQuery} />
+      </Suspense>
       {children}
     </SearchContext.Provider>
-  )
-}
-
-export function SearchProvider({ children }: { children: ReactNode }) {
-  return (
-    <Suspense fallback={
-      <SearchContext.Provider value={{
-        searchQuery: "",
-        debouncedQuery: "",
-        setSearchQuery: () => {},
-        startNavigation: () => {},
-        isSearching: false,
-        searchResults: { top: [], all: [] },
-        isLoading: false
-      }}>
-        {children}
-      </SearchContext.Provider>
-    }>
-      <SearchProviderContent>{children}</SearchProviderContent>
-    </Suspense>
   )
 }
 

@@ -34,11 +34,17 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# vscode
+# editors
 .vscode/*
+.idea/
+
+# vercel
 .vercel
-.env*.local
+
+# local env files (never commit real secrets; .env.example is the template)
 .env
+.env.*
+!.env.example
 
 # skills (restored via skills-lock.json, like node_modules)
 /skills

@@ -110,7 +110,7 @@ function ResultCard({ result, onClick }: { result: CVSearchResult; onClick: () =
     <Link
       href={`/${result.username}`}
       onClick={onClick}
-      className="flex flex-col items-center justify-center p-4 rounded-lg border bg-card hover:bg-accent transition-colors text-left w-full cursor-pointer"
+      className="ios-press flex flex-col items-center justify-center p-4 rounded-2xl border border-border/60 bg-card shadow-[var(--shadow-ios)] dark:shadow-none hover:bg-accent transition-colors text-left w-full cursor-pointer"
     >
       {result.avatar ? (
         <Image
@@ -138,7 +138,7 @@ function ResultRow({ result, onClick }: { result: CVSearchResult; onClick: () =>
     <Link
       href={`/${result.username}`}
       onClick={onClick}
-      className="flex items-center gap-3 p-2 rounded-md hover:bg-accent transition-colors text-left w-full cursor-pointer"
+      className="flex items-center gap-3 p-2 rounded-xl hover:bg-accent transition-colors text-left w-full cursor-pointer"
     >
       {result.avatar ? (
         <Image
@@ -163,7 +163,7 @@ function ResultRow({ result, onClick }: { result: CVSearchResult; onClick: () =>
 
 function ResultCardSkeleton() {
   return (
-    <div className="flex flex-col items-center justify-center p-4 rounded-lg border bg-card">
+    <div className="flex flex-col items-center justify-center p-4 rounded-2xl border border-border/60 bg-card">
       <Skeleton className="w-12 h-12 rounded-full mb-2" />
       <Skeleton className="h-4 w-20 mb-1" />
       <Skeleton className="h-3 w-16" />

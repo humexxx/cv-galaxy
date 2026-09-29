@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useTransition } from "react";
+import { useTransition } from "react";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
@@ -9,59 +9,32 @@ import { useAuth } from "@/components/auth-provider";
 
 interface ContractorToggleProps {
   username: string;
+  /**
+   * Current value, owned by the page. Seeded server-side from the stored
+   * preference so the switch renders in its real position on first paint.
+   */
+  showContractors: boolean;
   onToggle: (showContractors: boolean) => void;
 }
 
-export function ContractorToggle({ username, onToggle }: ContractorToggleProps) {
+export function ContractorToggle({
+  username,
+  showContractors,
+  onToggle,
+}: ContractorToggleProps) {
   const { user, isAuthenticated, isLoading: authLoading } = useAuth();
-  const [showContractors, setShowContractors] = useState(true);
   const [isPending, startTransition] = useTransition();
-  const [isOwnProfile, setIsOwnProfile] = useState(false);
 
-  // Check if viewing own profile
-  useEffect(() => {
-    async function checkOwnership() {
-      if (!isAuthenticated || !user?.email) {
-        setIsOwnProfile(false);
-        return;
-      }
+  // Derived during render — no effect, no fetch, no late pop-in. `username` on
+  // the auth user comes from the same session-backed lookup `/api/user/check`
+  // would have done, so the old fallback request was redundant.
+  const isOwnProfile = isAuthenticated && user?.username === username;
 
-      // First check if username matches (fastest)
-      if (user.username === username) {
-        setIsOwnProfile(true);
-        return;
-      }
-
-      // Fallback: check via API if email matches username
-      try {
-        const response = await fetch(`/api/user/check?email=${encodeURIComponent(user.email)}`);
-        const data = await response.json();
-        setIsOwnProfile(data.exists && data.username === username);
-      } catch (error) {
-        console.error('Error checking ownership:', error);
-        setIsOwnProfile(false);
-      }
-    }
-
-    checkOwnership();
-  }, [isAuthenticated, user?.email, user?.username, username]);
-
-  useEffect(() => {
-    if (isOwnProfile) {
-      PreferencesService.getPreferences(username).then((prefs) => {
-        setShowContractors(prefs.showContractors);
-        onToggle(prefs.showContractors);
-      });
-    }
-  }, [isOwnProfile, username, onToggle]);
-
-  // Only show if viewing own profile and auth is loaded
   if (authLoading || !isOwnProfile) {
     return null;
   }
 
   const handleToggle = (checked: boolean) => {
-    setShowContractors(checked);
     onToggle(checked);
 
     startTransition(async () => {
@@ -70,16 +43,23 @@ export function ContractorToggle({ username, onToggle }: ContractorToggleProps) 
       });
 
       if (error) {
+        // Roll back the optimistic flip.
+        onToggle(!checked);
         toast.error("Failed to update preference");
       } else {
-        toast.success(checked ? "Contractors will be shown" : "Contractors hidden");
+        toast.success(
+          checked ? "Contractors will be shown" : "Contractors hidden"
+        );
       }
     });
   };
 
   return (
     <div className="flex items-center gap-2">
-      <Label htmlFor="contractor-toggle" className="text-sm text-muted-foreground cursor-pointer">
+      <Label
+        htmlFor="contractor-toggle"
+        className="text-sm text-muted-foreground cursor-pointer"
+      >
         Show contractors
       </Label>
       <Switch

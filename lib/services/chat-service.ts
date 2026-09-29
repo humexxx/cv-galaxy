@@ -23,7 +23,8 @@ export class ChatService {
     model: string,
     userId: string,
     cvData: CVData,
-    onChunk?: (chunk: StreamChunk) => void
+    onChunk?: (chunk: StreamChunk) => void,
+    signal?: AbortSignal
   ): Promise<string> {
     const requestData: ChatRequest = {
       messages,
@@ -43,6 +44,7 @@ export class ChatService {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(validationResult.data),
+      signal,
     });
 
     if (!response.ok) {

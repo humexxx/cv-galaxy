@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import dynamic from "next/dynamic";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
@@ -17,10 +18,29 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
-import { RichTextEditor } from "@/components/ui/rich-text-editor";
+import { Skeleton } from "@/components/ui/skeleton";
 import { CVEditService } from "@/lib/services/cv-edit-service";
 import { workExperienceUpdateSchema, type WorkExperienceUpdate } from "@/schemas/cv";
 import type { WorkExperience } from "@/types/cv";
+
+// TipTap is only ever needed by an authenticated owner who opens this dialog —
+// keep the whole editor stack out of the initial payload for readers.
+const RichTextEditor = dynamic(
+  () =>
+    import("@/components/ui/rich-text-editor").then((m) => m.RichTextEditor),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="overflow-hidden rounded-xl border border-border bg-card">
+        <div className="h-10 border-b border-border bg-muted/60" />
+        <div className="min-h-[180px] space-y-2 px-3 py-3">
+          <Skeleton className="h-3.5 w-2/3" />
+          <Skeleton className="h-3.5 w-1/2" />
+        </div>
+      </div>
+    ),
+  }
+);
 
 type FormData = WorkExperienceUpdate;
 

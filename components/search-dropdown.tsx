@@ -25,7 +25,7 @@ export function SearchDropdown({
 
   if (isLoading) {
     return (
-      <div className="absolute top-full mt-1 w-full bg-popover border rounded-md shadow-lg z-50">
+      <div className="ios-material-elevated absolute top-full mt-2 w-full rounded-2xl border border-border/60 shadow-[var(--shadow-ios-lg)] z-50">
         <ScrollArea className="max-h-[500px]">
           <div className="p-4 space-y-4">
             <div>
@@ -57,7 +57,7 @@ export function SearchDropdown({
 
   if (!hasResults) {
     return (
-      <div className="absolute top-full mt-1 w-full bg-popover border rounded-md shadow-lg z-50">
+      <div className="ios-material-elevated absolute top-full mt-2 w-full rounded-2xl border border-border/60 shadow-[var(--shadow-ios-lg)] z-50">
         <div className="p-8 text-center">
           <p className="text-sm text-muted-foreground">No results found</p>
         </div>
@@ -66,7 +66,7 @@ export function SearchDropdown({
   }
 
   return (
-    <div className="absolute top-full mt-1 w-full bg-popover border rounded-md shadow-lg z-50">
+    <div className="ios-material-elevated absolute top-full mt-2 w-full rounded-2xl border border-border/60 shadow-[var(--shadow-ios-lg)] z-50">
       <ScrollArea className="max-h-[500px]">
         <div className="p-4 space-y-4">
           {topResults.length > 0 && (
@@ -117,7 +117,7 @@ function ResultCard({ result, onClick }: { result: CVSearchResult; onClick: () =
     <Link
       href={`/${result.username}`}
       onClick={onClick}
-      className="flex flex-col items-center justify-center p-3 rounded-lg border bg-card hover:bg-accent transition-colors text-left w-full cursor-pointer"
+      className="ios-press flex flex-col items-center justify-center p-3 rounded-xl border border-border/60 bg-card hover:bg-accent transition-colors text-left w-full cursor-pointer"
     >
       {result.avatar ? (
         <Image
@@ -145,7 +145,7 @@ function ResultRow({ result, onClick }: { result: CVSearchResult; onClick: () =>
     <Link
       href={`/${result.username}`}
       onClick={onClick}
-      className="flex items-center gap-3 w-full p-2 rounded-md hover:bg-accent transition-colors text-left cursor-pointer"
+      className="flex items-center gap-3 w-full p-2 rounded-lg hover:bg-accent transition-colors text-left cursor-pointer"
     >
       {result.avatar ? (
         <Image
@@ -170,7 +170,7 @@ function ResultRow({ result, onClick }: { result: CVSearchResult; onClick: () =>
 
 function ResultCardSkeleton() {
   return (
-    <div className="flex flex-col items-center justify-center p-3 rounded-lg border bg-card">
+    <div className="flex flex-col items-center justify-center p-3 rounded-xl border border-border/60 bg-card">
       <Skeleton className="w-10 h-10 rounded-full mb-2" />
       <Skeleton className="h-3 w-16 mb-1" />
       <Skeleton className="h-2 w-12" />

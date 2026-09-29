@@ -22,7 +22,7 @@ function SingleAvatar({
 
   const avatarContent = logo ? (
     <div
-      className={`shrink-0 overflow-hidden rounded-lg border bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center ${className}`}
+      className={`shrink-0 overflow-hidden rounded-[22%] border border-border/60 bg-card shadow-[var(--shadow-ios)] dark:shadow-none flex items-center justify-center ${className}`}
       style={{ width: size, height: size }}
     >
       <Image
@@ -36,7 +36,7 @@ function SingleAvatar({
   ) : (
     // Generic avatar with company initial
     <div
-      className={`shrink-0 flex items-center justify-center rounded-lg border bg-muted text-muted-foreground font-semibold ${className}`}
+      className={`shrink-0 flex items-center justify-center rounded-[22%] border border-border/60 bg-muted text-muted-foreground font-semibold ${className}`}
       style={{ width: size, height: size, fontSize: size * 0.4 }}
     >
       {company.name.charAt(0).toUpperCase()}
