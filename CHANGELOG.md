@@ -1,3 +1,13 @@
+## [1.6.0](https://github.com/humexxx/cv-galaxy/compare/v1.5.0...v1.6.0) (2026-09-29)
+
+### ✨ Features
+
+* enhance PDF download button with loading state and error handling ([7953d22](https://github.com/humexxx/cv-galaxy/commit/7953d226af2175cb068032a0117350c1e12e96b0))
+
+### 🐛 Bug Fixes
+
+* close auth bypass, add session refresh and harden the app end to end ([8843df9](https://github.com/humexxx/cv-galaxy/commit/8843df9293a47913ccb760d3b037ed01073129b6))
+
 ## [1.5.0](https://github.com/humexxx/cv-galaxy/compare/v1.4.2...v1.5.0) (2026-03-05)
 
 ### ✨ Features
