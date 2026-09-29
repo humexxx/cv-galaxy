@@ -12,6 +12,16 @@ export async function PUT(
 ) {
   try {
     const { username } = await params;
+
+    const { error: authError, authUser } = await requireAuth();
+    if (authError) return authError;
+
+    const { error: ownerError, user } = await requireOwnership(
+      username,
+      authUser!
+    );
+    if (ownerError) return ownerError;
+
     const body = await request.json();
 
     const validationResult = technologiesUpdateSchema.safeParse(body);
@@ -22,23 +32,19 @@ export async function PUT(
       );
     }
 
-    const { error: authError, session } = await requireAuth();
-    if (authError) return authError;
+    await db.transaction(async (tx) => {
+      await tx.delete(technologies).where(eq(technologies.userId, user!.id));
 
-    const { error: ownerError, user } = await requireOwnership(username, session!);
-    if (ownerError) return ownerError;
-
-    await db.delete(technologies).where(eq(technologies.userId, user!.id));
-
-    if (validationResult.data.technologies.length > 0) {
-      await db.insert(technologies).values(
-        validationResult.data.technologies.map((name, sortOrder) => ({
-          userId: user!.id,
-          name,
-          sortOrder,
-        }))
-      );
-    }
+      if (validationResult.data.technologies.length > 0) {
+        await tx.insert(technologies).values(
+          validationResult.data.technologies.map((name, sortOrder) => ({
+            userId: user!.id,
+            name,
+            sortOrder,
+          }))
+        );
+      }
+    });
 
     revalidatePath(`/${username}`);
     return NextResponse.json({ success: true });

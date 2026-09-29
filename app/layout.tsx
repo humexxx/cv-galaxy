@@ -64,7 +64,7 @@ export default function RootLayout({
             <SearchProvider>
               <div className="flex min-h-screen flex-col">
                 <Suspense fallback={
-                  <header className="sticky top-0 z-50 w-full border-b bg-background h-16" />
+                  <header className="ios-material sticky top-0 z-50 w-full border-b border-border/60 h-16" />
                 }>
                   <AppBar />
                 </Suspense>

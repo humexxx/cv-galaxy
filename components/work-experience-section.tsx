@@ -136,7 +136,11 @@ export function WorkExperienceSection({
             <Briefcase className="h-5 w-5" />
             Work Experience
           </CardTitle>
-          <ContractorToggle username={username} onToggle={onToggle} />
+          <ContractorToggle
+            username={username}
+            showContractors={showContractors}
+            onToggle={onToggle}
+          />
         </div>
       </CardHeader>
       <CardContent className="space-y-8">

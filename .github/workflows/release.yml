@@ -4,17 +4,26 @@ on:
   push:
     branches: [main]
 
+# Least privilege by default; each job widens only what it needs.
 permissions:
-  contents: write
-  issues: write
-  pull-requests: write
+  contents: read
+
+# Never run two releases against main at once, and never cancel one mid-flight
+# (a cancelled semantic-release can leave a tag without a GitHub release).
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
 
 jobs:
   release:
     name: Create Release
     runs-on: ubuntu-latest
     if: ${{ !contains(github.event.head_commit.message, 'skip ci') }}
-    
+    permissions:
+      contents: write # tags, the release commit and GitHub releases
+      issues: write # semantic-release comments on released issues
+      pull-requests: write # semantic-release comments on released PRs
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -40,5 +49,7 @@ jobs:
     name: Sync develop with main
     needs: release
     if: ${{ needs.release.result == 'success' }}
+    permissions:
+      contents: write # pushes the main -> develop merge commit
     uses: ./.github/workflows/sync-develop.yml
     secrets: inherit

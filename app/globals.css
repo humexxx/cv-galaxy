@@ -7,8 +7,10 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* Prefer the real San Francisco face on Apple platforms, Geist elsewhere */
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display",
+    var(--font-geist-sans), "Segoe UI", system-ui, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", var(--font-geist-mono), monospace;
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -26,6 +28,7 @@
   --color-input: var(--input);
   --color-border: var(--border);
   --color-destructive: var(--destructive);
+  --color-success: var(--success);
   --color-accent-foreground: var(--accent-foreground);
   --color-accent: var(--accent);
   --color-muted-foreground: var(--muted-foreground);
@@ -42,6 +45,11 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 10px);
+
+  /* iOS elevation: diffuse and low-contrast rather than a hard drop shadow */
+  --shadow-ios: 0 1px 2px oklch(0 0 0 / 0.04), 0 6px 20px -8px oklch(0 0 0 / 0.12);
+  --shadow-ios-lg: 0 2px 6px oklch(0 0 0 / 0.06), 0 24px 56px -16px oklch(0 0 0 / 0.24);
 
   /* Keyframes */
   @keyframes sparkle {
@@ -53,73 +61,77 @@
   --animate-sparkle: sparkle 2s ease-in-out infinite;
 }
 
+/* Palette follows the iOS system colors (systemBlue, systemGray, grouped
+   backgrounds) so light/dark mode match Apple's native surfaces. */
 :root {
-  --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
+  --radius: 0.875rem;
+  --background: oklch(0.9614 0.0053 286.4); /* systemGroupedBackground #F2F2F7 */
+  --foreground: oklch(0.2185 0.0037 285.9); /* label #1C1C1E */
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
+  --card-foreground: oklch(0.2185 0.0037 285.9);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --popover-foreground: oklch(0.2185 0.0037 285.9);
+  --primary: oklch(0.5799 0.2072 263.1); /* systemBlue #007AFF */
+  --primary-foreground: oklch(1 0 0);
+  --secondary: oklch(0.9209 0.0043 286); /* systemGray5 #E5E5EA */
+  --secondary-foreground: oklch(0.2185 0.0037 285.9);
+  --muted: oklch(0.9464 0.0043 286); /* systemGray6-ish fill */
+  --muted-foreground: oklch(0.6413 0.0056 286); /* secondaryLabel #8E8E93 */
+  --accent: oklch(0.9209 0.0043 286);
+  --accent-foreground: oklch(0.2185 0.0037 285.9);
+  --destructive: oklch(0.6368 0.2229 27.5); /* systemRed #FF3B30 */
+  --success: oklch(0.7513 0.1866 145.6); /* systemGreen #34C759 */
+  --border: oklch(0.8836 0.0037 286); /* separator */
+  --input: oklch(0.9209 0.0043 286);
+  --ring: oklch(0.5799 0.2072 263.1);
+  --chart-1: oklch(0.5799 0.2072 263.1);
+  --chart-2: oklch(0.7513 0.1866 145.6);
+  --chart-3: oklch(0.7686 0.1647 70.08);
+  --chart-4: oklch(0.6027 0.2216 305.5);
+  --chart-5: oklch(0.6368 0.2229 27.5);
+  --sidebar: oklch(0.9614 0.0053 286.4);
+  --sidebar-foreground: oklch(0.2185 0.0037 285.9);
+  --sidebar-primary: oklch(0.5799 0.2072 263.1);
+  --sidebar-primary-foreground: oklch(1 0 0);
+  --sidebar-accent: oklch(0.9209 0.0043 286);
+  --sidebar-accent-foreground: oklch(0.2185 0.0037 285.9);
+  --sidebar-border: oklch(0.8836 0.0037 286);
+  --sidebar-ring: oklch(0.5799 0.2072 263.1);
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  --background: oklch(0.1448 0.0035 285.9); /* near-black grouped background */
+  --foreground: oklch(1 0 0);
+  --card: oklch(0.2185 0.0037 285.9); /* secondarySystemGroupedBackground #1C1C1E */
+  --card-foreground: oklch(1 0 0);
+  --popover: oklch(0.2803 0.004 286); /* #2C2C2E */
+  --popover-foreground: oklch(1 0 0);
+  --primary: oklch(0.6182 0.1978 261.4); /* systemBlue dark #0A84FF */
+  --primary-foreground: oklch(1 0 0);
+  --secondary: oklch(0.3427 0.0043 286); /* systemGray5 dark #3A3A3C */
+  --secondary-foreground: oklch(1 0 0);
+  --muted: oklch(0.2803 0.004 286);
+  --muted-foreground: oklch(0.6949 0.0086 286); /* secondaryLabel dark */
+  --accent: oklch(0.3427 0.0043 286);
+  --accent-foreground: oklch(1 0 0);
+  --destructive: oklch(0.6519 0.2116 27.9); /* systemRed dark #FF453A */
+  --success: oklch(0.7776 0.1854 147.5); /* systemGreen dark #30D158 */
+  --border: oklch(1 0 0 / 14%);
+  --input: oklch(1 0 0 / 14%);
+  --ring: oklch(0.6182 0.1978 261.4);
+  --chart-1: oklch(0.6182 0.1978 261.4);
+  --chart-2: oklch(0.7776 0.1854 147.5);
+  --chart-3: oklch(0.8 0.164 70.08);
+  --chart-4: oklch(0.6644 0.2178 305.5);
+  --chart-5: oklch(0.6519 0.2116 27.9);
+  --sidebar: oklch(0.2185 0.0037 285.9);
+  --sidebar-foreground: oklch(1 0 0);
+  --sidebar-primary: oklch(0.6182 0.1978 261.4);
+  --sidebar-primary-foreground: oklch(1 0 0);
+  --sidebar-accent: oklch(0.3427 0.0043 286);
+  --sidebar-accent-foreground: oklch(1 0 0);
+  --sidebar-border: oklch(1 0 0 / 14%);
+  --sidebar-ring: oklch(0.6182 0.1978 261.4);
 }
 
 @layer base {
@@ -128,5 +140,40 @@
   }
   body {
     @apply bg-background text-foreground;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  /* iOS titles are set tight; the larger the type, the tighter the tracking */
+  h1 {
+    letter-spacing: -0.024em;
+  }
+  h2,
+  h3 {
+    letter-spacing: -0.019em;
+  }
+  h4 {
+    letter-spacing: -0.014em;
+  }
+}
+
+@utility ios-material {
+  background-color: color-mix(in oklab, var(--background) 72%, transparent);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+}
+
+@utility ios-material-elevated {
+  background-color: color-mix(in oklab, var(--popover) 80%, transparent);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+}
+
+/* Press-down feedback, the way iOS controls respond to touch */
+@utility ios-press {
+  transition: transform 150ms cubic-bezier(0.32, 0.72, 0, 1), opacity 150ms ease;
+
+  &:active:not(:disabled) {
+    transform: scale(0.96);
+    opacity: 0.7;
   }
 }

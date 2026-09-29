@@ -11,15 +11,17 @@ interface SearchBarProps {
   size?: "sm" | "md" | "lg"
   value?: string
   onChange?: (value: string) => void
+  label?: string
 }
 
-export function SearchBar({ 
+export function SearchBar({
   placeholder = "Search a name, username, email, or keyword...",
   className,
   inputClassName,
   size = "md",
   value,
-  onChange
+  onChange,
+  label = "Search CVs"
 }: SearchBarProps) {
   const sizeClasses = {
     sm: "h-10 pl-9",
@@ -35,16 +37,20 @@ export function SearchBar({
 
   return (
     <div className={cn("w-full relative", className)}>
-      <Search className={cn(
-        "absolute top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none",
-        iconSizeClasses[size]
-      )} />
+      <Search
+        aria-hidden="true"
+        className={cn(
+          "absolute top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none",
+          iconSizeClasses[size]
+        )}
+      />
       <Input
         type="text"
+        aria-label={label}
         placeholder={placeholder}
         value={value}
         onChange={(e) => onChange?.(e.target.value)}
-        className={cn(sizeClasses[size], inputClassName)}
+        className={cn("rounded-full", sizeClasses[size], inputClassName)}
       />
     </div>
   )

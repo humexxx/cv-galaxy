@@ -1,29 +1,19 @@
-import { NextRequest, NextResponse } from "next/server";
-import { getUserBySupabaseId, getSession } from "@/lib/utils/auth-helpers";
+import { NextResponse } from "next/server";
+import { getAuthUser, getUserBySupabaseId } from "@/lib/utils/auth-helpers";
 
-export async function GET(request: NextRequest) {
-  const { searchParams } = new URL(request.url);
-  const email = searchParams.get("email");
-
-  if (!email) {
-    return NextResponse.json(
-      { error: "email parameter is required" },
-      { status: 400 }
-    );
-  }
-
+export async function GET() {
   try {
-    const session = await getSession();
-    
-    if (!session) {
+    const authUser = await getAuthUser();
+
+    if (!authUser) {
       return NextResponse.json({ exists: false, username: null });
     }
 
-    const user = await getUserBySupabaseId(session.user.id);
+    const user = await getUserBySupabaseId(authUser.id);
 
-    return NextResponse.json({ 
-      exists: !!user, 
-      username: user?.username ?? null 
+    return NextResponse.json({
+      exists: !!user,
+      username: user?.username ?? null,
     });
   } catch (error) {
     console.error("Error checking user:", error);

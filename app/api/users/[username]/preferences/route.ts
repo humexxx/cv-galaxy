@@ -14,7 +14,7 @@ export async function GET(
     const { username } = await params;
 
     const user = await db.query.users.findFirst({
-      where: eq(users.username, username),
+      where: eq(users.username, username.toLowerCase()),
       with: {
         preferences: true,
       },
@@ -47,36 +47,36 @@ export async function PATCH(
 ) {
   try {
     const { username } = await params;
-    const body = await request.json();
 
-    const validated = userPreferencesSchema.partial().parse(body);
-
-    // Verificar autenticación
-    const { error: authError, session } = await requireAuth();
+    const { error: authError, authUser } = await requireAuth();
     if (authError) return authError;
 
-    // Verificar ownership
-    const { error: ownerError, user } = await requireOwnership(username, session!);
+    const { error: ownerError, user } = await requireOwnership(
+      username,
+      authUser!
+    );
     if (ownerError) return ownerError;
 
-    const existingPrefs = await db.query.userPreferences.findFirst({
-      where: eq(userPreferences.userId, user!.id),
-    });
+    const body = await request.json();
 
-    if (existingPrefs) {
-      await db
-        .update(userPreferences)
-        .set({
-          ...validated,
-          updatedAt: new Date(),
-        })
-        .where(eq(userPreferences.userId, user!.id));
-    } else {
-      await db.insert(userPreferences).values({
-        userId: user!.id,
-        showContractors: validated.showContractors ?? true,
-      });
+    const validationResult = userPreferencesSchema.partial().safeParse(body);
+    if (!validationResult.success) {
+      return NextResponse.json(
+        { error: "Invalid request", details: validationResult.error.issues },
+        { status: 400 }
+      );
     }
+
+    await db
+      .insert(userPreferences)
+      .values({
+        userId: user!.id,
+        showContractors: validationResult.data.showContractors ?? true,
+      })
+      .onConflictDoUpdate({
+        target: userPreferences.userId,
+        set: { ...validationResult.data, updatedAt: new Date() },
+      });
 
     // Invalidar la caché del CV para reflejar el cambio
     revalidatePath(`/${username}`);

@@ -3,9 +3,17 @@ import { chatRequestSchema } from "@/schemas/chat";
 import { OpenAIService } from "@/lib/services/openai-service";
 import { cvService } from "@/lib/services/cv-service";
 import { PreferencesServerService } from "@/lib/services/preferences-server-service";
+import { rateLimit } from "@/lib/utils/rate-limit";
 
 export async function POST(request: NextRequest) {
   try {
+    const limited = rateLimit(request, {
+      scope: "chat",
+      limit: 15,
+      windowMs: 60_000,
+    });
+    if (limited) return limited;
+
     const body = await request.json();
 
     const validationResult = chatRequestSchema.safeParse(body);
@@ -50,6 +58,16 @@ export async function POST(request: NextRequest) {
           { status: 500 }
         );
       }
+    }
+
+    // OpenAI reports quota and auth problems as 429/401. Collapsing those into a
+    // generic 500 hid an exhausted credit balance behind "Internal server error".
+    const upstreamStatus = (error as { status?: unknown })?.status;
+    if (upstreamStatus === 429 || upstreamStatus === 401) {
+      return NextResponse.json(
+        { error: "The AI assistant is temporarily unavailable. Please try again later." },
+        { status: 503 }
+      );
     }
 
     return NextResponse.json(

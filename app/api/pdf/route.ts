@@ -3,6 +3,9 @@ import { cvService } from "@/lib/services/cv-service";
 import { generateCVHTML } from "@/lib/templates/cv-pdf-template";
 import { PreferencesServerService } from "@/lib/services/preferences-server-service";
 import { env } from "@/lib/env";
+import { rateLimit } from "@/lib/utils/rate-limit";
+
+const USERNAME_PATTERN = /^[a-zA-Z0-9_-]{1,50}$/;
 
 // URL to the Chromium binary package hosted in /public
 // Use production URL if available, otherwise use the current deployment URL
@@ -10,7 +13,9 @@ const CHROMIUM_PACK_URL = env.VERCEL_PROJECT_PRODUCTION_URL
   ? `https://${env.VERCEL_PROJECT_PRODUCTION_URL}/chromium-pack.tar`
   : env.VERCEL_URL
   ? `https://${env.VERCEL_URL}/chromium-pack.tar`
-  : "https://github.com/humexxx/cv-galaxy/raw/refs/heads/develop/public/chromium-pack.tar";
+  : // Pinned to the commit that last changed the pack: a branch ref would let
+    // an unrelated push swap the binary we execute.
+    "https://github.com/humexxx/cv-galaxy/raw/2bcd2fc3a5bfc13385c6d5d3776c037a005a95a7/public/chromium-pack.tar";
 
 // Cache the Chromium executable path to avoid re-downloading on subsequent requests
 let cachedExecutablePath: string | null = null;
@@ -44,13 +49,23 @@ async function getChromiumPath(): Promise<string> {
 }
 
 export async function GET(request: NextRequest) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let browser: any = null;
+
   try {
+    const limited = rateLimit(request, {
+      scope: "pdf",
+      limit: 5,
+      windowMs: 60_000,
+    });
+    if (limited) return limited;
+
     const { searchParams } = new URL(request.url);
     const userId = searchParams.get("userId");
 
-    if (!userId) {
+    if (!userId || !USERNAME_PATTERN.test(userId)) {
       return NextResponse.json(
-        { error: "userId parameter is required" },
+        { error: "A valid userId parameter is required" },
         { status: 400 }
       );
     }
@@ -94,7 +109,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Launch browser
-    const browser = await puppeteer.launch(launchOptions);
+    browser = await puppeteer.launch(launchOptions);
     const page = await browser.newPage();
 
     // Generate HTML and set content
@@ -113,8 +128,6 @@ export async function GET(request: NextRequest) {
       }
     });
 
-    await browser.close();
-
     // Create filename with proper encoding for non-ASCII characters
     const filename = `${cvData.fullName.replace(/\s+/g, '_')}_CV.pdf`;
     const encodedFilename = encodeURIComponent(filename);
@@ -124,17 +137,21 @@ export async function GET(request: NextRequest) {
       headers: {
         'Content-Type': 'application/pdf',
         'Content-Disposition': `attachment; filename="${encodedFilename}"; filename*=UTF-8''${encodedFilename}`,
+        'Cache-Control': 'public, max-age=0, s-maxage=60, stale-while-revalidate=300',
       },
     });
 
   } catch (error) {
     console.error("PDF generation error:", error);
     return NextResponse.json(
-      { 
+      {
         error: "Failed to generate PDF",
         details: env.NODE_ENV === 'development' ? (error instanceof Error ? error.message : 'Unknown error') : undefined
       },
       { status: 500 }
     );
+  } finally {
+    // A leaked Chromium process pins the lambda's memory until it is recycled.
+    await browser?.close().catch(() => {});
   }
 }

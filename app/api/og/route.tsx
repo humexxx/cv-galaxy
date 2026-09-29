@@ -2,8 +2,8 @@ import { ImageResponse } from "@vercel/og";
 import { cvService } from "@/lib/services/cv-service";
 import { getBaseUrl } from "@/lib/env";
 
-export const runtime = "edge";
-
+// Deliberately NOT the edge runtime: cvService talks to Postgres over TCP via
+// postgres-js, which edge cannot open.
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
@@ -192,7 +192,7 @@ export async function GET(request: Request) {
         height: 630,
         headers: {
           'Content-Type': 'image/png',
-          'Cache-Control': 'public, max-age=31536000, immutable',
+          'Cache-Control': 'public, max-age=0, s-maxage=3600, stale-while-revalidate=86400',
         },
       }
     );

@@ -1,6 +1,12 @@
 "use client";
 
-import { useState, useRef, useImperativeHandle, forwardRef } from "react";
+import {
+  useState,
+  useRef,
+  useEffect,
+  useImperativeHandle,
+  forwardRef,
+} from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSessionStorage } from "@/hooks/use-session-storage";
@@ -71,13 +77,28 @@ export const AiChat = forwardRef<AiChatRef, AiChatProps>(function AiChat(
   });
 
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+  const abortControllerRef = useRef<AbortController | null>(null);
+
+  // Stop burning tokens on a stream nobody is going to read.
+  useEffect(() => {
+    return () => {
+      abortControllerRef.current?.abort();
+      abortControllerRef.current = null;
+    };
+  }, []);
 
   const onSubmit = async (data: ChatInput) => {
-    if (isLoading) return;
+    const content = data.message.trim();
+    if (!content) return;
+
+    // A new question supersedes whatever is still streaming.
+    abortControllerRef.current?.abort();
+    const controller = new AbortController();
+    abortControllerRef.current = controller;
 
     const userMessage: ChatMessage = {
       role: "user",
-      content: data.message.trim(),
+      content,
     };
     setMessages((prev) => [...prev, userMessage]);
     reset();
@@ -97,6 +118,8 @@ export const AiChat = forwardRef<AiChatRef, AiChatProps>(function AiChat(
         userId,
         cvData,
         (chunk) => {
+          if (controller.signal.aborted) return;
+
           if (chunk.type === "content" && chunk.content) {
             setMessages((prev) => {
               const updated = [...prev];
@@ -123,9 +146,14 @@ export const AiChat = forwardRef<AiChatRef, AiChatProps>(function AiChat(
           if (chunk.type === "highlight" && chunk.highlight) {
             addHighlight(chunk.highlight);
           }
-        }
+        },
+        controller.signal
       );
     } catch (error) {
+      // Cancellation is expected (unmount / a newer question) — stay quiet and
+      // keep whatever partial answer already streamed in.
+      if (controller.signal.aborted) return;
+
       console.error("Failed to send message:", error);
       const errorMessage =
         error instanceof Error
@@ -142,17 +170,28 @@ export const AiChat = forwardRef<AiChatRef, AiChatProps>(function AiChat(
         return updated;
       });
     } finally {
+      // Don't touch state that now belongs to a newer request (or to a
+      // component that has already unmounted).
+      if (controller.signal.aborted || abortControllerRef.current !== controller) {
+        return;
+      }
+      abortControllerRef.current = null;
       setIsLoading(false);
-      
+
       setMessages((prev) => {
         const updated = [...prev];
         const lastIndex = updated.length - 1;
-        if (updated[lastIndex]?.role === "assistant" && !updated[lastIndex].content) {
-          updated[lastIndex].content = "I apologize, but I couldn't generate a proper response. Please try again.";
+        const last = updated[lastIndex];
+        if (last?.role === "assistant" && !last.content) {
+          updated[lastIndex] = {
+            ...last,
+            content:
+              "I apologize, but I couldn't generate a proper response. Please try again.",
+          };
         }
         return updated;
       });
-      
+
       setTimeout(() => {
         const scrollArea = scrollAreaRef.current?.querySelector(
           "[data-radix-scroll-area-viewport]"
@@ -170,6 +209,9 @@ export const AiChat = forwardRef<AiChatRef, AiChatProps>(function AiChat(
   };
 
   const handleResetChat = () => {
+    abortControllerRef.current?.abort();
+    abortControllerRef.current = null;
+    setIsLoading(false);
     clearMessages();
     clearHighlights();
     reset();
@@ -202,11 +244,16 @@ export const AiChat = forwardRef<AiChatRef, AiChatProps>(function AiChat(
                   {SUGGESTIONS.map((suggestion) => (
                     <Badge
                       key={suggestion}
+                      asChild
                       variant="outline"
-                      className="cursor-pointer hover:bg-accent transition-colors"
-                      onClick={() => handleSuggestionClick(suggestion)}
+                      className="ios-press cursor-pointer rounded-full px-3 py-1 hover:bg-accent transition-colors"
                     >
-                      {suggestion}
+                      <button
+                        type="button"
+                        onClick={() => handleSuggestionClick(suggestion)}
+                      >
+                        {suggestion}
+                      </button>
                     </Badge>
                   ))}
                 </div>
@@ -224,10 +271,10 @@ export const AiChat = forwardRef<AiChatRef, AiChatProps>(function AiChat(
                   }`}
                 >
                   <div
-                    className={`max-w-[85%] rounded-lg px-4 py-2 ${
+                    className={`max-w-[85%] rounded-2xl px-4 py-2 ${
                       message.role === "user"
-                        ? "bg-primary text-primary-foreground"
-                        : "bg-muted"
+                        ? "bg-primary text-primary-foreground rounded-br-md"
+                        : "bg-muted rounded-bl-md"
                     }`}
                   >
                     {message.content ? (
@@ -250,7 +297,7 @@ export const AiChat = forwardRef<AiChatRef, AiChatProps>(function AiChat(
       <div className="min-h-fit">
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="rounded-lg border bg-background p-2"
+          className="rounded-2xl border border-border/60 bg-card p-2 shadow-[var(--shadow-ios)] dark:shadow-none"
         >
           <textarea
             {...register("message", {
@@ -270,6 +317,7 @@ export const AiChat = forwardRef<AiChatRef, AiChatProps>(function AiChat(
               textareaRef.current = e;
             }}
             placeholder="Ask about this CV..."
+            aria-label="Ask about this CV"
             onKeyDown={(e) => {
               if (e.key === "Enter" && !e.shiftKey) {
                 e.preventDefault();
@@ -286,7 +334,7 @@ export const AiChat = forwardRef<AiChatRef, AiChatProps>(function AiChat(
               onValueChange={onModelChange}
               disabled={isLoadingModels}
             >
-              <SelectTrigger className="h-7 w-auto text-xs border-0 bg-secondary/50 hover:bg-secondary focus:ring-0 px-2 gap-1">
+              <SelectTrigger className="h-7 w-auto rounded-full text-xs border-0 bg-secondary/60 hover:bg-secondary focus:ring-0 px-3 gap-1">
                 <SelectValue placeholder={isLoadingModels ? "..." : "Model"} />
               </SelectTrigger>
               <SelectContent>
@@ -318,8 +366,9 @@ export const AiChat = forwardRef<AiChatRef, AiChatProps>(function AiChat(
               size="icon"
               disabled={isLoading}
               className="h-7 w-7"
+              aria-label="Send message"
             >
-              <Send className="h-3.5 w-3.5" />
+              <Send className="h-3.5 w-3.5" aria-hidden="true" />
             </Button>
           </div>
         </form>

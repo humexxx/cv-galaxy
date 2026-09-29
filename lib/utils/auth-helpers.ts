@@ -1,32 +1,36 @@
 import { NextResponse } from "next/server";
-import { Session } from "@supabase/supabase-js";
+import { User } from "@supabase/supabase-js";
 import { db } from "@/db";
 import { users } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { createServerSupabaseClient } from "@/lib/supabase-server";
 
-export async function getSession() {
+// getUser() revalidates the JWT against the Supabase auth server. getSession()
+// only decodes the cookie, which the client can forge.
+export async function getAuthUser(): Promise<User | null> {
   const supabase = await createServerSupabaseClient();
-  const { data: { session } } = await supabase.auth.getSession();
-  return session;
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  return user;
 }
 
 export async function requireAuth() {
-  const session = await getSession();
-  
-  if (!session) {
+  const authUser = await getAuthUser();
+
+  if (!authUser) {
     return {
       error: NextResponse.json({ error: "Unauthorized" }, { status: 401 }),
-      session: null,
+      authUser: null,
     };
   }
-  
-  return { error: null, session };
+
+  return { error: null, authUser };
 }
 
 export async function getUserByUsername(username: string) {
   const user = await db.query.users.findFirst({
-    where: eq(users.username, username),
+    where: eq(users.username, username.toLowerCase()),
   });
 
   if (!user) {
@@ -47,14 +51,14 @@ export async function getUserBySupabaseId(supabaseUserId: string) {
   return user;
 }
 
-export async function requireOwnership(username: string, session: Session) {
+export async function requireOwnership(username: string, authUser: User) {
   const { error: userError, user } = await getUserByUsername(username);
-  
+
   if (userError) {
     return { error: userError, user: null };
   }
 
-  if (user!.supabaseUserId !== session.user.id) {
+  if (user!.supabaseUserId !== authUser.id) {
     return {
       error: NextResponse.json(
         { error: "Forbidden: You can only modify your own data" },

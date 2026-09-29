@@ -1,16 +1,15 @@
 import { NextResponse } from "next/server";
-import { getUserBySupabaseId } from "@/lib/utils/auth-helpers";
-import { getSession } from "@/lib/utils/auth-helpers";
+import { getAuthUser, getUserBySupabaseId } from "@/lib/utils/auth-helpers";
 
 export async function GET() {
   try {
-    const session = await getSession();
-    
-    if (!session) {
+    const authUser = await getAuthUser();
+
+    if (!authUser) {
       return NextResponse.json({ username: null });
     }
 
-    const user = await getUserBySupabaseId(session.user.id);
+    const user = await getUserBySupabaseId(authUser.id);
 
     return NextResponse.json({ username: user?.username || null });
   } catch (error) {

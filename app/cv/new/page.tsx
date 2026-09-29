@@ -47,7 +47,7 @@ export default function NewCVPage() {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="rounded-lg border border-dashed border-muted-foreground/25 p-8 text-center">
+            <div className="rounded-2xl border border-dashed border-muted-foreground/25 p-8 text-center">
               <p className="text-sm text-muted-foreground mb-4">
                 For now, CVs need to be added directly to the database.
               </p>

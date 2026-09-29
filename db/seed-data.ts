@@ -71,6 +71,16 @@ export const companiesData: Record<string, Company> = {
     name: "Gigster",
     website: "https://gigster.com/",
     logo: "/images/companies/gigster.webp",
+  },
+  invisory: {
+    id: "invisory",
+    name: "Invisory",
+    website: "https://www.invisory.co/",
+  },
+  bairesdev: {
+    id: "bairesdev",
+    name: "BairesDev",
+    website: "https://www.bairesdev.com/",
   }
 };
 
@@ -135,6 +145,18 @@ export const cvDatabase: Record<string, CVData> = {
       "Leveraging AI tools to improve productivity and code quality",
     ],
     workExperience: [
+      {
+        title: "Senior Fullstack Developer",
+        company: companiesData.invisory,
+        contractor: companiesData.bairesdev,
+        period: {
+          start: new Date(2026, 2), // Mar 2026
+          end: "Present",
+        },
+        description:
+          "Building a cloud marketplace platform that aggregates and synchronises co-sell opportunities across AWS, Azure and GCP.",
+        responsibilitiesHtml: "<ul><li><p>Deliver features end-to-end in an Nx monorepo combining a Node.js/Express + MongoDB API and an Angular frontend.</p></li><li><p>Build and maintain integrations with AWS Marketplace, Azure Partner Center, Salesforce and HubSpot, including credential validation and connection health checks.</p></li><li><p>Improve the reliability of opportunity synchronisation by adding merge-conflict detection and private offer management for co-sell deals.</p></li><li><p>Strengthen observability and developer experience with structured logging, distributed tracing, integration tests and local development tooling.</p></li></ul>",
+      },
       {
         title: "Senior Frontend Developer / Tech Lead",
         company: companiesData.prestige,

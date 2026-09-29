@@ -29,6 +29,13 @@
       "when": 1772731575537,
       "tag": "0003_superb_dark_phoenix",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1790652806153,
+      "tag": "0004_fix_schema_drift_and_indexes",
+      "breakpoints": true
     }
   ]
 }

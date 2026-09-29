@@ -1,5 +1,9 @@
-import { pgTable, text, timestamp, uuid, date, boolean, integer } from "drizzle-orm/pg-core";
+import { pgTable, text, timestamp, uuid, date, boolean, integer, index } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
+
+// Every child table below is read as "all rows for one user, ordered by
+// sort_order" (see lib/services/cv-service.ts). Without a composite index that
+// is a seq scan + sort per section, seven times per CV render.
 
 // Users table (main CV profile)
 export const users = pgTable("users", {
@@ -57,7 +61,9 @@ export const workExperience = pgTable("work_experience", {
   responsibilitiesHtml: text("responsibilities_html").notNull().default(""),
   sortOrder: integer("sort_order").notNull().default(0),
   createdAt: timestamp("created_at").defaultNow().notNull(),
-});
+}, (table) => [
+  index("work_experience_user_id_sort_order_idx").on(table.userId, table.sortOrder),
+]);
 
 // Work Experience Responsibilities table removed — responsibilities stored as HTML in work_experience.responsibilities_html
 
@@ -72,7 +78,9 @@ export const education = pgTable("education", {
   description: text("description").notNull(),
   sortOrder: integer("sort_order").notNull().default(0),
   createdAt: timestamp("created_at").defaultNow().notNull(),
-});
+}, (table) => [
+  index("education_user_id_sort_order_idx").on(table.userId, table.sortOrder),
+]);
 
 // Projects table
 export const projects = pgTable("projects", {
@@ -84,7 +92,9 @@ export const projects = pgTable("projects", {
   comingSoon: boolean("coming_soon").default(false),
   sortOrder: integer("sort_order").notNull().default(0),
   createdAt: timestamp("created_at").defaultNow().notNull(),
-});
+}, (table) => [
+  index("projects_user_id_sort_order_idx").on(table.userId, table.sortOrder),
+]);
 
 // Technologies table (for user's tech stack)
 export const technologies = pgTable("technologies", {
@@ -92,7 +102,9 @@ export const technologies = pgTable("technologies", {
   userId: uuid("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
   name: text("name").notNull(),
   sortOrder: integer("sort_order").notNull().default(0),
-});
+}, (table) => [
+  index("technologies_user_id_sort_order_idx").on(table.userId, table.sortOrder),
+]);
 
 // Languages table (spoken languages)
 export const languages = pgTable("languages", {
@@ -100,7 +112,9 @@ export const languages = pgTable("languages", {
   userId: uuid("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
   name: text("name").notNull(),
   sortOrder: integer("sort_order").notNull().default(0),
-});
+}, (table) => [
+  index("languages_user_id_sort_order_idx").on(table.userId, table.sortOrder),
+]);
 
 // Skills table
 export const skills = pgTable("skills", {
@@ -108,7 +122,9 @@ export const skills = pgTable("skills", {
   userId: uuid("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
   name: text("name").notNull(),
   sortOrder: integer("sort_order").notNull().default(0),
-});
+}, (table) => [
+  index("skills_user_id_sort_order_idx").on(table.userId, table.sortOrder),
+]);
 
 // Personal Values table
 export const personalValues = pgTable("personal_values", {
@@ -116,7 +132,9 @@ export const personalValues = pgTable("personal_values", {
   userId: uuid("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
   value: text("value").notNull(),
   sortOrder: integer("sort_order").notNull().default(0),
-});
+}, (table) => [
+  index("personal_values_user_id_sort_order_idx").on(table.userId, table.sortOrder),
+]);
 
 // Relations
 export const usersRelations = relations(users, ({ one, many }) => ({
@@ -137,7 +155,7 @@ export const userPreferencesRelations = relations(userPreferences, ({ one }) => 
   }),
 }));
 
-export const workExperienceRelations = relations(workExperience, ({ one, many }) => ({
+export const workExperienceRelations = relations(workExperience, ({ one }) => ({
   user: one(users, {
     fields: [workExperience.userId],
     references: [users.id],
